@@ -1,0 +1,125 @@
+.req{color: red; font-style: normal; font-weight: bold; }
+input.error, select.error{border-color: red !important; color: inherit;  }
+.error-btn{	border: 1px solid red !important; color: inherit; }
+
+
+/************	КРОШКИ	**************/
+.crumbs {margin: 0 0 25px 0; font-size: 14px; border-bottom: 1px solid #e7e7e7; padding: 0 0 10px 0; }
+.crumbs .item{ }
+.crumbs .item:after{content: "/"; margin: 0 8px; font-weight: normal; color: #5c6d70 }
+.crumbs .item:last-child:after{content: none;}
+.crumbs .item a{ color: #00a8cb;}
+.crumbs .item a:hover{}
+
+
+
+
+/**********	РАЗДЕЛЫ	**************/
+.pages-list h2{margin: 0px; padding: 0px;}
+.pages-list h2 a:link, .pages-list h2 a:visited{}
+.pages-list h2 a:hover{}
+
+.page h1{ font-size: 2.5em; color: #33bedb; }
+.page-text{display: block; }
+
+
+
+/**********	НОВОСТИ	**************/
+/*	список	*/
+.news-list{  width: 78%}
+.news-list h2{margin: 0px; padding: 0px; background: none;  }
+.news-list h2 a:link, .news-list h2 a:visited{color: #00a8cb; font-size: 16px;}
+.news-list h2 a:hover{}
+.news-list hr{}
+.news-list .item{margin: 0 0 45px 0; }
+.news-list .item:last-child {margin: 0 0 20px 0;}
+.news-list .item img{float:right; margin: 7px 5px 0 5px; border: 0px solid black; }
+.news-list .item .date{
+	display: block; 
+	font-size: 12px; 
+	color: #b4b4b4; 
+	border-bottom: 1px solid #e7e7e7; 
+	text-align: right; 
+	padding: 0 10px 5px 0;
+	width: 76%;
+}
+.news-list .item .anons, .news-list .item .anons a{color:#203042};
+/*	новость	*/
+.news-el { display: none;}
+.news-el img {float: left; margin: 3px 10px 10px 0px; max-width: 250px;}
+.date{display: block; font-size: 12px; color: #888;}
+.text{display: block; }
+
+
+
+
+
+/**********	ГАЛЕРЕЯ	***********/
+.gallery-albums-wrapper{}
+.gallery-album{ width: 220px; background: #ECECEC; margin: 0 10px 10px 0; padding: 20px 0;  text-align: center; display: inline-block; }
+.gallery-album a:link, .gallery-album a:visited{color: green; }
+.gallery-album a:hover{color: red; }
+.gallery-album img{ border: 2px solid #ccc;}
+.gallery-album img:hover{border: 2px solid #e0e0e0;}
+
+.gallery-photos-wrapper{}
+.gallery-photo{ width: 19%;  background: #ECECEC; margin: 10px; padding:10px;  text-align: center; display: inline-block; vertical-align: middle; }
+.gallery-photo a:link, .gallery-photo a:visited{color: green; }
+.gallery-photo a:hover{color: red; }
+.gallery-photo img{ border: 2px solid #ccc; width: 90%;}
+.gallery-photo img:hover{border: 2px solid #e0e0e0;}
+.gallery-photo span{font-size: 11px;}
+
+
+
+/**********	КАБИНЕТ	***********/
+.cabinet {font-size: 13px; color: #999999;}
+.cabinet h1, .cabinet h2{background: none; }
+.cabinet input, .form-table input{border: 1px solid #e0e0e3}
+.cabinet input[type='text'], .cabinet input[type='password']{height: 30px; padding: 6px; width: 220px; font-size: 12px; border-radius: 2px; }
+.cabinet select, .form-table input{font-size: 12px; border-radius: 2px; border: 1px solid #e0e0e3; }
+.cabinet input.error, input.error, select.error{border-color: red !important; color: inherit;  }
+.cabinet #re-captcha, #re-captcha{font-size: 12px;}
+.cabinet #captcha{width: 50px;}
+
+
+
+
+
+/************	СТРАНИЦЫ	******************/
+.pages-div{ display: inline-block; margin: 0 auto;}
+.pages-div a:link, .pages-div a:visited, .pages-div div {
+    color: #807f7f;
+    display: block;
+    float: left;
+    margin: 2px;
+    padding: 5px 7px;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 100px;
+    min-width: 20px;
+    height: 23px;
+}
+.pages-div div {
+    color: #fff;
+    font-weight: normal;
+    text-decoration: none;
+    background: #33bedb;
+    
+}
+.pages-div a:hover {
+    background-color: #f2f2f2;
+}
+
+.pages-div .pages-inactive{
+	text-decoration: none;
+	font-weight: normal; 
+	color: #ececec; 
+	background: none;
+	border: 1px solid #ececec !important;
+}
+.pages-div .prev, .pages-div .next, .pages-div .beginning, .pages-div .end{border: 1px solid #cccccc; font-weight: bold;  }
+.pages-div a.prev, .pages-div a.next, .pages-div a.beginning, .pages-div a.end{color: #ccc;}
+.pages-div a.prev:hover, .pages-div a.next:hover, .pages-div a.beginning:hover, .pages-div a.end:hover{}
+
+

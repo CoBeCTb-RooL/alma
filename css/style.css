@@ -1,0 +1,197 @@
+@font-face{
+	font-family: PTSans;
+	src: url(../fonts/pt-sans-regular-cyrillic.ttf);
+}
+
+
+body{
+	font-size: 14px;
+	background: white;
+	/*text-align: center;*/
+	margin: 0px; 
+	padding: 0px;
+	
+	/*font-family: Arial;*/
+	font-family: PTSans;
+	min-width: 950px;
+	
+	color:#203042;
+}
+
+
+
+
+a, a:visited{
+	color: #00a8cb;
+	text-decoration: underline;
+}
+a:hover{
+	text-decoration: none;
+}
+
+hr{
+	background-color: #e3e7e9;
+	color: #e3e7e9;
+	border:0px none; 
+	height:1px; 
+	
+}
+
+.justify{text-align: justify;}
+.center{text-align: center;}
+.clear{clear: both;}
+
+.grey{color: #8c8c8c;}
+.orange{color: #f28c00;}
+.dark-grey{color: #464646;}
+.blue{color: #39a1cc;}
+.blue2{color: #004a77;}
+.dark-blue{color:#22242b;}
+.white{color: #f6f7f8;}
+.error{color: red;}
+
+.req{color: red;}
+
+a.orange:link, a.orange:visited{
+	color: #f28c00;
+	text-decoration: underline;
+}
+a.orange:hover{
+	color: #f28c00;
+	text-decoration: none;
+}
+
+.underlined{text-decoration: underline;}
+
+a.ununderlined:link, a.ununderlined:visited{text-decoration: none;}
+a.ununderlined:hover{text-decoration: underline;}
+
+.dashed:link, .dashed:visited{
+	text-decoration: none;
+	border-bottom: 1px dashed #006cc8; 
+}
+.dashed:hover{border-bottom: 0px solid black;}
+
+.left{text-align: left; }
+.right{text-align: right; }
+.center{text-align: center; }
+
+h1{
+	font-size: 55px;
+	font-weight: normal;
+	color: #1d2b3a;
+	margin: 0px;
+	padding: 0px;
+	
+}
+h2{
+	font-size: 20px;
+	font-weight: normal;
+	color: #1d2b3a;
+	margin: 0px;
+	padding: 0px;
+}
+h3{
+	font-size: 30px;
+	font-weight: normal;
+}
+
+
+
+
+
+
+
+
+
+
+.block{
+	width: 100%; 
+	border: 0px solid black; 
+	
+}
+
+.content{
+	width: 978px; 
+	border: 0px solid black;
+	margin: 0px auto; 
+}
+
+
+
+
+
+
+
+#menu{background: #203042; height: 66px; color: #fff; }
+/*	МЕНЮ	*/
+#menu ul{margin: 0; padding: 0; z-index: 100000}
+#menu ul li{
+	float: left;
+	list-style: none;
+	position: relative;
+}
+#menu ul.primary >li{
+	
+	width: 162px;
+	height: 66px;
+	
+	border: 0px solid black;
+	
+	background: inherit;
+	padding: 0px 0 0 0;
+	
+	
+	background: url(../img/menu-separator-bg.jpg) no-repeat left 24px;
+}
+#menu ul.primary li:hover{
+	background: #395473;
+	
+}
+#menu ul.primary > li > a{
+	color: #fff; 
+	font-size: 17px; 
+	text-decoration: none; 
+	height: 46px;
+	display: block;
+	text-align: center;
+	padding: 20px 0 0 0;
+}
+
+/*	 ВЫПАДАЮЩАЯ ЧАСТЬ (1 ур)  */
+#menu ul.primary li ul {
+       display: none;	/*скрываем вложенные пункты*/
+       border: 0px solid black;
+       background: #395473;
+    }
+#menu ul.primary li:hover > ul {
+	display: block;
+	position: absolute;
+	top: 66px; /*первый уровень меню раскрывается вниз*/
+	left: 0;
+	
+}
+/*ВТОРОЙ и последующие уровни вложенности*/
+#menu ul.primary li ul li{
+	height: 26px;
+	width: 150px;
+	background: inherit;
+	padding: 8px 0 0 10px;
+	
+}
+#menu ul.primary li ul li:hover{
+	background: #203042;
+}
+#menu ul.primary li ul li a{color: #fff;   height: 100%;  display: block; text-decoration: none;}
+#menu ul:primary li ul li a:hover{ text-decoration: none;}
+/* После второго уровня чтоб всё выпадало справа */
+#menu ul.primary li:hover ul li ul{
+	position: absolute;
+	top: 0;
+	left: 160px; /*второй и последующие уровни расскрываются вправо*/
+}
+
+
+
+
+
