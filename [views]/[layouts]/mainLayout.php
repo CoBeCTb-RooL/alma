@@ -1,4 +1,4 @@
-dfsg sdg sdfg d<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
