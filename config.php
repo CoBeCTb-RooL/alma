@@ -13,7 +13,7 @@ else
 	define('DB_HOST', 'localhost');
 	define('DB_NAME', 'v_93999_alma');
 }
-
+//////
 
 #	лэйаут по умолчанию
 $_CONFIG['DEFAULT_LAYOUT'] = 'mainLayout';
