@@ -8,10 +8,10 @@ if($_SERVER['SERVER_ADDR'] == '127.0.0.1')
 }
 else
 {
-	define('DB_USER', 'v_93999_alma');
+	define('DB_USER', 'p-745_alma');
 	define('DB_PASSWORD', 'Wvks%204ld88$D0l');
 	define('DB_HOST', 'localhost');
-	define('DB_NAME', 'v_93999_alma');
+	define('DB_NAME', 'p-7456_alma');
 }
 //////d
 
