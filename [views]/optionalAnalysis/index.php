@@ -37,7 +37,7 @@ $todayData = $data[date('Y-m-d')];
 
 <?foreach($currencies as $cur)
 {?>
-	<form class="form" action="/ru/stock/optionalAnalysis/submit" id="form-<?=$cur->code?>" target="frame7" onsubmit="return Opt.calc('<?=$cur->code?>')">
+	<form class="form" action="/ru/optionalAnalysis/v2/submit" id="form-<?=$cur->code?>" target="frame7" onsubmit="return Opt.calc('<?=$cur->code?>')">
 		<input type="hidden" name="currency" value="<?=$cur->code?>">
 		<h3><?=$cur->code?></h3>
 
@@ -60,14 +60,6 @@ $todayData = $data[date('Y-m-d')];
 
 
 
-		<div id="data-<?=$cur->code?>" style="display: none; ">
-			<textarea cols="30" rows="3"></textarea>
-			<br><button type="button" onclick="Opt.loadData('<?=$cur->code?>')">загрузить</button>
-		</div>
-
-
-
-
 
         <?
         foreach(StrikeType2::$items as $st)
@@ -86,9 +78,9 @@ $todayData = $data[date('Y-m-d')];
                     {?>
                         <tr>
                             <td><?=$t->name?></td>
-                            <td><input type="text" class="strike strike-<?=$t->code?>" name="strike[<?=$cur->code?>][<?=$st->code?>][<?=$t->code?>]" value=""></td>
-                            <td><input type="text" class="premium-<?=$t->code?>" name="premium[<?=$cur->code?>][<?=$st->code?>][<?=$t->code?>]" value=""></td>
-                            <td class="result-<?=$t->code?>"></td>
+                            <td><input type="text" class="strike strike-<?=$t->code?>" name="strike[<?=$cur->code?>][<?=$st->code?>][<?=$t->code?>]" value="<?=$todayData[$cur->code][$st->code][$t->code]->strike?>"></td>
+                            <td><input type="text" class="premium-<?=$t->code?>" name="premium[<?=$cur->code?>][<?=$st->code?>][<?=$t->code?>]" value="<?=$todayData[$cur->code][$st->code][$t->code]->premium?>"></td>
+                            <td class="result-<?=$t->code?>"><?=$todayData[$cur->code][$st->code][$t->code]->result?></td>
                         </tr>
                         <?
                     }?>
@@ -96,8 +88,8 @@ $todayData = $data[date('Y-m-d')];
                 <button type="button" style="font-size: 12px; padding: 3px 6px; " onclick="$('#form-<?=$cur->code?> .strike-<?=$st->code?> .data-input').slideToggle('fast')">внести данные</button>
                 <button type="button" style="font-size: 12px; padding: 3px 6px; " onclick="Opt.calc('<?=$cur->code?>', '<?=$st->code?>');">посчитать</button>
                 <div class="data-input" style="display: none; ">
-                    <textarea cols="30" rows="1"></textarea>
-                    <br><button type="button" onclick="Opt.loadData('<?=$cur->code?>', '<?=$st->code?>')">загрузить</button>
+                    <textarea cols="30" rows="1" onkeyup="Opt.loadData('<?=$cur->code?>', '<?=$st->code?>')" style="height: 25px; "></textarea>
+                    <!--<br><button type="button" onclick="Opt.loadData('<?=$cur->code?>', '<?=$st->code?>')">загрузить</button>-->
                 </div>
             </fieldset>
         <?
@@ -116,7 +108,7 @@ $todayData = $data[date('Y-m-d')];
 <hr>
 <?//vd($todayData);?>
 
-<button onclick="Opt.drawStats()">обновить стат.</button>
+<!--<button onclick="Opt.drawStats()">обновить стат.</button>-->
 <h1>Статистика</h1>
 <div class="stats-loading" style="display: none; ">Ща...</div>
 <div class="stats"></div>
@@ -149,20 +141,6 @@ $todayData = $data[date('Y-m-d')];
 
                 w.find('.strike-'+st+' .result-buy').html(resultBuy.toFixed(4))
                 w.find('.strike-'+st+' .result-sell').html(resultSell.toFixed(4))
-
-				/*result_buy = parseFloat(data.strike_buy) + parseFloat(data.premium_buy) - parseFloat(data.forward)
-				result_sell = parseFloat(data.strike_sell) - parseFloat(data.premium_sell) - parseFloat(data.forward)
-
-				resultMainBuy = parseFloat(data.mainStrikeBuy) + parseFloat(data.mainPremiumBuy) - parseFloat(data.forward)
-				resultMainSell = parseFloat(data.mainStrikeSell) - parseFloat(data.mainPremiumSell) - parseFloat(data.forward)
-
-				var w = $('#form-'+cur)
-
-				w.find('.result-main-buy').html(resultMainBuy.toFixed(4))
-				w.find('.result-main-sell').html(resultMainSell.toFixed(4))
-
-				w.find('.result-barrier-buy').html(result_buy.toFixed(4))
-				w.find('.result-barrier-sell').html(result_sell.toFixed(4))*/
 			}
 			return true
 
@@ -208,7 +186,7 @@ $todayData = $data[date('Y-m-d')];
 
 		drawStats: function(){
 			$.ajax({
-				url: '/ru/stock/optionalAnalysis/statsAjax',
+				url: '/ru/optionalAnalysis/v2/statsAjax',
 				data: {},
 				beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
 				complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
@@ -252,7 +230,7 @@ $todayData = $data[date('Y-m-d')];
             w.find('.premium-buy').val(data.premBuy)
             w.find('.premium-sell').val(data.premSell)
 
-            $('#form-'+cur+' .strike-'+strikeType+' .data-input').slideToggle('fast')
+            $('#form-'+cur+' .strike-'+strikeType+' .data-input').slideUp('fast')
             Opt.calc(cur, strikeType)
 		},
 

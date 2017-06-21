@@ -29,7 +29,7 @@ foreach($data3 as $date=>$val)
 		<?
 		$a=0;
 		$b=0;
-		$krat = 4;
+		$krat = 6;
 		foreach($val as $item)
 		{
 			if($cur!=$item->currency->code && $b)
@@ -43,7 +43,7 @@ foreach($data3 as $date=>$val)
 			$cur = $item->currency->code;
 
 			?>
-			<tr>
+			<tr style="<?=!(($a+1)%($krat/3)) ? 'border-bottom: 2px solid #000; ' : '' ?>">
 				<?
 				if(!$a)
 				{?>
@@ -54,7 +54,7 @@ foreach($data3 as $date=>$val)
 
 
 				<?
-				if(!($a%($krat/2)))
+				if(!($a%($krat/3)))
 				{?>
 					<td rowspan="2" style="font-weight: bold; " ><?=$item->strikeType->name?></td>
 				<?
@@ -62,6 +62,12 @@ foreach($data3 as $date=>$val)
 
 
 				<td class="cell-<?=$item->type->code?>" style="font-weight: bold; "><?=$item->type->code?></td>
+                <!--<?
+                if(!($a%($krat/3)))
+                {?>
+                    <td rowspan="2" ><?=$item->strike?></td>
+                    <?
+                }?>-->
 				<td class="cell-<?=$item->type->code?>"><?=$item->strike?></td>
 				<td class="cell-<?=$item->type->code?>"><?=$item->premium?></td>
 				<td class="cell-<?=$item->type->code?>"><?=$item->result?></td>
