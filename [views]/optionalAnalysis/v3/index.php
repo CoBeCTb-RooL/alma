@@ -223,8 +223,14 @@ $todayData = $data[date('Y-m-d')];
 
                 var w = $('#form-'+cur)
 
-                resultBuy = parseFloat(data.strikeBuy) - parseFloat(data.premBuy) - parseFloat(data.forward)
-                resultSell = parseFloat(data.strikeSell) + parseFloat(data.premSell) - parseFloat(data.forward)
+                /*resultBuy = parseFloat(data.strikeBuy) - parseFloat(data.premBuy) - parseFloat(data.forward)
+                resultSell = parseFloat(data.strikeSell) + parseFloat(data.premSell) - parseFloat(data.forward)*/
+
+                resultBuy = parseFloat(data.strikeBuy) - parseFloat(data.premBuy)
+                resultSell = parseFloat(data.strikeSell) + parseFloat(data.premSell)
+
+                resultBuy -= parseFloat(data.forward)
+                resultSell -= parseFloat(data.forward)
 
                 w.find('.strike-'+st+' .result-'+st+'-buy').html(resultBuy.toFixed(4))
                 w.find('.strike-'+st+' .result-'+st+'-sell').html(resultSell.toFixed(4))

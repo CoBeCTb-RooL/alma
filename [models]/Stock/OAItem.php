@@ -159,11 +159,12 @@ class OAItem{
 	{
 		$res = '';
 
-		$res = $this->strike - $this->forward;
 		if($this->type->code == Type::BUY)
-			$res -= $this->premium;
+			$res = $this->strike - $this->premium;
 		elseif($this->type->code == Type::SELL)
-			$res += $this->premium;
+			$res = $this->strike + $this->premium;
+
+        $res -= $this->forward;
 
 		$this->result = $res;
 	}
