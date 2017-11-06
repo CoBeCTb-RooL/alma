@@ -41,7 +41,7 @@ class MainController{
 	function index()
 	{
 		global $_GLOBALS;
-		
+
 	}
 	
 }
