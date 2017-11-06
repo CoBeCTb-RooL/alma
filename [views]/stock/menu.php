@@ -23,5 +23,9 @@
     &nbsp;|&nbsp;
     <a href="/ru/optionalAnalysis/v2">Опционный анализ 2.0</a>
 
+
+
+    <p>
+    <a style="font-weight: bold; " href="/ru/optionalAnalysis/v3">Опционный анализ 3.0</a>
 	
 </div>
