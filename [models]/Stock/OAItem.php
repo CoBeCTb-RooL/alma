@@ -75,7 +75,7 @@ class OAItem{
 	}
 
 
-	/*public static function arrangeList($list)
+	public static function arrangeList($list)
 	{
 		$res = [];
 
@@ -83,7 +83,7 @@ class OAItem{
 			$res[substr($val->dt, 0, 10)][$val->currency->code][$val->type->code] = $val;
 
 		return $res;
-	}*/
+	}
 
 
 	public static function arrangeList2($list)
@@ -96,7 +96,7 @@ class OAItem{
 		return $res;
 	}
 
-	/*public static function arrangeListByDate($list)
+	public static function arrangeListByDate($list)
 	{
 		$res = [];
 
@@ -104,7 +104,7 @@ class OAItem{
 			$res[substr($val->dt, 0, 10)][] = $val;
 
 		return $res;
-	}*/
+	}
 
 
 	

@@ -294,7 +294,7 @@ $todayData = $data[date('Y-m-d')];
 
 		drawStats: function(){
 			$.ajax({
-				url: '/ru/optionalAnalysis/v2/statsAjax',
+				url: '/ru/optionalAnalysis/v3/statsAjax',
 				data: {},
 				beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
 				complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
