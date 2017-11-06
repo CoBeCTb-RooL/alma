@@ -229,8 +229,16 @@ $todayData = $data[date('Y-m-d')];
                 resultBuy = parseFloat(data.strikeBuy) - parseFloat(data.premBuy)
                 resultSell = parseFloat(data.strikeSell) + parseFloat(data.premSell)
 
-                resultBuy -= parseFloat(data.forward)
-                resultSell -= parseFloat(data.forward)
+                if(cur == '<?=Currency::CODE_AUD?>')
+                {
+                    resultBuy += parseFloat(data.forward)
+                    resultSell += parseFloat(data.forward)
+                }
+                else{
+                    resultBuy -= parseFloat(data.forward)
+                    resultSell -= parseFloat(data.forward)
+                }
+
 
                 w.find('.strike-'+st+' .result-'+st+'-buy').html(resultBuy.toFixed(4))
                 w.find('.strike-'+st+' .result-'+st+'-sell').html(resultSell.toFixed(4))

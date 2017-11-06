@@ -164,7 +164,10 @@ class OAItem{
 		elseif($this->type->code == Type::SELL)
 			$res = $this->strike + $this->premium;
 
-        $res -= $this->forward;
+		if($this->currency->code == Currency::CODE_AUD)
+            $res += $this->forward;
+		else
+            $res -= $this->forward;
 
 		$this->result = $res;
 	}
