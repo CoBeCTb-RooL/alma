@@ -74,7 +74,7 @@
 
 <body style="background: none; padding: 15px 40px;">
 
-			<div style="position: absolute; top: 0; left: 0; font-size: .7em;">ПаНКТаР ХоЙ! 22</div>
+			<div style="position: absolute; top: 0; left: 0; font-size: .7em;">ПаНКТаР ХоЙ!</div>
 
 			<!--КОНТЕНТ-->
 			<div class="content">
