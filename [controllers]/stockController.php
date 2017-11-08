@@ -351,26 +351,26 @@ class StockController extends MainController{
 		if($dateFromRequest && !Funx::isDateValid($dateFromRequest))
 			$dateFromRequest = $today;
 	
-			if($dateFromRequest && $dateFromRequest < $today)
-				$date = $dateFromRequest;
-			else
-				$date = $today;
-	
-	
-			$prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
-			$nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
-	
-			$MODEL['date'] = $date;
-			$MODEL['today'] = $today;
-			$MODEL['datePrev'] = $prevDate;
-			$MODEL['dateNext'] = $nextDate;
-	
-			$oiStrikes = OpenInterest::sortByType(OpenInterest::getByCurrencyAndDate($MODEL['currentCur']->code, $date));
-			//vd($oiStrikes);
-			$MODEL['oiStrikes'] = $oiStrikes;
-	
-	
-			Slonne::view('stock/openInterestData.php', $MODEL);
+        if($dateFromRequest && $dateFromRequest < $today)
+            $date = $dateFromRequest;
+        else
+            $date = $today;
+
+
+        $prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
+        $nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
+
+        $MODEL['date'] = $date;
+        $MODEL['today'] = $today;
+        $MODEL['datePrev'] = $prevDate;
+        $MODEL['dateNext'] = $nextDate;
+
+        $oiStrikes = OpenInterest::sortByType(OpenInterest::getByCurrencyAndDate($MODEL['currentCur']->code, $date));
+        //vd($oiStrikes);
+        $MODEL['oiStrikes'] = $oiStrikes;
+
+
+        Slonne::view('stock/openInterestData.php', $MODEL);
 	}
 	
 	

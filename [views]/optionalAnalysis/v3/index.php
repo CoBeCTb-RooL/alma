@@ -2,10 +2,19 @@
 $currencies = $MODEL['currencies'];
 $data = $MODEL['list2'];
 
+$date = $MODEL['date'];
+$datePrev = $MODEL['datePrev'];
+$dateNext = $MODEL['dateNext'];
+$today = $MODEL['today'];
+
+$graphicDateFrom = $MODEL['graphicDateFrom'];
+$graphicDateTo = $MODEL['graphicDateTo'];
+$graphicChosenCurrency = $MODEL['graphicChosenCurrency'];
+
 
 //vd($data);
 
-$todayData = $data[date('Y-m-d')];
+$todayData = $data[$date];
 
 //vd($todayData);
 ?>
@@ -37,13 +46,28 @@ $todayData = $data[date('Y-m-d')];
 <h1>Опционный анализ v3</h1>
 
 
+<div class="day-nav" style="margin: 0 0 14px 0; ">
+    <h2 class="current-date" style="margin: 0 0 5px 0;  padding: 0;">
+        <?=Funx::mkDate($date);?>
+        <?=($date == $today ? '<span class="today-lbl">(сегодня)</span>' : '' )?>
+    </h2>
+    <a href="?date=<?=$datePrev?>">&larr; Предыдущий</a>
+    <?php
+    if($dateNext)
+    {?>
+        <a href="?date=<?=$dateNext?>">Следующий &rarr;</a>
+        <?php
+    }?>
+</div>
+
+
 <?foreach($currencies as $cur)
 {?>
     <form class="form" action="/ru/optionalAnalysis/v3/submit" id="form-<?=$cur->code?>" target="frame7" onsubmit="if(confirm('Сохранить данные?')){return Opt.calc('<?=$cur->code?>')}; return false; ">
         <input type="hidden" name="currency" value="<?=$cur->code?>">
         <h3><?=$cur->code?></h3>
 
-        <input  name="date[<?=$cur->code?>]" id="date-<?=$cur->code?>" value="<?=date('Y-m-d')?>" style="width:70px" type="text">
+        <input  name="date[<?=$cur->code?>]" id="date-<?=$cur->code?>" value="<?=$date?>" style="width:70px" type="text">
         <img id="<?=$cur->code?>-calendar-btn" src="/js/calendar/calendar.jpg" style="border:0px;">
         <script>
             Calendar.setup({
@@ -106,11 +130,84 @@ $todayData = $data[date('Y-m-d')];
 }?>
 
 
+<hr>
 
 
+<script>
+    var Graphic = {
+        opts: {},
+
+        takeData: function(){
+            this.opts.dateFrom = $('#graphic-date-from').val()
+            this.opts.dateTo = $('#graphic-date-to').val()
+            this.opts.currency = $('#graphicCurrency').val()
+        },
+
+        draw: function(){
+            //alert(this.opts.currency)
+            var w = $('#graphic')
+
+            $.ajax({
+                url: '/ru/optionalAnalysis/v3/graphicAjax',
+                data: this.opts,
+                beforeSend: function(){w.css('opacity', .7)},
+                complete: function(){w.css('opacity', 1)},
+                success: function(data){
+                    w.find('.inner').html(data)
+                },
+                error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
+            })
+        },
+    }
 
 
+    $(document).ready(function(){
+        Graphic.takeData()
+        Graphic.draw()
+    })
+</script>
 
+
+<div id="graphic">
+    <form class="filter" onsubmit="Graphic.takeData(); Graphic.draw(); return false; ">
+        <select id="graphicCurrency">
+            <?
+            foreach($currencies as $cur)
+            {?>
+                <option value="<?=$cur->code?>" <?=$cur->code==$graphicChosenCurrency->code ? ' selected ' : ''?>><?=$cur->code?></option>
+            <?    
+            }?>
+        </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
+        from: <input  id="graphic-date-from" value="<?=$graphicDateFrom?>" style="width:70px" type="text">
+        <img id="graphic-date-from-btn" src="/js/calendar/calendar.jpg" style="border:0px;">
+        <script>
+            Calendar.setup({
+                inputField     :    "graphic-date-from",      // id of the input field
+                ifFormat       :    "%Y-%m-%d",       // format of the input field
+                showsTime      :    false,            // will display a time selector
+                button         :    "graphic-date-from-btn",   // trigger for the calendar (button ID)
+                singleClick    :    true,           // double-click mode
+                step           :    1                // show all years in drop-down boxes (instead of every other year as default)
+            });
+        </script>
+        &nbsp;&nbsp;&nbsp;
+        to: <input  id="graphic-date-to" value="<?=$graphicDateTo?>" style="width:70px" type="text">
+        <img id="graphic-date-to-btn" src="/js/calendar/calendar.jpg" style="border:0px;">
+        <script>
+            Calendar.setup({
+                inputField     :    "graphic-date-to",      // id of the input field
+                ifFormat       :    "%Y-%m-%d",       // format of the input field
+                showsTime      :    false,            // will display a time selector
+                button         :    "graphic-date-to-btn",   // trigger for the calendar (button ID)
+                singleClick    :    true,           // double-click mode
+                step           :    1                // show all years in drop-down boxes (instead of every other year as default)
+            });
+        </script>
+        <input type="submit" value="go">
+    </form>
+    <div class="inner"></div>
+</div>
 
 
 

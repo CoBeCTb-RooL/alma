@@ -1,8 +1,8 @@
 <?
-$data = $MODEL['list'];
+/*$data = $MODEL['list'];
 //vd($data);
 
-$data2 = $MODEL['list2'];
+$data2 = $MODEL['list2'];*/
 $data3 = $MODEL['list3'];
 
 //vd($data3);

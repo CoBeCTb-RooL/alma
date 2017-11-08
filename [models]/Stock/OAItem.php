@@ -60,8 +60,13 @@ class OAItem{
 			$sql.=" AND currency= '".strPrepare($params['currency']->code)."' ";
 		if($params['type'] )
 			$sql.=" AND `type`= '".strPrepare($params['type']->code)."' ";
-		if($params['dt'] )
-			$sql.=" AND DATE(dt)= DATE('".strPrepare($params['dt'])."') ";
+        if($params['dt'] )
+            $sql.=" AND DATE(dt)= DATE('".strPrepare($params['dt'])."') ";
+
+        if($params['dateFrom'] )
+            $sql.=" AND DATE(dt) >= DATE('".strPrepare($params['dateFrom'])."') ";
+        if($params['dateTo'] )
+            $sql.=" AND DATE(dt) <= DATE('".strPrepare($params['dateTo'])."') ";
 
 		if($params['orderBy'])
 			$sql .= " ORDER BY ".strPrepare($params['orderBy'])." ";
@@ -75,7 +80,7 @@ class OAItem{
 	}
 
 
-	public static function arrangeList($list)
+	/*public static function arrangeList($list)
 	{
 		$res = [];
 
@@ -83,7 +88,7 @@ class OAItem{
 			$res[substr($val->dt, 0, 10)][$val->currency->code][$val->type->code] = $val;
 
 		return $res;
-	}
+	}*/
 
 
 	public static function arrangeList2($list)
