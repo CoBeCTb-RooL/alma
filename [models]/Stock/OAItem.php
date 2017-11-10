@@ -3,6 +3,7 @@
 /*  for alma v3 */
 
 class OAItem{
+	public $id;
 	public $dt;
 	public $currency;
 	public $strikeType;
@@ -11,6 +12,8 @@ class OAItem{
 	public $premium;
 	public $forward;
 	public $result;
+	public $done;
+	public $isHistory;
 
 	/*public $currencyStr;
 	public $typeStr;*/
@@ -22,6 +25,7 @@ class OAItem{
 	{
 		if(count($arr))
 		{
+			$this->id = $arr['id'];
 			$this->dt = $arr['dt'];
 			$this->currency = Currency::code($arr['currency']);
 			$this->type = Type::code($arr['type']);
@@ -29,6 +33,8 @@ class OAItem{
 			$this->strike = $arr['strike'];
 			$this->premium = $arr['premium'];
 			$this->forward = $arr['forward'];
+			$this->done = $arr['done'];
+			$this->isHistory = $arr['isHistory'];
 
 			$this->calculate();
 		}
@@ -51,6 +57,18 @@ class OAItem{
 		return $res;
 	}
 
+
+    public function get($id)
+    {
+        $sql = "SELECT * FROM `".self::TBL."` WHERE id=".intval($id)." ";
+
+        //vd($sql);
+        $qr = DB::query($sql);
+        echo mysql_error();
+        $next = mysql_fetch_array($qr, MYSQL_ASSOC);
+
+        return new self($next);
+    }
 
 
 	public function getList($params)
@@ -176,7 +194,41 @@ class OAItem{
 
 		$this->result = $res;
 	}
-	
+
+
+
+
+    function update()
+    {
+        $sql = "
+			UPDATE `".self::TBL."` 
+			SET   
+            ".$this->innerAlterSql()."
+            WHERE id=".intval($this->id)." ";
+        //vd($sql);
+        DB::query($sql);
+        echo mysql_error();
+    }
+
+
+
+
+    function innerAlterSql()
+    {
+        $str="
+		  dt = '".strPrepare($this->dt)."'
+				, `strikeType` = '".strPrepare($this->strikeType->code)."'
+				, `type` = '".strPrepare($this->type->code)."'
+				, currency = '".strPrepare($this->currency->code)."'
+				, strike = '".floatval($this->strike)."'
+				, premium = '".floatval($this->premium)."'
+				, `result` = '".floatval($this->result)."'
+				, `forward` = '".floatval($this->forward)."'
+				, `done` = '".($this->done?1:0)."'
+				";
+
+        return $str;
+    }
 	
 		
 }

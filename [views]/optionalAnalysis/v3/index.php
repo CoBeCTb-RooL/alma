@@ -158,6 +158,26 @@ $todayData = $data[$date];
                 error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
             })
         },
+
+        switchDone: function(id){
+            var w = $('#graphic')
+            $.ajax({
+                url: '/ru/optionalAnalysis/v3/switchDoneAjax',
+                data: {id: id},
+                dataType: 'json',
+                beforeSend: function(){w.css('opacity', .7)},
+                complete: function(){w.css('opacity', 1)},
+                success: function(data){
+                    //w.find('.inner').html(data)
+                    if(!data.error)
+                    {
+                        $('#oa-row-'+id+'').removeClass('done-0').removeClass('done-1').addClass('done-'+data.doneToBe)
+                    }
+                    else alert(data.error)
+                },
+                error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
+            })
+        }
     }
 
 

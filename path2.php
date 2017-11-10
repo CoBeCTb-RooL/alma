@@ -83,48 +83,27 @@ else	#	в любом случае для админки
 	
 
 
-/*echo "!";
-$sql="select * from slonne__constants";
-$qr=mysql_query($sql);
-echo mysql_error();
-while($next = mysql_fetch_array($qr, MYSQL_ASSOC))
-{
-	//vd($next);
-	$arr = array('ru'=>$next['value'], 'en'=>$next['value_en'], 'tur'=>$next['value_tur']);
-	
-	$sql="insert into slonne__constants2 set name='".strPrepare($next['name'])."', value='".strPrepare(json_encode($arr))."'";
-	mysql_query($sql);
-	echo mysql_error();
-	vd($sql);
-}*/
-
-/*$a = Constants::get(1);
-vd($a);*/
-
-
 
 ob_start();
 $arr = NULL;
 
 
-
-
-$controllerPath = (IS_ADMINKA ? ADMIN_DIR.'/' : '').CONTROLLERS_DIR.'/'.$module.'.php'; 
+$controllerPath = (IS_ADMINKA ? ADMIN_DIR.'/' : '').CONTROLLERS_DIR.'/'.$module.'.php';
 
 if(!file_exists($controllerPath))
 	$module = 'errorController';
 
-define('CURRENT_CONTROLLER', $module);	
+define('CURRENT_CONTROLLER', $module);
 $controllerPath = (IS_ADMINKA && $module != 'errorController' ? ADMIN_DIR.'/' : '').CONTROLLERS_DIR.'/'.CURRENT_CONTROLLER.'.php';
 
 require_once($controllerPath);
 
-
 #	задача контроллеров - наполнить переменные $ACTION и $CONTROLLER(при желании)
 #	дальще просто вызывается соответствующий экшн соотв. контроллера:
-MainController::action($ACTION, $CONTROLLER ? $CONTROLLER : CURRENT_CONTROLLER);	
+MainController::action($ACTION, $CONTROLLER ? $CONTROLLER : CURRENT_CONTROLLER);
 
 $_GLOBALS['CONTENT']=ob_get_clean();
+$_GLOBALS['CONTENT'] = trim($_GLOBALS['CONTENT']); //   Х пойми
 
 
 $LAYOUT = '';
@@ -136,6 +115,6 @@ if(!$_GLOBALS['NO_LAYOUT'])
 if(IS_ADMINKA)
 	$_GLOBALS['TITLE'] = 'SLoNNe CMS';
 
-Slonne::layoutRender($LAYOUT); 
+Slonne::layoutRender($LAYOUT);
 
 ?>

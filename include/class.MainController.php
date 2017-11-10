@@ -7,7 +7,7 @@ class MainController{
 	{
 		global $_GLOBALS;
 		//vd($controller);
-		
+
 		if($controller)
 		{
 			if(class_exists($controller))
@@ -17,7 +17,7 @@ class MainController{
 					if(method_exists($controller, $action))
 					{
 						//eval($controller.'::'.$action.'();');
-						
+
 						call_user_func_array(''.$controller.'::'.$action.'', $params);
 					}
 					else

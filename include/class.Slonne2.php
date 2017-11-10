@@ -44,7 +44,7 @@ class Slonne
 	function layoutRender($layout)
 	{
 		global $_GLOBALS, $_CONFIG;
-		
+
 		//vd($layout);
 		if($layout)
 		{
@@ -58,7 +58,7 @@ class Slonne
 				echo $_GLOBALS['CONTENT'];
 			}
 		}
-			
+
 		else echo $_GLOBALS['CONTENT'];
 	}
 	

@@ -20,8 +20,11 @@
 	
 	<script type="text/javascript" src="/js/libs/highslide-4.1.13/highslide-full.packed.js"></script>
 	<link rel="stylesheet" type="text/css" href="/js/libs/highslide-4.1.13/highslide.css" />
-	
-	<!--стандартные js Slonne-->
+
+    <link rel="stylesheet" href="/js/font-awesome-4.7.0/css/font-awesome.min.css">
+
+
+    <!--стандартные js Slonne-->
 	<script type="text/javascript" src="/js/common.js"></script>
 	<!--кабинет-->
 	<script src="/js/slonne.cabinet.js" type="text/javascript"></script>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 //vd(Currency::$items);
 
 switch($_PARAMS[0])
@@ -24,11 +24,13 @@ switch($_PARAMS[0])
             $ACTION = 'v3statsAjax';
         if($_PARAMS[1] == 'graphicAjax')
             $ACTION = 'v3graphicAjax';
+        if($_PARAMS[1] == 'switchDoneAjax')
+            $ACTION = 'v3switchDoneAjax';
+
     break;
 
 
 }
-	
 
 
 
@@ -312,6 +314,36 @@ class optionalAnalysisController extends MainController{
 
 
         Slonne::view('optionalAnalysis/v3/graphicPartial.php', $MODEL);
+    }
+
+
+
+    public function v3switchDoneAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $res = [];
+        $error = null;
+
+
+        //vd($_REQUEST);
+        if ($item = OAItem::get($_REQUEST['id']) )
+        {
+           // vd($item);
+            $doneToBe = $item->done ? 0 : 1;
+            $item->done = $doneToBe;
+            //vd($item);
+            $item->update();
+        }
+        else
+            $error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
+
+
+        $res['error'] = $error;
+        $res['doneToBe'] = $doneToBe;
+
+        echo json_encode($res);
     }
 
 
