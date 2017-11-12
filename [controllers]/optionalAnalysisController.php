@@ -273,7 +273,7 @@ class optionalAnalysisController extends MainController{
         global $_GLOBALS, $_CONFIG;
         $_GLOBALS['NO_LAYOUT'] = true;
 
-        $list = OAItem::getList([/*'dt'=>date('Y-m-d'),*/ 'orderBy'=>'dt desc, currency,  `strikeType` desc', ]);
+        $list = OAItem::getList([ 'orderBy'=>'dt desc, currency,  `strikeType` desc, `type` asc', ]);
         //vd($list);
         /*$MODEL['list'] = OAItem::arrangeList($list);
         $MODEL['list2'] = OAItem::arrangeList2($list);*/
