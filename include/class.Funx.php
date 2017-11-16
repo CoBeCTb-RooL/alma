@@ -1,6 +1,30 @@
 <?php 
 class Funx
 {
+    static $daysOfWeek = [
+        0=>[
+            'short'=>'ВС'
+        ],
+        [
+            'short'=>'ПН'
+        ],
+        [
+            'short'=>'ВТ'
+        ],
+        [
+            'short'=>'СР'
+        ],
+        [
+            'short'=>'ЧТ'
+        ],
+        [
+            'short'=>'ПТ'
+        ],
+        [
+            'short'=>'СБ'
+        ],
+    ];
+
 	static $months=array(
 		'ru'=>array(
 			1=>array('Январь', 'Января'),
@@ -49,6 +73,12 @@ class Funx
 		
 		
 	);
+
+	function dayOfweek($date, $format='short')
+    {
+        $ret = self::$daysOfWeek[date('w', strtotime($date))][$format];
+        return $ret;
+    }
 
 				
 				
