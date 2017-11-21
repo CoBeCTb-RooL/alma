@@ -377,7 +377,7 @@ class optionalAnalysisController extends MainController{
             //'dt'=>date('Y-m-d'),
             'dateFrom'=>$dateFrom,
             'dateTo'=>$dateTo,
-            'currency'=>$currency,
+            //'currency'=>$currency,
             'orderBy'=>'id desc',
         ]);
 
