@@ -26,6 +26,8 @@ switch($_PARAMS[0])
             $ACTION = 'v3graphicAjax';
         if($_PARAMS[1] == 'switchDoneAjax')
             $ACTION = 'v3switchDoneAjax';
+        if($_PARAMS[1] == 'graphic2Ajax')
+            $ACTION = 'v3graphic2Ajax';
 
     break;
 
@@ -201,11 +203,15 @@ class optionalAnalysisController extends MainController{
         global $_GLOBALS, $_CONFIG;
         $_GLOBALS['NO_LAYOUT'] = true;
 
+        //vd($_REQUEST);
+        //return;
         $error = '';
 
         $cur = Currency::code($_REQUEST['currency']);
         $date = $_REQUEST['date'][$cur->code];
+        $data = $_REQUEST['data'][$cur->code];
         $forward = $_REQUEST['forward'][$cur->code];
+        $bunchTitle = trim($_REQUEST['bunchTitle'][$cur->code]);
 
 
         $strikes = $_REQUEST['strike'][$cur->code];
@@ -213,16 +219,25 @@ class optionalAnalysisController extends MainController{
 
         if(!$date && !$error)
             $error = 'Не указана дата!';
-        if(!$forward && !$error)
+        if(!$forward && !$error && $forward!=='0')
             $error = 'Не указан форвард!';
 
         $objs = [];
 
-
         if(!$error)
         {
+            $bunch = new StrikeBunch();
+            $bunch->title = $bunchTitle;
+            $bunch->status = Status2::code(Status2::NEUTRAL);
+            $bunch->dt = $date;
+            $bunch->data = $data;
+            $bunch->currency = $cur;
+            $bunch->insert();
+            //vd($bunch);
+
             foreach(StrikeTypeV3::$items as $st)
             {
+
                 foreach(Type::$items as $t)
                 {
                     $strike = $strikes[$st->code][$t->code];
@@ -231,6 +246,7 @@ class optionalAnalysisController extends MainController{
                     if($strike && $prem)
                     {
                         $item = new OAItem();
+                        $item->bunchId = $bunch->id;
                         $item->strike = $strike;
                         $item->currency = $cur;
                         $item->dt = $date;
@@ -249,7 +265,7 @@ class optionalAnalysisController extends MainController{
         }
 
         //vd($objs);
-        if(!count($objs))
+        if(!$error && !count($objs))
             $error = 'Не введены никакие данные.';
 
 
@@ -257,7 +273,7 @@ class optionalAnalysisController extends MainController{
         {
             foreach($objs as $item)
             {
-                $item->deletePreviousData();
+                //$item->deletePreviousData();
                 $item->insert();
             }
             echo '<script>window.top.Opt.drawStats(); </script>';
@@ -345,6 +361,48 @@ class optionalAnalysisController extends MainController{
 
         echo json_encode($res);
     }
+
+
+
+    public function v3graphic2Ajax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $dateFrom = $_REQUEST['dateFrom'];
+        $dateTo = $_REQUEST['dateTo'];
+        $currency = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_AUD);
+
+        $bunchesList = StrikeBunch::getList([
+            //'dt'=>date('Y-m-d'),
+            'dateFrom'=>$dateFrom,
+            'dateTo'=>$dateTo,
+            'currency'=>$currency,
+            'orderBy'=>'id desc',
+        ]);
+
+        foreach($bunchesList as $b)
+            $b->initItems();
+
+        //vd($bunchesList);
+
+        $bunchesListArranged = [];
+        foreach($bunchesList as $val)
+            $bunchesListArranged[substr($val->dt, 0, 10)][] = $val;
+
+
+        $MODEL['dateFrom'] = $dateFrom;
+        $MODEL['dateTo'] = $dateTo;
+        $MODEL['currency'] = $currency;
+        $MODEL['bunchesList'] = $bunchesList;
+        $MODEL['bunchesListArranged'] = $bunchesListArranged;
+
+
+        Slonne::view('optionalAnalysis/v3/graphic2Partial.php', $MODEL);
+    }
+
+
+
 
 
 }

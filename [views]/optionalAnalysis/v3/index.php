@@ -83,9 +83,11 @@ $todayData = $data[$date];
 
         <p>
         <div class="data-input" style="display: ; ">
-            <textarea class="global-ta" onkeyup="/*Opt.parseData2('<?=$cur->code?>')*/" style="height: 75px; "></textarea>
+            <textarea name="data[<?=$cur->code?>]" class="global-ta" onkeyup="/*Opt.parseData2('<?=$cur->code?>')*/" style="height: 75px; "></textarea>
         </div>
         <button type="button" style="font-size: 12px; padding: 3px 6px; " onclick="Opt.loadData2('<?=$cur->code?>', Opt.parseData2('<?=$cur->code?>')); Opt.calcAll('<?=$cur->code?>')">внести</button>
+
+        <p>Название пучка: <input type="text" name="bunchTitle[<?=$cur->code?>]" style="width: 170px; ">
 
         <p>Форвард: <input type="text" class="forward" name="forward[<?=$cur->code?>]" value="<?=$todayData[$cur->code][StrikeType::MAIN][Type::BUY]->forward?>">
 
@@ -159,6 +161,22 @@ $todayData = $data[$date];
             })
         },
 
+        draw2: function(){
+            //alert(this.opts.currency)
+            var w = $('#graphic')
+
+            $.ajax({
+                url: '/ru/optionalAnalysis/v3/graphic2Ajax',
+                data: this.opts,
+                beforeSend: function(){w.css('opacity', .7)},
+                complete: function(){w.css('opacity', 1)},
+                success: function(data){
+                    w.find('.inner').html(data)
+                },
+                error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
+            })
+        },
+
         switchDone: function(id){
             var w = $('#graphic')
             $.ajax({
@@ -183,13 +201,13 @@ $todayData = $data[$date];
 
     $(document).ready(function(){
         Graphic.takeData()
-        Graphic.draw()
+        Graphic.draw2()
     })
 </script>
 
 
 <div id="graphic">
-    <form class="filter" onsubmit="Graphic.takeData(); Graphic.draw(); return false; ">
+    <form class="filter" onsubmit="Graphic.takeData(); Graphic.draw2(); return false; ">
         <select id="graphicCurrency">
             <?
             foreach($currencies as $cur)

@@ -8,6 +8,7 @@ class OAItem{
 	public $currency;
 	public $strikeType;
 	public $type;
+    public $bunchId;
 	public $strike;
 	public $premium;
 	public $forward;
@@ -30,6 +31,7 @@ class OAItem{
 			$this->currency = Currency::code($arr['currency']);
 			$this->type = Type::code($arr['type']);
 			$this->strikeType = StrikeTypeV3::code($arr['strikeType']);
+            $this->bunchId = $arr['bunchId'];
 			$this->strike = $arr['strike'];
 			$this->premium = $arr['premium'];
 			$this->forward = $arr['forward'];
@@ -74,8 +76,10 @@ class OAItem{
 	public function getList($params)
 	{
 		$sql = "SELECT * FROM `".self::TBL."` WHERE 1 ";
-		if($params['currency'] )
-			$sql.=" AND currency= '".strPrepare($params['currency']->code)."' ";
+        if($params['bunchId'] )
+            $sql.=" AND bunchId= '".strPrepare($params['bunchId'])."' ";
+        if($params['currency'] )
+            $sql.=" AND currency= '".strPrepare($params['currency']->code)."' ";
 		if($params['type'] )
 			$sql.=" AND `type`= '".strPrepare($params['type']->code)."' ";
         if($params['dt'] )
@@ -142,6 +146,7 @@ class OAItem{
 				, `strikeType` = '".strPrepare($this->strikeType->code)."'
 				, `type` = '".strPrepare($this->type->code)."'
 				, currency = '".strPrepare($this->currency->code)."'
+				, bunchId = '".intval($this->bunchId)."'
 				, strike = '".floatval($this->strike)."'
 				, premium = '".floatval($this->premium)."'
 				, `result` = '".floatval($this->result)."'
@@ -220,6 +225,7 @@ class OAItem{
 				, `strikeType` = '".strPrepare($this->strikeType->code)."'
 				, `type` = '".strPrepare($this->type->code)."'
 				, currency = '".strPrepare($this->currency->code)."'
+				, bunchId = '".intval($this->bunchId)."'
 				, strike = '".floatval($this->strike)."'
 				, premium = '".floatval($this->premium)."'
 				, `result` = '".floatval($this->result)."'

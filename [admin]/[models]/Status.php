@@ -8,7 +8,7 @@ class Status{
 		, $name
 		;
 		
-	const UNSPECIFIED = '';	
+	const UNSPECIFIED = '';
 	const ACTIVE = 'active';
 	const INACTIVE = 'inactive';
 
@@ -28,7 +28,7 @@ class Status{
 	{
 		$arr[self::ACTIVE] = new Status(1, 'active', 'Активен');
 		$arr[self::INACTIVE] = new Status(2, 'inactive', 'Неактивен');
-		
+
 		self::$items = $arr;
 	}
 	

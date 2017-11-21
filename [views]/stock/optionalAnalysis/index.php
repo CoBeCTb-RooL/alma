@@ -107,6 +107,8 @@ $todayData = $data[date('Y-m-d')];
 				}?>
 			</table>
 		</fieldset>
+
+
 		<p>
 		Форвард: <input type="text" class="forward" name="forward[<?=$cur->code?>]" value="<?=$todayData[$cur->code][StrikeType::MAIN][Type::BUY]->forward?>">
 		<p>
