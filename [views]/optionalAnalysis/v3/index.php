@@ -254,9 +254,9 @@ $todayData = $data[$date];
 <?//vd($todayData);?>
 
 <!--<button onclick="Opt.drawStats()">обновить стат.</button>-->
-<h1>Статистика</h1>
+<!--<h1>Статистика</h1>
 <div class="stats-loading" style="display: none; ">Ща...</div>
-<div class="stats"></div>
+<div class="stats"></div>-->
 
 
 

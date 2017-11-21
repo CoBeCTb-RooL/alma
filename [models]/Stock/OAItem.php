@@ -180,6 +180,16 @@ class OAItem{
 		DB::query($sql);
 		echo mysql_error();
 	}
+
+
+
+    public function delete()
+    {
+        $sql = "DELETE FROM `".self::TBL."` where id=".$this->id;
+        //vd($sql);
+        DB::query($sql);
+        echo mysql_error();
+    }
 	
 	
 

@@ -126,6 +126,19 @@ class StrikeBunch{
 
         return $str;
     }
+
+
+    public function delete()
+    {
+        $this->initItems();
+        foreach($this->items as $val)
+            $val->delete();
+
+        $sql = "DELETE FROM `".self::TBL."` where id=".$this->id;
+        //vd($sql);
+        DB::query($sql);
+        echo mysql_error();
+    }
 	
 		
 }

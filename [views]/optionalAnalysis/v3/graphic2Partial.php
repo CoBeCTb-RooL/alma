@@ -60,7 +60,36 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
     .done-1 .lbl, .done-1 .val {text-decoration: line-through ; opacity: .4; }
     .done-0 .done-btn-0{display: none;}
     .done-1 .done-btn-1{display: none;}
+
+
+    .bunch-title{ font-weight: bold; }
+    .btns{margin: 5px 0 0 0; }
+    .btns .btn{font-size: .8em; }
 </style>
+
+
+<script>
+    function deleteItem(id){
+        if(!confirm('Удалить пучок?'))
+            return
+
+        var w = $('#bunch-'+id)
+
+        $.ajax({
+            url: '/ru/optionalAnalysis/v3/deleteBunch',
+            data: {id: id},
+            beforeSend: function(){w.css('opacity', .7)},
+            complete: function(){w.css('opacity', 1)},
+            success: function(data){
+                if(!data.error){
+                    w.fadeOut()
+                }
+                else alert(data.error)
+            },
+            error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
+        })
+    }
+</script>
 
 
 <div style="margin: 40px 0; ">
@@ -143,13 +172,12 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
 </div>
 
 
-<hr><hr><hr><hr><hr><hr>
+<hr>
 
 <div class="stats2">
     <h1>Статистика 2.0</h1>
 
     <?
-
     foreach($listAssembled as $date=>$bunches)
     {?>
         <h1><?=Funx::mkDate($date)?></h1>
@@ -158,7 +186,7 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
         {
             $rows = count($bunch->items);
             ?>
-            <div class="bunch bunch-<?=$bunch->id?>" style="margin: 0 0 3px 0; ">
+            <div class="bunch" id="bunch-<?=$bunch->id?>" style="margin: 0 0 3px 0; ">
 
                 <table border="1" class="t">
                     <tr style="border-bottom: 2px solid #000; ">
@@ -184,15 +212,11 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
                             <?
                             }?>
 
-
-
                             <?if(!($i%2))
                             {?>
                             <td rowspan="2" style="font-weight: bold; "><?=$item->strikeType->name?></td>
                             <?
                             }?>
-
-
 
                             <td class="cell-<?=$item->type->code?>" style="font-weight: bold; "><?=$item->type->code?></td>
                             <td class="cell-<?=$item->type->code?>"><?=$item->strike?></td>
@@ -203,8 +227,13 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
 
                             <?if(!$i)
                             {?>
-                                <td rowspan="<?=$rows?>">[<?=$bunch->id?>] <?=$bunch->title?></td>
-                                <?
+                            <td rowspan="<?=$rows?>" class="bunch-info">
+                                <div class="bunch-title">[<?=$bunch->id?>] <?=$bunch->title?></div>
+                                <div class="btns">
+                                    <a href="#" onclick="deleteItem(<?=$bunch->id?>); return false; " class="btn" style="color: red; "><i class="fa fa-times" aria-hidden="true"></i> удалить</a>
+                                </div>
+                            </td>
+                            <?
                             }?>
 
                         </tr>

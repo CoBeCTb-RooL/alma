@@ -28,6 +28,9 @@ switch($_PARAMS[0])
             $ACTION = 'v3switchDoneAjax';
         if($_PARAMS[1] == 'graphic2Ajax')
             $ACTION = 'v3graphic2Ajax';
+        if($_PARAMS[1] == 'deleteBunch')
+            $ACTION = 'v3deleteBunch';
+
 
     break;
 
@@ -378,7 +381,7 @@ class optionalAnalysisController extends MainController{
             'dateFrom'=>$dateFrom,
             'dateTo'=>$dateTo,
             //'currency'=>$currency,
-            'orderBy'=>'id desc',
+            'orderBy'=>'dt desc',
         ]);
 
         foreach($bunchesList as $b)
@@ -401,6 +404,29 @@ class optionalAnalysisController extends MainController{
         Slonne::view('optionalAnalysis/v3/graphic2Partial.php', $MODEL);
     }
 
+
+
+
+    public function v3deleteBunch()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $error = null;
+
+        //vd($_REQUEST);
+        if ($item = StrikeBunch::get($_REQUEST['id']) )
+        {
+            $item->delete();
+        }
+        else
+            $error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
+
+
+        $res['error'] = $error;
+
+        echo json_encode($res);
+    }
 
 
 
