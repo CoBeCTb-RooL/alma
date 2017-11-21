@@ -159,7 +159,6 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
             $rows = count($bunch->items);
             ?>
             <div class="bunch bunch-<?=$bunch->id?>">
-                <div class="title">[<?=$bunch->id?>] <?=$bunch->title?></div>
 
                 <table border="1" class="t">
                     <tr style="border-bottom: 2px solid #000; ">
@@ -170,6 +169,7 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
                         <th>Страйк</th>
                         <th>Премия</th>
                         <th>Результат</th>
+                        <th></th>
                         <th></th>
                     </tr>
                     <?
@@ -200,13 +200,19 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
                             <td class="cell-<?=$item->type->code?>"><?=$item->result?></td>
 
                             <td style="font-size: .7em; "><?=$item->id?></td>
+
+                            <?if(!$i)
+                            {?>
+                                <td rowspan="<?=$rows?>">[<?=$bunch->id?>] <?=$bunch->title?></td>
+                                <?
+                            }?>
+
                         </tr>
                     <?
                         $i++;
                     }?>
                 </table>
             </div>
-            <p>
         <?
         }?>
     <?
