@@ -77,7 +77,30 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
 
     .bunch-title{ font-weight: bold; }
     .btns{margin: 5px 0 0 0; text-align: left; }
-    .btns .btn{font-size: .8em; }
+    .btns .btn{font-size: .8em; text-decoration: none !important; }
+
+.status-lbl{border-radius: 3px; padding: 3px 5px; color: #fff; margin: 2px 0 0 0; }
+
+.bunch-status-<?=Status2::NEUTRAL?> {}
+.bunch-status-<?=Status2::NEUTRAL?> .status-lbl{background: #999; }
+.bunch-status-<?=Status2::NEUTRAL?> table{border-left: 6px solid #999; }
+
+.bunch-status-<?=Status2::DONE?> {text-decoration: line-through; opacity: .8; }
+.bunch-status-<?=Status2::DONE?> .status-lbl{background: #840084; }
+.bunch-status-<?=Status2::DONE?> table{border-left: 6px solid #840084; }
+
+
+.bunch-status-<?=Status2::ACTIVE?> .status-lbl{background: green; }
+.bunch-status-<?=Status2::ACTIVE?> table{border-left: 6px solid #3cae27; }
+
+
+    <?
+    foreach(Status2::$items as $s)
+    {?>
+    .bunch-status-<?=$s->code?> {}
+    .bunch-status-<?=$s->code?> .bunch-status-btn-<?=$s->code?>{font-weight: bold;  }
+    <?
+    }?>
 </style>
 
 
@@ -102,6 +125,33 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
             error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
         })
     }
+
+
+
+    function setBunchStatus(id, status){
+        var w = $('#bunch-'+id)
+
+        $.ajax({
+            url: '/ru/optionalAnalysis/v3/setBunchStatus',
+            data: {id: id, status: status},
+            dataType: 'json',
+            beforeSend: function(){w.css('opacity', .7)},
+            complete: function(){w.css('opacity', 1)},
+            success: function(data){
+                if(!data.error){
+                    //w.fadeOut()
+                    //alert(data.status.code)
+                    w.removeAttr('class')
+                    w.addClass('bunch-status-'+data.status.code)
+
+                    w.find('.status-lbl').html(data.status.title)
+                }
+                else alert(data.error)
+            },
+            error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
+        })
+    }
+
 </script>
 
 
@@ -192,6 +242,10 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
 
 <hr>
 
+
+
+
+
 <div class="stats2">
     <h1>Статистика 2.0</h1>
 
@@ -204,7 +258,7 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
         {
             $rows = count($bunch->items);
             ?>
-            <div class="bunch" id="bunch-<?=$bunch->id?>" style="margin: 0 0 3px 0; ">
+            <div class="bunch bunch-status-<?=$bunch->status->code?>" id="bunch-<?=$bunch->id?>" style="margin: 0 0 3px 0; ">
 
                 <table border="1" class="t">
                     <tr style="border-bottom: 2px solid #000; ">
@@ -222,7 +276,7 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                     $i=0;
                     foreach($bunch->items as $item)
                     {?>
-                        <tr>
+                        <tr >
                             <?if(!$i)
                             {?>
                             <td rowspan="<?=$rows?>" style="font-weight: bold; font-size: 1.2em; "><?=$item->currency->code?></td>
@@ -245,10 +299,21 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
 
                             <?if(!$i)
                             {?>
-                            <td rowspan="<?=$rows?>" class="bunch-info">
-                                <div class="bunch-title">[<?=$bunch->id?>] <?=$bunch->title?></div>
+                            <td rowspan="<?=$rows?>" class="bunch-info" >
+                                <div class="bunch-title">
+                                    [<?=$bunch->id?>] <?=$bunch->title?>
+                                    <div style="font-size: .7em; color: 777; " class="status-lbl"><?=$bunch->status->title?></div>
+                                </div>
                                 <div class="btns">
                                     <a href="#" onclick="deleteItem(<?=$bunch->id?>); return false; " class="btn" style="color: red; "><i class="fa fa-times" aria-hidden="true"></i> удалить</a>
+                                    <p>
+
+                                    <?
+                                    foreach(Status2::$items as $s)
+                                    {?>
+                                    <div><a href="#" class="btn bunch-status-btn-<?=$s->code?>" onclick="setBunchStatus(<?=$bunch->id?>, '<?=$s->code?>'); return false; " ><?=$s->title?></a></div>
+                                    <?
+                                    }?>
                                 </div>
                             </td>
                             <?

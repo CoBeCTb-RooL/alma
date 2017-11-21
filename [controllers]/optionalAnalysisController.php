@@ -30,6 +30,9 @@ switch($_PARAMS[0])
             $ACTION = 'v3graphic2Ajax';
         if($_PARAMS[1] == 'deleteBunch')
             $ACTION = 'v3deleteBunch';
+        if($_PARAMS[1] == 'setBunchStatus')
+            $ACTION = 'v3setBunchStatus';
+
 
 
     break;
@@ -424,6 +427,41 @@ class optionalAnalysisController extends MainController{
 
 
         $res['error'] = $error;
+
+        echo json_encode($res);
+    }
+
+
+
+
+    public function v3setBunchStatus()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $res = [];
+        $error = null;
+
+        //vd($_REQUEST);
+        if ($item = StrikeBunch::get($_REQUEST['id']) )
+        {
+            // vd($item);
+            $statusToBe = Status2::code($_REQUEST['status']);
+            if($statusToBe)
+            {
+                $item->status = $statusToBe;
+                //vd($item);
+                $item->update();
+            }
+            else
+                $error = 'Ошибка! Непонятный статус ['.$_REQUEST['status'].']';
+        }
+        else
+            $error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
+
+
+        $res['error'] = $error;
+        $res['status'] = $statusToBe;
 
         echo json_encode($res);
     }
