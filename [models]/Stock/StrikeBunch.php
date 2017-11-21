@@ -77,10 +77,22 @@ class StrikeBunch{
 
 	function initItems()
     {
-        $this->items = OAItem::getList([
-                'bunchId' =>$this->id,
-                'orderBy' => 'strikeType, type',
-            ]);
+        if(!$this->items)
+            $this->items = OAItem::getList([
+                    'bunchId' =>$this->id,
+                    'orderBy' => 'strikeType, type',
+                ]);
+    }
+
+
+    public function row($strikeType, $type)
+    {
+        if(!$this->items)
+            $this->initItems();
+
+        foreach($this->items as $item)
+            if($item->strikeType->code == $strikeType && $item->type->code == $type)
+                return $item;
     }
 
 

@@ -8,6 +8,14 @@ $list = $MODEL['bunchesList'];
 $listAssembled = $MODEL['bunchesListArranged'];
 
 
+$listAssembledForGraphic = $listAssembled;
+foreach ($listAssembledForGraphic as $dt=>$bunches)
+    foreach($bunches as $key=>$bunch)
+        if($bunch->currency->code != $currency->code)
+            unset($listAssembledForGraphic[$dt][$key]);
+
+
+
 #   рассчитываем массив дат (диапазон)
 $dates = [];
 $d = $dateFrom;
@@ -20,15 +28,17 @@ while($d <= $dateTo)
 
 #   высчитываем макс значение страйка по мэйну (например, по баю)
 $maxStrike=0;
-foreach($list as $val)
-    if($val->strikeType->code == StrikeTypeV3::MAIN && $val->type->code == Type::BUY)
-        $maxStrike = $val->strike >= $maxStrike ? $val->strike : $maxStrike;
+foreach($list as $bunch)
+    foreach($bunch->items as $val)
+        if($val->strikeType->code == StrikeTypeV3::MAIN && $val->type->code == Type::BUY)
+            $maxStrike = $val->strike >= $maxStrike ? $val->strike : $maxStrike;
 
 #   высчитываем мин значение страйка по мэйну (например, по баю)
 $minStrike=0;
-foreach($list as $val)
-    if($val->strikeType->code == StrikeTypeV3::MAIN && $val->type->code == Type::BUY)
-        $minStrike = $val->strike <= $minStrike || !$minStrike ? $val->strike : $minStrike;
+foreach($list as $bunch)
+    foreach($bunch->items as $val)
+        if($val->strikeType->code == StrikeTypeV3::MAIN && $val->type->code == Type::BUY)
+            $minStrike = $val->strike <= $minStrike || !$minStrike ? $val->strike : $minStrike;
 
 /*vd($maxStrike);
 vd($minStrike);*/
@@ -38,15 +48,18 @@ vd($minStrike);*/
 <style>
 .graphic-tbl{border-collapse: collapse; 100% }
 .graphic-tbl td{border: 1px solid #ccc ; }
-td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;  padding: 0; margin: 0;   border-top: none; }
+td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;  padding: 0; margin: 0;   border-top: none; }
 
-.stolbec-wrapper{height: 100%; border: 0px solid green; display:block; position: relative;  vertical-align: bottom; }
-.stolbec-wrapper .inner2{display: inline-block; border: 0px solid red; vertical-align: bottom;  width: 10px; background: #88b0bf; position: absolute; bottom: 0;  padding: 0 0  20px 0; box-sizing: border-box;    }
-.strike-lbl{ position: absolute; top: -20px; left: -10px; font-size: .8em; font-weight: bold; }
+.stolbec-wrapper{height: 100%; width: 30px; border: 0px solid green; display:inline-block; position: relative;  vertical-align: bottom; border: 0px solid red;  }
+.stolbec-wrapper .inner2{display: inline-block; border: 0px solid green; vertical-align: bottom;  width: 10px; background: #88b0bf; position: absolute; bottom: 0;  padding: 0 0  20px 0; box-sizing: border-box;    }
+.stolbec-wrapper:hover .inner2{background: #55bf64;  }
+.info{display: none; position: absolute; left: 15px; bottom: 0px;  background: oldlace; border: 1px solid #ccc; border-radius: 2px;  font-size: .9em; z-index: 10; font-size: .8em; padding: 3px 6px 3px 3px ; width: 150px; }
+.stolbec-wrapper:hover .inner2 .info{display: inline-block; }
+.strike-lbl{ position: absolute; top: -34px; left: -10px; font-size: .8em; font-weight: bold; }
 
-.info{display: none; position: absolute; left: 30px; top: -30px;  background: oldlace; border: 1px solid #ccc; border-radius: 2px;  font-size: .9em; z-index: 10; font-size: .8em; padding: 3px 6px 3px 3px ; width: 150px; }
-.stolb:hover{background: #eee; }
-.stolb:hover .info{display: inline-block; }
+
+.stolb:hover{/*background: #eee;*/ }
+/*.stolb:hover .info{display: inline-block; }*/
 .day-of-week-lbl{font-size: 1.3em; font-weight: bold; }
     .row{text-align: left; border: 0px solid red; padding: 1px ;  cursor: pointer; }
     .row:hover{background: #dadbff; }
@@ -63,7 +76,7 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
 
 
     .bunch-title{ font-weight: bold; }
-    .btns{margin: 5px 0 0 0; }
+    .btns{margin: 5px 0 0 0; text-align: left; }
     .btns .btn{font-size: .8em; }
 </style>
 
@@ -97,28 +110,24 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
         <tr>
             <?
             foreach($dates as $dt)
-            {
-                $data = $listAssembled[$dt][$currency->code];
-                $main = $data[StrikeTypeV3::MAIN][Type::BUY];
-                $heightPercent = $main->strike * 100 / $maxStrike;
-
-                $pseudoMax = ($maxStrike-$minStrike)*1000;
-                $pseudoCurrent = ($main->strike - $minStrike)*1000;
-                $heightPercent2 = $pseudoCurrent * 100 / $pseudoMax;
-                    //vd($heightPercent2);
-
-                //echo '<hr>';
-                ?>
+            {?>
                 <td class="stolb">
+                <?
+                foreach($listAssembledForGraphic[$dt] as $bunch)
+                {
+                    $main = $bunch->row(StrikeTypeV3::MAIN, Type::BUY);
 
-                    <?
+                    $pseudoMax = ($maxStrike-$minStrike)*1000;
+                    $pseudoCurrent = ($main->strike - $minStrike)*1000;
+                    $heightPercent2 = $pseudoCurrent * 100 / $pseudoMax;
+
                     $rows = [
-                            'OS'=>$data[StrikeTypeV3::OUTER][Type::SELL],
-                            'IS'=>$data[StrikeTypeV3::INNER][Type::SELL],
-                            'MB'=>$data[StrikeTypeV3::MAIN][Type::BUY],
-                            'MS'=>$data[StrikeTypeV3::MAIN][Type::SELL],
-                            'IB'=>$data[StrikeTypeV3::INNER][Type::BUY],
-                            'OB'=>$data[StrikeTypeV3::OUTER][Type::BUY],
+                        'OS'=>$bunch->row(StrikeTypeV3::OUTER, Type::SELL),
+                        'IS'=>$bunch->row(StrikeTypeV3::INNER, Type::SELL),
+                        'MB'=>$bunch->row(StrikeTypeV3::MAIN, Type::BUY),
+                        'MS'=>$bunch->row(StrikeTypeV3::MAIN, Type::SELL),
+                        'IB'=>$bunch->row(StrikeTypeV3::INNER, Type::BUY),
+                        'OB'=>$bunch->row(StrikeTypeV3::OUTER, Type::BUY),
                     ];
                     ?>
 
@@ -129,8 +138,14 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
                         <div class="stolbec-wrapper">
                             <div class="inner2" style="height: <?= $heightPercent2 ?>%;   ">
 
-                                <div class="strike-lbl"><?= $main->strike ?></div>
+                                <div class="strike-lbl">
+                                    [<?=$bunch->currency->code?>]<br>
+                                    <?= $main->strike ?>
+                                </div>
                                 <div class="info">
+                                    <div class="title" style="font-size: 1.3em; text-align: left; margin: 0 0 6px 0; ">
+                                        [<?=$bunch->currency->code?>][<?=$bunch->id?>] <?=$bunch->title?>
+                                    </div>
                                     <?
                                     foreach($rows as $lbl=>$item)
                                     {?>
@@ -138,10 +153,10 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
                                             <div class="lbl"><?=$lbl?>: </div>
                                             <div class="val"><?=$item->result?></div>
                                             <!--<div class="done-wrapper">
-                                    <a href="#" class="done done-btn-1" onclick="Graphic.switchDone(<?=$item->id?>); return false; "><i class="fa fa-square-o" aria-hidden="true"></i></a>
-                                    <a href="#" class="done-btn-0" onclick="Graphic.switchDone(<?=$item->id?>); return false; "><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
-                                    </a>
-                                </div>-->
+                                <a href="#" class="done done-btn-1" onclick="Graphic.switchDone(<?=$item->id?>); return false; "><i class="fa fa-square-o" aria-hidden="true"></i></a>
+                                <a href="#" class="done-btn-0" onclick="Graphic.switchDone(<?=$item->id?>); return false; "><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
+                                </a>
+                            </div>-->
                                         </div>
                                         <?
                                     }?>
@@ -149,8 +164,11 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
                                 </div>
                             </div>
                         </div>
+                        <?
+                        }?>
                     <?
                     }?>
+
 
                 </td>
                 <?
