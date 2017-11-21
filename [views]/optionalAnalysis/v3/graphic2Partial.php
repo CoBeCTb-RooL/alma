@@ -158,7 +158,7 @@ td.stolb{width: 80px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;
         {
             $rows = count($bunch->items);
             ?>
-            <div class="bunch bunch-<?=$bunch->id?>">
+            <div class="bunch bunch-<?=$bunch->id?>" style="margin: 0 0 3px 0; ">
 
                 <table border="1" class="t">
                     <tr style="border-bottom: 2px solid #000; ">
