@@ -8,10 +8,11 @@ $list = $MODEL['bunchesList'];
 $listAssembled = $MODEL['bunchesListArranged'];
 
 
+#   какие именно пучки отображать на графике
 $listAssembledForGraphic = $listAssembled;
 foreach ($listAssembledForGraphic as $dt=>$bunches)
     foreach($bunches as $key=>$bunch)
-        if($bunch->currency->code != $currency->code)
+        if($bunch->currency->code != $currency->code || !in_array($bunch->status->code, [Status2::NEUTRAL, Status2::ACTIVE]))
             unset($listAssembledForGraphic[$dt][$key]);
 
 
@@ -53,6 +54,8 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
 .stolbec-wrapper{height: 100%; width: 30px; border: 0px solid green; display:inline-block; position: relative;  vertical-align: bottom; border: 0px solid red;  }
 .stolbec-wrapper .inner2{display: inline-block; border: 0px solid green; vertical-align: bottom;  width: 10px; background: #88b0bf; position: absolute; bottom: 0;  padding: 0 0  20px 0; box-sizing: border-box;    }
 .stolbec-wrapper:hover .inner2{background: #55bf64;  }
+.stolbec-wrapper .inner2.stolbec-status-<?=Status2::NEUTRAL?>{background: #999; }
+.stolbec-wrapper .inner2.stolbec-status-<?=Status2::ACTIVE?>{background: #00b600; }
 .info{display: none; position: absolute; left: 15px; bottom: 0px;  background: oldlace; border: 1px solid #ccc; border-radius: 2px;  font-size: .9em; z-index: 10; font-size: .8em; padding: 3px 6px 3px 3px ; width: 150px; }
 .stolbec-wrapper:hover .inner2 .info{display: inline-block; }
 .strike-lbl{ position: absolute; top: -34px; left: -10px; font-size: .8em; font-weight: bold; }
@@ -186,7 +189,7 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                     if($main)
                     {?>
                         <div class="stolbec-wrapper">
-                            <div class="inner2" style="height: <?= $heightPercent2 ?>%;   ">
+                            <div class="inner2 stolbec-status-<?=$bunch->status->code?>" style="height: <?= $heightPercent2 ?>%;   ">
 
                                 <div class="strike-lbl">
                                     [<?=$bunch->currency->code?>]<br>
@@ -195,6 +198,7 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                                 <div class="info">
                                     <div class="title" style="font-size: 1.3em; text-align: left; margin: 0 0 6px 0; ">
                                         [<?=$bunch->currency->code?>][<?=$bunch->id?>] <?=$bunch->title?>
+                                        <div class="bunch-status"><?=$bunch->status->code?></div>
                                     </div>
                                     <?
                                     foreach($rows as $lbl=>$item)
