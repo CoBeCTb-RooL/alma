@@ -328,14 +328,14 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                             <td rowspan="<?=$rows?>" class="bunch-info" style="width: 400px; ">
                                 <div class="bunch-title-wrapper" style="text-align: left; ">
                                     [<?=$bunch->id?>]
-                                    <span>
+                                    <form action="" onsubmit="saveBunchTitle(<?=$bunch->id?>, $('#bunch-<?=$bunch->id?> .bunch-title-input-wrapper input').val()); return false; " style="display: inline-block; ">
                                         <span class="bunch-title" style="cursor: default; " ondblclick="$('#bunch-<?=$bunch->id?> .bunch-title-input-wrapper').slideToggle('fast')"><?=$bunch->title?$bunch->title:'нет названия'?></span>
                                         <span class="bunch-title-input-wrapper" style="display: none; ">
                                             <input type="text" value="<?=htmlspecialchars($bunch->title)?>">
-                                            <button onclick="saveBunchTitle(<?=$bunch->id?>, $('#bunch-<?=$bunch->id?> .bunch-title-input-wrapper input').val())">ok</button>
+                                            <button type="submit">ok</button>
                                             <a href="#" onclick="$('#bunch-<?=$bunch->id?> .bunch-title-input-wrapper').slideUp('fast'); return false; ">отмена</a>
                                         </span>
-                                    </span>
+                                    </form>
                                     <br>
                                     <div style="font-size: .7em; display: inline-block; " class="status-lbl"><?=$bunch->status->title?></div>
                                 </div>
