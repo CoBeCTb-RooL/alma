@@ -106,6 +106,12 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
     .bunch-status-<?=$s->code?> .bunch-status-btn-<?=$s->code?>{font-weight: bold;  }
     <?
     }?>
+
+.row-done-1 .to-be-line-throughed{ text-decoration: line-through; color: #999;  }
+
+.row-done-0 .row-done-0-btn{display: none;}
+.row-done-1 .row-done-1-btn{display: none;}
+
 </style>
 
 
@@ -297,12 +303,13 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                         <th>Результат</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                     <?
                     $i=0;
                     foreach($bunch->items as $item)
                     {?>
-                        <tr >
+                        <tr class="roww row-done-<?=$item->done?>" id="row-<?=$item->id?>">
                             <?if(!$i)
                             {?>
                             <td rowspan="<?=$rows?>" style="font-weight: bold; font-size: 1.2em; "><?=$item->currency->code?></td>
@@ -316,12 +323,18 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                             <?
                             }?>
 
-                            <td class="cell-<?=$item->type->code?>" style="font-weight: bold; "><?=$item->type->code?></td>
-                            <td class="cell-<?=$item->type->code?>"><?=$item->strike?></td>
-                            <td class="cell-<?=$item->type->code?>"><?=$item->premium?></td>
-                            <td class="cell-<?=$item->type->code?>"><?=$item->result?></td>
+                            <td class="cell-<?=$item->type->code?> to-be-line-throughed" style="font-weight: bold; "><?=$item->type->code?></td>
+                            <td class="cell-<?=$item->type->code?> to-be-line-throughed"><?=$item->strike?></td>
+                            <td class="cell-<?=$item->type->code?> to-be-line-throughed"><?=$item->premium?></td>
+                            <td class="cell-<?=$item->type->code?> to-be-line-throughed"><?=$item->result?></td>
 
                             <td style="font-size: .7em; "><?=$item->id?></td>
+                            <td class="done-wrapper">
+                                <a href="#" class="row-done-btn row-done-1-btn" onclick="Graphic.switchDone(<?=$item->id?>); return false; "><i class="fa fa-square-o" aria-hidden="true"></i>
+                                </a>
+                                <a href="#" class="row-done-btn row-done-0-btn" onclick="Graphic.switchDone(<?=$item->id?>); return false; "><i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                </a>
+                            </td>
 
                             <?if(!$i)
                             {?>

@@ -179,17 +179,20 @@ $todayData = $data[$date];
 
         switchDone: function(id){
             var w = $('#graphic')
+            var w2 = $('#row-'+id+'')
             $.ajax({
                 url: '/ru/optionalAnalysis/v3/switchDoneAjax',
                 data: {id: id},
                 dataType: 'json',
-                beforeSend: function(){w.css('opacity', .7)},
-                complete: function(){w.css('opacity', 1)},
+                beforeSend: function(){w.css('opacity', .7); w2.css('opacity', .7)},
+                complete: function(){w.css('opacity', 1); w2.css('opacity', 1)},
                 success: function(data){
                     //w.find('.inner').html(data)
                     if(!data.error)
                     {
                         $('#oa-row-'+id+'').removeClass('done-0').removeClass('done-1').addClass('done-'+data.doneToBe)
+
+                        $('#row-'+id+'').removeClass('row-done-0').removeClass('row-done-1').addClass('roww').addClass('row-done-'+data.doneToBe)
                     }
                     else alert(data.error)
                 },
