@@ -84,11 +84,13 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
 
 .status-lbl{border-radius: 3px; padding: 3px 5px; color: #fff; margin: 2px 0 0 0; }
 
+.bunch{display: inline-block; }
+
 .bunch-status-<?=Status2::NEUTRAL?> {}
 .bunch-status-<?=Status2::NEUTRAL?> .status-lbl{background: #999; }
 .bunch-status-<?=Status2::NEUTRAL?> table{border-left: 6px solid #999; }
 
-.bunch-status-<?=Status2::DONE?> {text-decoration: line-through; opacity: .8; }
+.bunch-status-<?=Status2::DONE?> {/*text-decoration: line-through;*/ opacity: 1; background: #eee1ff;  }
 .bunch-status-<?=Status2::DONE?> .status-lbl{background: #840084; }
 .bunch-status-<?=Status2::DONE?> table{border-left: 6px solid #840084; }
 
@@ -145,9 +147,29 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                     //w.fadeOut()
                     //alert(data.status.code)
                     w.removeAttr('class')
-                    w.addClass('bunch-status-'+data.status.code)
+                    w.addClass('bunch').addClass('bunch-status-'+data.status.code)
 
                     w.find('.status-lbl').html(data.status.title)
+                }
+                else alert(data.error)
+            },
+            error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
+        })
+    }
+
+
+    function saveBunchTitle(id, title){
+        var w = $('#bunch-'+id)
+        $.ajax({
+            url: '/ru/optionalAnalysis/v3/saveBunchTitle',
+            data: {id: id, title: title},
+            dataType: 'json',
+            beforeSend: function(){w.css('opacity', .7)},
+            complete: function(){w.css('opacity', 1)},
+            success: function(data){
+                if(!data.error){
+                    w.find('.bunch-title').html(title!='' ? title : 'нет названия')
+                    w.find('.bunch-title-input-wrapper').slideUp('fast')
                 }
                 else alert(data.error)
             },
@@ -303,10 +325,19 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
 
                             <?if(!$i)
                             {?>
-                            <td rowspan="<?=$rows?>" class="bunch-info" >
-                                <div class="bunch-title">
-                                    [<?=$bunch->id?>] <?=$bunch->title?>
-                                    <div style="font-size: .7em; color: 777; " class="status-lbl"><?=$bunch->status->title?></div>
+                            <td rowspan="<?=$rows?>" class="bunch-info" style="width: 400px; ">
+                                <div class="bunch-title-wrapper" style="text-align: left; ">
+                                    [<?=$bunch->id?>]
+                                    <span>
+                                        <span class="bunch-title" style="cursor: default; " ondblclick="$('#bunch-<?=$bunch->id?> .bunch-title-input-wrapper').slideToggle('fast')"><?=$bunch->title?$bunch->title:'нет названия'?></span>
+                                        <span class="bunch-title-input-wrapper" style="display: none; ">
+                                            <input type="text" value="<?=htmlspecialchars($bunch->title)?>">
+                                            <button onclick="saveBunchTitle(<?=$bunch->id?>, $('#bunch-<?=$bunch->id?> .bunch-title-input-wrapper input').val())">ok</button>
+                                            <a href="#" onclick="$('#bunch-<?=$bunch->id?> .bunch-title-input-wrapper').slideUp('fast'); return false; ">отмена</a>
+                                        </span>
+                                    </span>
+                                    <br>
+                                    <div style="font-size: .7em; display: inline-block; " class="status-lbl"><?=$bunch->status->title?></div>
                                 </div>
                                 <div class="btns">
                                     <a href="#" onclick="deleteItem(<?=$bunch->id?>); return false; " class="btn" style="color: red; "><i class="fa fa-times" aria-hidden="true"></i> удалить</a>

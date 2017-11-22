@@ -32,6 +32,8 @@ switch($_PARAMS[0])
             $ACTION = 'v3deleteBunch';
         if($_PARAMS[1] == 'setBunchStatus')
             $ACTION = 'v3setBunchStatus';
+        if($_PARAMS[1] == 'saveBunchTitle')
+            $ACTION = 'v3saveBunchTitle';
 
 
 
@@ -462,6 +464,31 @@ class optionalAnalysisController extends MainController{
 
         $res['error'] = $error;
         $res['status'] = $statusToBe;
+
+        echo json_encode($res);
+    }
+
+
+
+
+    public function v3saveBunchTitle()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $res = [];
+        $error = null;
+
+        if ($item = StrikeBunch::get($_REQUEST['id']) )
+        {
+            $item->title = trim($_REQUEST['title']);
+            $item->update();
+        }
+        else
+            $error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
+
+        $res['error'] = $error;
+        $res['title'] = $item->title;
 
         echo json_encode($res);
     }
