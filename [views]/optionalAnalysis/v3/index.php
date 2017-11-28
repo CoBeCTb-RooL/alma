@@ -211,7 +211,7 @@ $todayData = $data[$date];
 
 <div id="graphic">
     <form class="filter" onsubmit="Graphic.takeData(); Graphic.draw2(); return false; ">
-        <select id="graphicCurrency">
+        <select id="graphicCurrency" onchange="Graphic.takeData(); Graphic.draw2();">
             <?
             foreach($currencies as $cur)
             {?>

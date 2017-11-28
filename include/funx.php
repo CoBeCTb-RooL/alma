@@ -168,6 +168,15 @@ function getOnclick($page, $onclick)
 
 
 
+function strikeVal($val)
+{
+    $str = $val;
+    $str = number_format($str,"4");
+    return $str;
+}
+
+
+
 
 
 ?>

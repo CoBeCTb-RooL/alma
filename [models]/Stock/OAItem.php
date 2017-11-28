@@ -32,8 +32,8 @@ class OAItem{
 			$this->type = Type::code($arr['type']);
 			$this->strikeType = StrikeTypeV3::code($arr['strikeType']);
             $this->bunchId = $arr['bunchId'];
-			$this->strike = $arr['strike'];
-			$this->premium = $arr['premium'];
+			$this->strike = strikeVal($arr['strike']);
+			$this->premium = strikeVal($arr['premium']);
 			$this->forward = $arr['forward'];
 			$this->done = $arr['done'];
 			$this->isHistory = $arr['isHistory'];
@@ -202,12 +202,14 @@ class OAItem{
 		elseif($this->type->code == Type::SELL)
 			$res = $this->strike + $this->premium;
 
+		#   for AUD
 		if($this->currency->code == Currency::CODE_AUD)
             $res += $this->forward;
 		else
             $res -= $this->forward;
 
-		$this->result = $res;
+
+		$this->result = strikeVal($res);
 	}
 
 
@@ -245,6 +247,11 @@ class OAItem{
 
         return $str;
     }
+
+
+
+
+
 	
 		
 }

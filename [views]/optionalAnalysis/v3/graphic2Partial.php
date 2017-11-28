@@ -15,6 +15,7 @@ foreach ($listAssembledForGraphic as $dt=>$bunches)
         if($bunch->currency->code != $currency->code || !in_array($bunch->status->code, [Status2::NEUTRAL, Status2::ACTIVE]))
             unset($listAssembledForGraphic[$dt][$key]);
 
+//vd($listAssembledForGraphic);
 
 
 #   рассчитываем массив дат (диапазон)
@@ -30,16 +31,18 @@ while($d <= $dateTo)
 #   высчитываем макс значение страйка по мэйну (например, по баю)
 $maxStrike=0;
 foreach($list as $bunch)
-    foreach($bunch->items as $val)
-        if($val->strikeType->code == StrikeTypeV3::MAIN && $val->type->code == Type::BUY)
-            $maxStrike = $val->strike >= $maxStrike ? $val->strike : $maxStrike;
+    if($bunch->currency->code == $currency->code)
+        foreach($bunch->items as $val)
+            if($val->strikeType->code == StrikeTypeV3::MAIN && $val->type->code == Type::BUY)
+                $maxStrike = $val->strike >= $maxStrike ? $val->strike : $maxStrike;
 
 #   высчитываем мин значение страйка по мэйну (например, по баю)
 $minStrike=0;
 foreach($list as $bunch)
-    foreach($bunch->items as $val)
-        if($val->strikeType->code == StrikeTypeV3::MAIN && $val->type->code == Type::BUY)
-            $minStrike = $val->strike <= $minStrike || !$minStrike ? $val->strike : $minStrike;
+    if($bunch->currency->code == $currency->code)
+        foreach($bunch->items as $val)
+            if($val->strikeType->code == StrikeTypeV3::MAIN && $val->type->code == Type::BUY)
+                $minStrike = $val->strike <= $minStrike || !$minStrike ? $val->strike : $minStrike;
 
 /*vd($maxStrike);
 vd($minStrike);*/
@@ -59,6 +62,8 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
 .info{display: none; position: absolute; left: 15px; bottom: 0px;  background: oldlace; border: 1px solid #ccc; border-radius: 2px;  font-size: .9em; z-index: 10; font-size: .8em; padding: 3px 6px 3px 3px ; width: 150px; }
 .stolbec-wrapper:hover .inner2 .info{display: inline-block; }
 .strike-lbl{ position: absolute; top: -34px; left: -10px; font-size: .8em; font-weight: bold; }
+.strike-lbl .cur-lbl{ color: #aaa; font-size: .9em;  }
+.strike-lbl .strike-itself{}
 
 
 .stolb:hover{/*background: #eee;*/ }
@@ -220,8 +225,8 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                             <div class="inner2 stolbec-status-<?=$bunch->status->code?>" style="height: <?= $heightPercent2 ?>%;   ">
 
                                 <div class="strike-lbl">
-                                    [<?=$bunch->currency->code?>]<br>
-                                    <?= $main->strike ?>
+                                    <div class="cur-lbl"><?=$bunch->currency->code?></div>
+                                    <div class="strike-itself"><?= strikeVal($main->strike) ?></div>
                                 </div>
                                 <div class="info">
                                     <div class="title" style="font-size: 1.3em; text-align: left; margin: 0 0 6px 0; ">
@@ -234,11 +239,7 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                                         <div id="oa-row-<?=$item->id?>" class="row done-<?=$item->done ? 1 : 0?> <?=$item->strikeType->code==StrikeTypeV3::MAIN?'m':''?> " onclick="Graphic.switchDone(<?=$item->id?>); " title="Нажми, чтобы done/не done">
                                             <div class="lbl"><?=$lbl?>: </div>
                                             <div class="val"><?=$item->result?></div>
-                                            <!--<div class="done-wrapper">
-                                <a href="#" class="done done-btn-1" onclick="Graphic.switchDone(<?=$item->id?>); return false; "><i class="fa fa-square-o" aria-hidden="true"></i></a>
-                                <a href="#" class="done-btn-0" onclick="Graphic.switchDone(<?=$item->id?>); return false; "><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
-                                </a>
-                            </div>-->
+
                                         </div>
                                         <?
                                     }?>
@@ -324,9 +325,9 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
                             }?>
 
                             <td class="cell-<?=$item->type->code?> to-be-line-throughed" style="font-weight: bold; "><?=$item->type->code?></td>
-                            <td class="cell-<?=$item->type->code?> to-be-line-throughed"><?=$item->strike?></td>
-                            <td class="cell-<?=$item->type->code?> to-be-line-throughed"><?=$item->premium?></td>
-                            <td class="cell-<?=$item->type->code?> to-be-line-throughed"><?=$item->result?></td>
+                            <td class="cell-<?=$item->type->code?> to-be-line-throughed"><?=strikeVal($item->strike)?></td>
+                            <td class="cell-<?=$item->type->code?> to-be-line-throughed"><?=strikeVal($item->premium)?></td>
+                            <td class="cell-<?=$item->type->code?> to-be-line-throughed"><?=strikeVal($item->result)?></td>
 
                             <td style="font-size: .7em; "><?=$item->id?></td>
                             <td class="done-wrapper">
