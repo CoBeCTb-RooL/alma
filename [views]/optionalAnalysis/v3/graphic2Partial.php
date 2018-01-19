@@ -52,9 +52,9 @@ vd($minStrike);*/
 <style>
 .graphic-tbl{border-collapse: collapse; 100% }
 .graphic-tbl td{border: 1px solid #ccc ; }
-td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;  padding: 0; margin: 0;   border-top: none; }
+td.stolb{width: 140px; min-width: 140px;   /*height: 300px;*/ height: 200px;  border: 1px solid #aaa;  padding: 0; margin: 0;   border-top: none; }
 
-.stolbec-wrapper{height: 100%; width: 30px; border: 0px solid green; display:inline-block; position: relative;  vertical-align: bottom; border: 0px solid red;  }
+.stolbec-wrapper{height: 100%; width: 41px; border: 0px solid green !important; display:inline-block; position: relative;  vertical-align: bottom; border: 0px solid red;  }
 .stolbec-wrapper .inner2{display: inline-block; border: 0px solid green; vertical-align: bottom;  width: 10px; background: #88b0bf; position: absolute; bottom: 0;  padding: 0 0  20px 0; box-sizing: border-box;    }
 .stolbec-wrapper:hover .inner2{background: #55bf64;  }
 .stolbec-wrapper .inner2.stolbec-status-<?=Status2::NEUTRAL?>{background: #999; }
@@ -68,7 +68,7 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
 
 .stolb:hover{/*background: #eee;*/ }
 /*.stolb:hover .info{display: inline-block; }*/
-.day-of-week-lbl{font-size: 1.3em; font-weight: bold; }
+.day-of-week-lbl{font-size: 1.5em; font-weight: bold; }
     .row{text-align: left; border: 0px solid red; padding: 1px ;  cursor: pointer; }
     .row:hover{background: #dadbff; }
     .lbl{display: inline-block; font-weight: bold; width:35px; text-align: right; border: 0px solid red; }
@@ -103,6 +103,8 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
 .bunch-status-<?=Status2::ACTIVE?> .status-lbl{background: green; }
 .bunch-status-<?=Status2::ACTIVE?> table{border-left: 6px solid #3cae27; }
 
+
+.weekend{background: #fddeff; }
 
     <?
     foreach(Status2::$items as $s)
@@ -195,9 +197,12 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
     <table class="graphic-tbl" >
         <tr>
             <?
-            foreach($dates as $dt)
-            {?>
-                <td class="stolb">
+			foreach($dates as $dt)
+            {
+                $isWeekend = date('N', strtotime($dt)) > 5;
+                $columnsCount = count($listAssembledForGraphic[$dt]);
+                ?>
+                <td class="stolb <?=$isWeekend ? 'weekend' : ''?>" style="min-width: <?=55*($columnsCount ? $columnsCount : 1) ?>px">
                 <?
                 foreach($listAssembledForGraphic[$dt] as $bunch)
                 {
@@ -262,8 +267,8 @@ td.stolb{width: 140px; /*height: 300px;*/ height: 200px;  border: 1px solid #aaa
             <?
             foreach($dates as $dt)
             {?>
-                <td style="font-size: .7em; ">
-                    <?=Funx::mkDate($dt)?>
+                <td style="font-size: .8em; " class="<?=date('N', strtotime($dt)) > 5 ? 'weekend' : ''?>">
+                    <div style="white-space: nowrap; "><?=Funx::mkDate($dt)?></div>
                     <div class="day-of-week-lbl"><?=Funx::dayOfWeek($dt)?></div>
                 </td>
             <?

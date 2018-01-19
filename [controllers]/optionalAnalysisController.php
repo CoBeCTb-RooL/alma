@@ -199,7 +199,7 @@ class optionalAnalysisController extends MainController{
         #   даты ОТ и ДО для графика
         $MODEL['graphicDateFrom'] = date('Y-m-d', strtotime($today . ' - 7 day'));
         $MODEL['graphicDateTo'] = $today;
-        $MODEL['graphicChosenCurrency'] = Currency::code(Currency::CODE_AUD);
+        $MODEL['graphicChosenCurrency'] = Currency::code(Currency::CODE_EUR);
 
         Slonne::view('optionalAnalysis/v3/index.php', $MODEL);
     }
@@ -379,7 +379,7 @@ class optionalAnalysisController extends MainController{
 
         $dateFrom = $_REQUEST['dateFrom'];
         $dateTo = $_REQUEST['dateTo'];
-        $currency = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_AUD);
+        $currency = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
 
         $bunchesList = StrikeBunch::getList([
             //'dt'=>date('Y-m-d'),
