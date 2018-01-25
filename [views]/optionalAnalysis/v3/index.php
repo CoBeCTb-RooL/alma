@@ -198,7 +198,33 @@ $todayData = $data[$date];
                 },
                 error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
             })
+        },
+
+        switchShowOnGraphic: function(id){
+            var w = $('#graphic')
+            var w2 = $('#bunch-'+id+'')
+            $.ajax({
+                url: '/ru/optionalAnalysis/v3/switchShowOnGraphicAjax',
+                data: {id: id},
+                dataType: 'json',
+                beforeSend: function(){w.css('opacity', .7); w2.css('opacity', .7)},
+                complete: function(){/*w.css('opacity', 1); w2.css('opacity', 1)*/},
+                success: function(data){
+                    //w.find('.inner').html(data)
+                    if(!data.error)
+                    {
+                        //$('#oa-row-'+id+'').removeClass('showOnGraphic-0').removeClass('showOnGraphic-1').addClass('showOnGraphic-'+data.valueToBe)
+
+                        //$('#showOnGraphic-'+id+'').removeClass('bunch-showOnGraphic-0').removeClass('bunch-showOnGraphic-1').addClass('bunch-showOnGraphic-'+data.valueToBe)
+                        Graphic.draw2()
+                    }
+                    else alert(data.error)
+                },
+                error: function(){alert('Ошибка какая-то.. хмм. Звоните Лахматому')},
+            })
         }
+
+
     }
 
 

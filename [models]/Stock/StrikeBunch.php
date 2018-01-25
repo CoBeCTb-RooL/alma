@@ -28,6 +28,7 @@ class StrikeBunch{
 			$this->data = $arr['data'];
 			$this->status = Status2::code($arr['status']);
             $this->currency = Currency::code($arr['currency']);
+			$this->showOnGraphic = $arr['showOnGraphic'];
 		}
 	}
 
@@ -61,6 +62,9 @@ class StrikeBunch{
             $sql.=" AND DATE(dt) >= DATE('".strPrepare($params['dateFrom'])."') ";
         if($params['dateTo'] )
             $sql.=" AND DATE(dt) <= DATE('".strPrepare($params['dateTo'])."') ";
+
+		if($params['showOnGraphic'] )
+			$sql.=" AND showOnGraphic = ".$params['showOnGraphic'] ? 1 : 0;
 
 		if($params['orderBy'])
 			$sql .= " ORDER BY ".strPrepare($params['orderBy'])." ";
@@ -134,6 +138,7 @@ class StrikeBunch{
             , `status` = '".strPrepare($this->status->code)."'
             , currency = '".strPrepare($this->currency->code)."'
             , `data` = '".strPrepare($this->data)."'
+            , `showOnGraphic` = '".($this->showOnGraphic ? 1 : 0)."'
             ";
 
         return $str;

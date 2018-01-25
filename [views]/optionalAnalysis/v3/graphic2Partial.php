@@ -12,7 +12,8 @@ $listAssembled = $MODEL['bunchesListArranged'];
 $listAssembledForGraphic = $listAssembled;
 foreach ($listAssembledForGraphic as $dt=>$bunches)
     foreach($bunches as $key=>$bunch)
-        if($bunch->currency->code != $currency->code || !in_array($bunch->status->code, [Status2::NEUTRAL, Status2::ACTIVE]))
+        //if($bunch->currency->code != $currency->code || !in_array($bunch->status->code, [Status2::NEUTRAL, Status2::ACTIVE]))
+		if(!$bunch->showOnGraphic)
             unset($listAssembledForGraphic[$dt][$key]);
 
 //vd($listAssembledForGraphic);
@@ -118,6 +119,13 @@ td.stolb{width: 140px; min-width: 140px;   /*height: 300px;*/ height: 200px;  bo
 
 .row-done-0 .row-done-0-btn{display: none;}
 .row-done-1 .row-done-1-btn{display: none;}
+
+
+.bunch-showOnGraphic-btn{font-size: 28px; }
+.bunch-showOnGraphic-0 .bunch-showOnGraphic-1-btn{display: none;}
+.bunch-showOnGraphic-1 .bunch-showOnGraphic-0-btn{display: none;}
+
+.bunch-showOnGraphic-0 .bunch-showOnGraphic-0-btn{opacity: .7; }
 
 </style>
 
@@ -296,7 +304,7 @@ td.stolb{width: 140px; min-width: 140px;   /*height: 300px;*/ height: 200px;  bo
         {
             $rows = count($bunch->items);
             ?>
-            <div class="bunch bunch-status-<?=$bunch->status->code?>" id="bunch-<?=$bunch->id?>" style="margin: 0 0 3px 0; ">
+            <div class="bunch bunch-status-<?=$bunch->status->code?> bunch-showOnGraphic-<?=$bunch->showOnGraphic?>" id="bunch-<?=$bunch->id?>" style="margin: 0 0 3px 0; ">
 
                 <table border="1" class="t">
                     <tr style="border-bottom: 2px solid #000; ">
@@ -357,6 +365,16 @@ td.stolb{width: 140px; min-width: 140px;   /*height: 300px;*/ height: 200px;  bo
                                     </form>
                                     <br>
                                     <div style="font-size: .7em; display: inline-block; " class="status-lbl"><?=$bunch->status->title?></div>
+
+                                    <!--кнопка ОТОБРАЖАТЬ-->
+                                    <span class="showOnGraphic-wrapper" style="margin: 0 0 0 15px; ">
+                                        <a href="#" class="bunch-showOnGraphic-btn bunch-showOnGraphic-1-btn" onclick="Graphic.switchShowOnGraphic(<?=$bunch->id?>); return false; "><i class="fa fa-eye" aria-hidden="true"></i>
+                                        </a>
+                                        <a href="#" class="bunch-showOnGraphic-btn bunch-showOnGraphic-0-btn" onclick="Graphic.switchShowOnGraphic(<?=$bunch->id?>); return false; "><i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                        </a>
+                                    </span>
+                                    <!--//кнопка ОТОБРАЖАТЬ-->
+
                                 </div>
                                 <div class="btns">
                                     <a href="#" onclick="deleteItem(<?=$bunch->id?>); return false; " class="btn" style="color: red; "><i class="fa fa-times" aria-hidden="true"></i> удалить</a>
@@ -368,6 +386,9 @@ td.stolb{width: 140px; min-width: 140px;   /*height: 300px;*/ height: 200px;  bo
                                     <div><a href="#" class="btn bunch-status-btn-<?=$s->code?>" onclick="setBunchStatus(<?=$bunch->id?>, '<?=$s->code?>'); return false; " ><?=$s->title?></a></div>
                                     <?
                                     }?>
+
+
+
                                 </div>
                             </td>
                             <?
