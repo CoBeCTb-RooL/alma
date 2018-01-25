@@ -60,6 +60,7 @@ td.stolb{width: 140px; min-width: 140px;   /*height: 300px;*/ height: 200px;  bo
 .stolbec-wrapper:hover .inner2{background: #55bf64;  }
 .stolbec-wrapper .inner2.stolbec-status-<?=Status2::NEUTRAL?>{background: #999; }
 .stolbec-wrapper .inner2.stolbec-status-<?=Status2::ACTIVE?>{background: #00b600; }
+.stolbec-wrapper .inner2.stolbec-status-<?=Status2::DONE?>{background: #840084; }
 .info{display: none; position: absolute; left: 15px; bottom: 0px;  background: oldlace; border: 1px solid #ccc; border-radius: 2px;  font-size: .9em; z-index: 10; font-size: .8em; padding: 3px 6px 3px 3px ; width: 150px; }
 .stolbec-wrapper:hover .inner2 .info{display: inline-block; }
 .strike-lbl{ position: absolute; top: -34px; left: -10px; font-size: .8em; font-weight: bold; }
@@ -162,9 +163,11 @@ td.stolb{width: 140px; min-width: 140px;   /*height: 300px;*/ height: 200px;  bo
             data: {id: id, status: status},
             dataType: 'json',
             beforeSend: function(){w.css('opacity', .7)},
-            complete: function(){w.css('opacity', 1)},
+            complete: function(){/*w.css('opacity', 1)*/},
             success: function(data){
                 if(!data.error){
+                    Graphic.draw2()
+                    return
                     //w.fadeOut()
                     //alert(data.status.code)
                     w.removeAttr('class')

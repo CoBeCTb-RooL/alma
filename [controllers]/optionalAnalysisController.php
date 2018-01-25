@@ -453,8 +453,12 @@ class optionalAnalysisController extends MainController{
             if($statusToBe)
             {
                 $item->status = $statusToBe;
-                //vd($item);
-                $item->update();
+
+                #   если статус стал АКТИВ или ДАН - насильно тащим в график
+				if(in_array($statusToBe->code, [Status2::ACTIVE, Status2::DONE, ]))
+				    $item->showOnGraphic = 1;
+
+				$item->update();
             }
             else
                 $error = 'Ошибка! Непонятный статус ['.$_REQUEST['status'].']';

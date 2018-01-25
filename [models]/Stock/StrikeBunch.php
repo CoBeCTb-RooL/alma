@@ -27,8 +27,8 @@ class StrikeBunch{
 			$this->dt = $arr['dt'];
 			$this->data = $arr['data'];
 			$this->status = Status2::code($arr['status']);
-            $this->currency = Currency::code($arr['currency']);
-			$this->showOnGraphic = $arr['showOnGraphic'];
+			$this->showOnGraphic = intval($arr['showOnGraphic']);
+			$this->currency = Currency::code($arr['currency']);
 		}
 	}
 
