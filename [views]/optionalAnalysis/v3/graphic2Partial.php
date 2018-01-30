@@ -13,7 +13,7 @@ $listAssembledForGraphic = $listAssembled;
 foreach ($listAssembledForGraphic as $dt=>$bunches)
     foreach($bunches as $key=>$bunch)
         //if($bunch->currency->code != $currency->code || !in_array($bunch->status->code, [Status2::NEUTRAL, Status2::ACTIVE]))
-		if(!$bunch->showOnGraphic)
+		if($bunch->currency->code != $currency->code || !$bunch->showOnGraphic)
             unset($listAssembledForGraphic[$dt][$key]);
 
 //vd($listAssembledForGraphic);

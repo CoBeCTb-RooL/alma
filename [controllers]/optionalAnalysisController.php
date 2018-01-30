@@ -212,7 +212,7 @@ class optionalAnalysisController extends MainController{
         global $_GLOBALS, $_CONFIG;
         $_GLOBALS['NO_LAYOUT'] = true;
 
-        //vd($_REQUEST);
+        vd($_REQUEST);
         //return;
         $error = '';
 
@@ -377,6 +377,7 @@ class optionalAnalysisController extends MainController{
     {
         global $_GLOBALS, $_CONFIG;
         $_GLOBALS['NO_LAYOUT'] = true;
+        //vd($_REQUEST);
 
         $dateFrom = $_REQUEST['dateFrom'];
         $dateTo = $_REQUEST['dateTo'];
@@ -387,7 +388,7 @@ class optionalAnalysisController extends MainController{
             'dateFrom'=>$dateFrom,
             'dateTo'=>$dateTo,
             //'currency'=>$currency,
-            'orderBy'=>'dt desc',
+            'orderBy'=>'dt desc, id asc',
         ]);
 
         foreach($bunchesList as $b)

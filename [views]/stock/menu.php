@@ -1,5 +1,5 @@
 <div style="margin: 0 0 20px 0 ; ">
-	<a href="/ru/stock/graphics/percents">График "ПРОЦЕНТЫ"</a>
+	<!--<a href="/ru/stock/graphics/percents">График "ПРОЦЕНТЫ"</a>
 	&nbsp;|&nbsp;
 	<a href="/ru/stock/graphics/levels">График "УРОВНИ"</a>
 	&nbsp;|&nbsp;
@@ -25,7 +25,7 @@
 
 
 
-    <p>
+    <p>-->
     <a style="font-weight: bold; " href="/ru/optionalAnalysis/v3">Опционный анализ 3.0</a>
 	
 </div>

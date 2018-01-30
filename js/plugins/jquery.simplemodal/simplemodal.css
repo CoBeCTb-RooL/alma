@@ -17,11 +17,12 @@
 
 /* Container */
 #simplemodal-container {
-	max-height: 423px; 
-	height: 70%;
-	width:489px;
+	/*max-height: 423px; */
+	height: 90%;
+	/*width:489px;*/
+	width: 90%;
 	color:black;
-	border:1px solid #000;
+	border:0px solid #000;
 	padding:12px 0 0 0; 
 	font-family: Helvetica; 
 	background: #fff;
