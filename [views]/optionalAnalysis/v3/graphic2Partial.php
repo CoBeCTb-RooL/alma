@@ -3,6 +3,7 @@
 $dateFrom = $MODEL['dateFrom'];
 $dateTo = $MODEL['dateTo'];
 $currency = $MODEL['currency'];
+//vd($currency);
 
 $list = $MODEL['bunchesList'];
 $listAssembled = $MODEL['bunchesListArranged'];
@@ -291,7 +292,7 @@ td.stolb{width: 140px; min-width: 140px;   /*height: 300px;*/ height: 200px;  bo
 
 <hr>
 
-
+<??>
 
 
 

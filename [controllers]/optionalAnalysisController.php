@@ -197,10 +197,12 @@ class optionalAnalysisController extends MainController{
             Currency::code(Currency::CODE_AUD),
         ];
 
+		$MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
         #   даты ОТ и ДО для графика
         $MODEL['graphicDateFrom'] = date('Y-m-d', strtotime($today . ' - 7 day'));
         $MODEL['graphicDateTo'] = $today;
-        $MODEL['graphicChosenCurrency'] = Currency::code(Currency::CODE_EUR);
+        $MODEL['graphicChosenCurrency'] = /*Currency::code(Currency::CODE_EUR)*/ $MODEL['currency'];
 
         Slonne::view('optionalAnalysis/v3/index.php', $MODEL);
     }
@@ -398,7 +400,8 @@ class optionalAnalysisController extends MainController{
 
         $bunchesListArranged = [];
         foreach($bunchesList as $val)
-            $bunchesListArranged[substr($val->dt, 0, 10)][] = $val;
+            if($val->currency->code == $currency->code)
+                $bunchesListArranged[substr($val->dt, 0, 10)][] = $val;
 
 
         $MODEL['dateFrom'] = $dateFrom;

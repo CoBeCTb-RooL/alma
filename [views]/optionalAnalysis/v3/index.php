@@ -18,7 +18,8 @@ $todayData = $data[$date];
 
 //vd($todayData);
 ///////////////////////////////
-$currency = Currency::code(Currency::CODE_EUR);
+//$currency = Currency::code(Currency::CODE_EUR);
+$currency = $MODEL['currency'];
 //vd($currency);
 ?>
 
@@ -51,6 +52,14 @@ $currency = Currency::code(Currency::CODE_EUR);
 
 <h1>Опционный анализ v3</h1>
 
+Валюта:
+<?
+foreach($currencies as $c)
+{?>
+    <a href="?currency=<?=$c->code?>" style="; <?=$c->code == $currency->code ? 'font-weight: bold; ' : ''?>"><?=$c->code?></a>
+<?
+}?>
+<p></p>
 
 <!--новая всплывающая форма-->
 <div id="form-tmpl" style="display: none; ">
@@ -391,7 +400,6 @@ $currency = Currency::code(Currency::CODE_EUR);
 
 
 
-<hr>
 <?//vd($todayData);?>
 
 <!--<button onclick="Opt.drawStats()">обновить стат.</button>-->
@@ -402,7 +410,7 @@ $currency = Currency::code(Currency::CODE_EUR);
 
 
 <hr>
-<iframe src="" frameborder="0" name="frame7" style="border: 1px solid #000; background: #ececec; height: 400px; width: 100%; ">wqe</iframe>
+<iframe src="" frameborder="0" name="frame7" style="display: none; border: 1px solid #000; background: #ececec; height: 400px; width: 100%; ">wqe</iframe>
 
 
 
