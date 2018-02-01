@@ -151,10 +151,10 @@ foreach($currencies as $c)
     }
 
 </script>
-<!--<button onclick="/*openFormsModal()*/ appendForm('<?=$corrency->form?>')">+ форма</button>-->
+<button onclick="/*openFormsModal()*/ appendForm('<?=$corrency->form?>')">+ форма</button>
 <div id="formsModal" style="display: ; vertical-align: top; ">
     <span class="inner"></span>
-    <button onclick="appendForm('<?=$corrency->form?>')" style="vertical-align: top; ">+form</button>
+    <!--<button onclick="appendForm('<?=$corrency->form?>')" style="vertical-align: top; ">+form</button>-->
 </div>
 <script>//openFormsModal()</script>
 <!--//новая всплывающая форма-->
