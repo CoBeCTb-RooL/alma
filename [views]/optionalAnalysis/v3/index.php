@@ -361,7 +361,9 @@ foreach($currencies as $c)
         <select id="graphicCurrency" onchange="Graphic.takeData(); Graphic.draw2();">
             <?
             foreach($currencies as $cur)
-            {?>
+            {
+                if($cur->code != $currency->code)
+                    continue; ?>
                 <option value="<?=$cur->code?>" <?=$cur->code==$graphicChosenCurrency->code ? ' selected ' : ''?>><?=$cur->code?></option>
             <?    
             }?>
