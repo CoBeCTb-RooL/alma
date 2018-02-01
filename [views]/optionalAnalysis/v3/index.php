@@ -84,11 +84,7 @@ foreach($currencies as $c)
             </script>
         </h3>
         <div class="data-input" style="display: ; ">
-            <textarea name="data[<?=$currency->code?>]" class="global-ta" onkeyup="/*Opt.parseData2('<?=$currency->code?>')*/" style="height: 75px; ">0.0150	12300.0
-0.0093	12350.0
-0.0066	12400.0	0.0040
-12450.0	0.0064
-12500.0	0.0099</textarea>
+            <textarea name="data[<?=$currency->code?>]" class="global-ta" onkeyup="/*Opt.parseData2('<?=$currency->code?>')*/" style="height: 75px; "></textarea>
         </div>
         <button type="button" style="font-size: 12px; padding: 3px 6px; " onclick="Opt.loadData2('<?=$currency->code?>', Opt.parseData2('<?=$currency->code?>', _FORM_NUM_), _FORM_NUM_); Opt.calcAll('<?=$currency->code?>', _FORM_NUM_)">внести</button>
 
@@ -155,8 +151,8 @@ foreach($currencies as $c)
     }
 
 </script>
-<button onclick="openFormsModal()">+ форма</button>
-<div id="formsModal" style="display: none; vertical-align: top; ">
+<!--<button onclick="/*openFormsModal()*/ appendForm('<?=$corrency->form?>')">+ форма</button>-->
+<div id="formsModal" style="display: ; vertical-align: top; ">
     <span class="inner"></span>
     <button onclick="appendForm('<?=$corrency->form?>')" style="vertical-align: top; ">+form</button>
 </div>
