@@ -595,6 +595,7 @@ class optionalAnalysisController extends MainController{
 
         $MODEL['list'] = V4Strike::getList([
                 'date' => $date,
+                'currency'=>$MODEL['currency'],
         ]);
 
 //		$today = date('Y-m-d');

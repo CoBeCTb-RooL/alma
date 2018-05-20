@@ -149,12 +149,7 @@ foreach($MODEL['currencies'] as $c)
 
     <p>
     <div class="data-input" style="display: ; ">
-        <textarea name="data" class="global-ta" onkeyup="/*Opt.parseData2('<?=$cur->code?>')*/" style="height: 75px; width: 200px;  ">0.0137	11700.0	0.0014
-0.0097	11750.0	0.0025
-0.0064	11800.0	0.0042
-0.0038	11850.0	0.0066
-0.0021	11900.0	0.0098
-        </textarea>
+        <textarea name="data" class="global-ta" onkeyup="/*Opt.parseData2('<?=$cur->code?>')*/" style="height: 75px; width: 200px;  "></textarea>
 
         <br><label><input type="checkbox" name="isZone">Зона</label>
     </div>
@@ -203,6 +198,7 @@ foreach ($zones as $z)
         <table border="1" style="">
             <tr style="border-top: 3px solid #000; ">
                 <td rowspan="2" style="font-size: .8em; border-left: 3px solid #000;  "><?=$z->id?>. </td>
+                <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->currency->code?> </td>
                 <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->strike?> </td>
                 <td>Buy</td>
                 <td><?=$z->premiumBuy?></td>
@@ -222,6 +218,7 @@ foreach ($zones as $z)
         ?>
             <tr style="font-size: .9em; ">
                 <td rowspan="2" style="font-size: .8em;  "><?=$s->id?>. </td>
+                <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->currency->code?> </td>
                 <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$s->strike?> </td>
                 <td>Buy</td>
                 <td ><?=$s->premiumBuy?></td>

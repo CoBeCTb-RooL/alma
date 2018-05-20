@@ -59,10 +59,8 @@ class V4Strike{
 	{
 		$sql = "SELECT * FROM `".self::TBL."` WHERE 1 ";
 
-        if($params['currency'] )
-            $sql.=" AND currency= '".strPrepare($params['currency']->code)."' ";
-		if($params['type'] )
-			$sql.=" AND `type`= '".strPrepare($params['type']->code)."' ";
+		if($params['currency'] )
+			$sql.=" AND `currency`= '".strPrepare($params['currency']->code)."' ";
 		if($params['date'] )
 			$sql.=" AND DATE(dt)= DATE('".strPrepare($params['date'])."') ";
 
