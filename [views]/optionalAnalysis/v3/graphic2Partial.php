@@ -142,6 +142,7 @@ td.stolb{width: 140px; min-width: 140px;   /*height: 300px;*/ height: 200px;  bo
         $.ajax({
             url: '/ru/optionalAnalysis/v3/deleteBunch',
             data: {id: id},
+            dataType:'json',
             beforeSend: function(){w.css('opacity', .7)},
             complete: function(){w.css('opacity', 1)},
             success: function(data){
