@@ -16,10 +16,17 @@ $list = $MODEL['list'];
 $strikes = [];
 $zones = [];
 foreach ($list as $item)
+{
     if($item->isZone)
+    {
+        foreach ($list as $item2)
+            if($item2->pid == $item->id)
+                $item->strikes[] = $item2;
         $zones[] = $item;
+	}
     else
 		$strikes[] = $item;
+}
 
 
 #   разбираемся со страйками зон
@@ -30,9 +37,8 @@ foreach ($zones as $z)
 
 	$deltaBuy = 0;
 	$deltaSell = 0;
-    $z->strikes = [];
     $i=0;
-    foreach ($strikes as $s)
+    foreach ($z->strikes as $s)
     {
         #   разбираем БАЙи
         if($s->premiumBuy <= $z->premiumBuy)
@@ -64,7 +70,6 @@ foreach ($zones as $z)
 			}
 		}
 
-        $z->strikes[] = $s;
 //        $i++;
 //        if($i >=3)
 //            break;
@@ -146,12 +151,13 @@ foreach($MODEL['currencies'] as $c)
 
     <p>Коммент: <input type="text" name="comment" style="width: 170px; ">
     <p>
-
+    <p>Данные зоны: <br><input type="text" name="zoneData" style="width: 204px; ">
     <p>
     <div class="data-input" style="display: ; ">
+        Страйки:<br>
         <textarea name="data" class="global-ta" onkeyup="/*Opt.parseData2('<?=$cur->code?>')*/" style="height: 75px; width: 200px;  "></textarea>
 
-        <br><label><input type="checkbox" name="isZone">Зона</label>
+<!--        <br><label><input type="checkbox" name="isZone">Зона</label>-->
     </div>
 
 <!--    <fieldset class="strike">-->
@@ -204,6 +210,7 @@ foreach ($zones as $z)
                 <td><?=$z->premiumBuy?></td>
                 <td style="border-right: 3px solid #000; background: <?=$buyColor?>;  "><?=$z->resultBuy?></td>
                 <td></td>
+                <td rowspan="2"><a href="#" onclick="deleteStrike(<?=$z->id?>); return false; ">удалить</a></td>
             </tr>
             <tr style="border-bottom: 3px solid #000; ">
                 <td>Sell</td>
@@ -225,13 +232,14 @@ foreach ($zones as $z)
                 <td>Buy</td>
                 <td ><?=$s->premiumBuy?></td>
                 <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
-                <td style="font-size: .8em; text-align: left;  ">дельта: <?=$z->resultBuy-$s->resultBuy?></td>
+                <td style="font-size: .8em; text-align: left;  ">дельта: <?=strikeVal($z->resultBuy-$s->resultBuy)?></td>
+                <td rowspan="2"><a href="#" onclick="deleteStrike(<?=$s->id?>);; return false; ">удалить</a></td>
             </tr>
         <tr style="font-size: .9em; border-bottom: 2px solid #000; ">
                 <td>Sell</td>
                 <td><?=$s->premiumSell?></td>
                 <td style="<?=($isClosestSell ? ' border: 3px solid #b100ff; background: '.$sellColor.'' : '')?>"><?=$s->resultSell?></td>
-            <td style="font-size: .8em; text-align: left;  ">дельта: <?=$s->resultSell-$z->resultSell?></td>
+            <td style="font-size: .8em; text-align: left;  ">дельта: <?=strikeVal($s->resultSell-$z->resultSell)?></td>
             </tr>
     <?
     }?>
@@ -245,3 +253,24 @@ foreach ($zones as $z)
 
 
 <iframe src="" frameborder="0" name="frame7" style="display: none ; border: 1px solid #000; background: #ececec; height: 400px; width: 100%; ">wqe</iframe>
+
+
+<script>
+    var deleteStrike = function(id){
+        if(!confirm('удалить?'))
+            return
+
+        $.ajax({
+            url: '/ru/optionalAnalysis/v4/deleteStrikeAjax',
+            data: {id: id},
+            beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
+            complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
+            success: function(data){
+                // $('.stats').html(data)
+                location.href=location.href
+            },
+            error: function(){}
+        })
+    }
+
+</script>

@@ -4,6 +4,7 @@
 
 class V4Strike{
 	public $id;
+	public $pid;
 	public $dt;
 	public $currency;
 	public $strike;
@@ -24,6 +25,7 @@ class V4Strike{
 		if(count($arr))
 		{
 			$this->id = $arr['id'];
+			$this->pid = $arr['pid'];
 			$this->dt = $arr['dt'];
 			$this->currency = Currency::code($arr['currency']);
 			$this->type = Type::code($arr['type']);
@@ -51,7 +53,8 @@ class V4Strike{
         echo mysql_error();
         $next = mysql_fetch_array($qr, MYSQL_ASSOC);
 
-        return new self($next);
+        if($next)
+        	return new self($next);
     }
 
 
@@ -61,6 +64,8 @@ class V4Strike{
 
 		if($params['currency'] )
 			$sql.=" AND `currency`= '".strPrepare($params['currency']->code)."' ";
+		if($params['pid'] )
+			$sql.=" AND `pid`= '".intval($params['pid'])."' ";
 		if($params['date'] )
 			$sql.=" AND DATE(dt)= DATE('".strPrepare($params['date'])."') ";
 
@@ -132,6 +137,16 @@ class V4Strike{
 
     public function delete()
     {
+    	$list = self::getList(['pid'=>$this->id]);
+    	foreach ($list as $item)
+		{
+			$sql = "DELETE FROM `".self::TBL."` where id=".$item->id;
+			//vd($sql);
+			DB::query($sql);
+			echo mysql_error();
+		}
+
+		# 	удаляем сам объект
         $sql = "DELETE FROM `".self::TBL."` where id=".$this->id;
         //vd($sql);
         DB::query($sql);
@@ -175,6 +190,7 @@ class V4Strike{
 			//vd($sql);
 			DB::query($sql);
 			echo mysql_error();
+			$this->id = mysql_insert_id();
 		}
 	}
 
@@ -201,6 +217,7 @@ class V4Strike{
         $str="
 		  dt = '".strPrepare($this->dt)."'
 				, currency = '".strPrepare($this->currency->code)."'
+				, pid = '".intval($this->pid)."'
 				, strike = '".floatval($this->strike)."'
 				, premiumBuy = '".floatval($this->premiumBuy)."'
 				, premiumSell = '".floatval($this->premiumSell)."'

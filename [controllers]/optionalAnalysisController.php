@@ -45,6 +45,9 @@ switch($_PARAMS[0])
 		$ACTION = 'v4index';
 		if($_PARAMS[1] == 'submit')
 			$ACTION = 'v4formSubmit';
+		if($_PARAMS[1] == 'deleteStrikeAjax')
+			$ACTION = 'v4deleteStrikeAjax';
+
 		/*if($_PARAMS[1] == 'submit')
 			$ACTION = 'v3formSubmit';
 		if($_PARAMS[1] == 'statsAjax')
@@ -644,6 +647,7 @@ class optionalAnalysisController extends MainController{
 
 		$cur = Currency::code($_REQUEST['currency']);
 		$date = $_REQUEST['date'];
+		$zoneData = trim($_REQUEST['zoneData']);
 		$data = trim($_REQUEST['data']);
 		$forward = $_REQUEST['forward'];
 		$comment = trim($_REQUEST['comment']);
@@ -652,12 +656,35 @@ class optionalAnalysisController extends MainController{
 			$error = 'Не указана дата!';
 		if(!$forward && !$error && $forward!=='0')
 			$error = 'Не указан форвард!';
+		if(!$error && !$zoneData)
+			$error = 'Не введены данные зоны';
 		if(!$error && !$data)
 			$error = 'Не введены данные';
 
 
+
 		if(!$error )
         {
+            #   зона
+			$cols = explode("\t", $zoneData);
+
+			$s = new V4Strike();
+			$s->dt = $date;
+			$s->pid = 0;
+			$s->currency = $cur;
+			$s->strike = $cols[1]/10000;
+			$s->premiumBuy = $cols[0];
+			$s->premiumSell = $cols[2];
+			$s->forward = $forward;
+			$s->status = Status2::code(Status2::ACTIVE);
+			$s->comment = $comment;
+			$s->isZone = 1;
+
+			$s->calculate();
+			$s->insert();
+            $zone = $s;
+
+            #   страйки
             $rows = explode("\r\n", $data);
             //vd($rows);
             foreach ($rows as $row)
@@ -665,6 +692,7 @@ class optionalAnalysisController extends MainController{
                 $cols = explode("\t", $row);
 
                 $s = new V4Strike();
+				$s->pid = $zone->id;
 				$s->dt = $date;
 				$s->currency = $cur;
 				$s->strike = $cols[1]/10000;
@@ -673,11 +701,9 @@ class optionalAnalysisController extends MainController{
 				$s->forward = $forward;
 				$s->status = Status2::code(Status2::ACTIVE);
 				$s->comment = $comment;
-				$s->isZone = $_REQUEST['isZone'] ? 1 : 0;
+				$s->isZone = 0;
 
 				$s->calculate();
-
-				vd($s);
 				$s->insert();
 			}
             echo '<hr>';
@@ -750,6 +776,32 @@ class optionalAnalysisController extends MainController{
 		}
 		else
 			echo '<script>window.top.alert("'.$error.'")</script>';
+	}
+
+
+
+
+
+
+	public function v4deleteStrikeAjax()
+	{
+		global $_GLOBALS, $_CONFIG;
+		$_GLOBALS['NO_LAYOUT'] = true;
+
+		$error = null;
+
+		//vd($_REQUEST);
+		if ($item = V4Strike::get($_REQUEST['id']) )
+		{
+			$item->delete();
+		}
+		else
+			$error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
+
+
+		$res['error'] = $error;
+
+		echo json_encode($res);
 	}
 
 
