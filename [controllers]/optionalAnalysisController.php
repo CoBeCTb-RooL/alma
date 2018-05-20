@@ -16,29 +16,55 @@ switch($_PARAMS[0])
     break;
 
 
-    case "v3":
-        $ACTION = 'v3index';
-        if($_PARAMS[1] == 'submit')
-            $ACTION = 'v3formSubmit';
-        if($_PARAMS[1] == 'statsAjax')
-            $ACTION = 'v3statsAjax';
-        if($_PARAMS[1] == 'graphicAjax')
-            $ACTION = 'v3graphicAjax';
-        if($_PARAMS[1] == 'switchDoneAjax')
-            $ACTION = 'v3switchDoneAjax';
-        if($_PARAMS[1] == 'graphic2Ajax')
-            $ACTION = 'v3graphic2Ajax';
-        if($_PARAMS[1] == 'deleteBunch')
-            $ACTION = 'v3deleteBunch';
-        if($_PARAMS[1] == 'setBunchStatus')
-            $ACTION = 'v3setBunchStatus';
+	case "v3":
+		$ACTION = 'v3index';
+		if($_PARAMS[1] == 'submit')
+			$ACTION = 'v3formSubmit';
+		if($_PARAMS[1] == 'statsAjax')
+			$ACTION = 'v3statsAjax';
+		if($_PARAMS[1] == 'graphicAjax')
+			$ACTION = 'v3graphicAjax';
+		if($_PARAMS[1] == 'switchDoneAjax')
+			$ACTION = 'v3switchDoneAjax';
+		if($_PARAMS[1] == 'graphic2Ajax')
+			$ACTION = 'v3graphic2Ajax';
+		if($_PARAMS[1] == 'deleteBunch')
+			$ACTION = 'v3deleteBunch';
+		if($_PARAMS[1] == 'setBunchStatus')
+			$ACTION = 'v3setBunchStatus';
 		if($_PARAMS[1] == 'saveBunchTitle')
 			$ACTION = 'v3saveBunchTitle';
 		if($_PARAMS[1] == 'switchShowOnGraphicAjax')
 			$ACTION = 'v3switchShowOnGraphicAjax';
 
+		break;
 
-    break;
+
+
+	case "v4":
+		$ACTION = 'v4index';
+		if($_PARAMS[1] == 'submit')
+			$ACTION = 'v4formSubmit';
+		/*if($_PARAMS[1] == 'submit')
+			$ACTION = 'v3formSubmit';
+		if($_PARAMS[1] == 'statsAjax')
+			$ACTION = 'v3statsAjax';
+		if($_PARAMS[1] == 'graphicAjax')
+			$ACTION = 'v3graphicAjax';
+		if($_PARAMS[1] == 'switchDoneAjax')
+			$ACTION = 'v3switchDoneAjax';
+		if($_PARAMS[1] == 'graphic2Ajax')
+			$ACTION = 'v3graphic2Ajax';
+		if($_PARAMS[1] == 'deleteBunch')
+			$ACTION = 'v3deleteBunch';
+		if($_PARAMS[1] == 'setBunchStatus')
+			$ACTION = 'v3setBunchStatus';
+		if($_PARAMS[1] == 'saveBunchTitle')
+			$ACTION = 'v3saveBunchTitle';
+		if($_PARAMS[1] == 'switchShowOnGraphicAjax')
+			$ACTION = 'v3switchShowOnGraphicAjax';*/
+
+		break;
 
 
 }
@@ -532,6 +558,201 @@ class optionalAnalysisController extends MainController{
 
 		echo json_encode($res);
 	}
+
+
+
+
+
+
+	#######################################
+    ####    v4.0    #######################
+    #######################################
+
+	function v4index()
+	{
+		global $_GLOBALS, $_CONFIG;
+		$_GLOBALS['TITLE'] = Slonne::getTitle('Опционный анализ v3');
+
+		$MODEL['currencies'] = [
+			Currency::code(Currency::CODE_EUR),
+			Currency::code(Currency::CODE_GBP),
+			Currency::code(Currency::CODE_AUD),
+		];
+
+
+		$today = date('Y-m-d');
+		$date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+
+		$prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
+		$nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
+
+		$MODEL['date'] = $date;
+		$MODEL['today'] = $today;
+		$MODEL['datePrev'] = $prevDate;
+		$MODEL['dateNext'] = $nextDate;
+
+		$MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
+        $MODEL['list'] = V4Strike::getList([
+                'date' => $date,
+        ]);
+
+//		$today = date('Y-m-d');
+//		$date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+//
+//		$prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
+//		$nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
+//
+//		$MODEL['date'] = $date;
+//		$MODEL['today'] = $today;
+//		$MODEL['datePrev'] = $prevDate;
+//		$MODEL['dateNext'] = $nextDate;
+//
+//		$list = OAItem::getList(['dt'=>$date, 'orderBy'=>'dt DESC', ]);
+//		//vd($list);
+//		$MODEL['list2'] = OAItem::arrangeList2($list);
+//		//vd($MODEL['list2']);
+//
+//		$MODEL['currencies'] = [
+//			Currency::code(Currency::CODE_EUR),
+//			Currency::code(Currency::CODE_GBP),
+//			Currency::code(Currency::CODE_AUD),
+//		];
+//
+//		$MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+//
+//		#   даты ОТ и ДО для графика
+//		$MODEL['graphicDateFrom'] = date('Y-m-d', strtotime($today . ' - 7 day'));
+//		$MODEL['graphicDateTo'] = $today;
+//		$MODEL['graphicChosenCurrency'] = /*Currency::code(Currency::CODE_EUR)*/ $MODEL['currency'];
+
+		Slonne::view('optionalAnalysis/v4/index.php', $MODEL);
+	}
+
+
+
+
+	public function v4formSubmit()
+	{
+		global $_GLOBALS, $_CONFIG;
+		$_GLOBALS['NO_LAYOUT'] = true;
+
+		vd($_REQUEST);
+		//return;
+		$error = '';
+
+		$cur = Currency::code($_REQUEST['currency']);
+		$date = $_REQUEST['date'];
+		$data = trim($_REQUEST['data']);
+		$forward = $_REQUEST['forward'];
+		$comment = trim($_REQUEST['comment']);
+
+		if(!$date && !$error)
+			$error = 'Не указана дата!';
+		if(!$forward && !$error && $forward!=='0')
+			$error = 'Не указан форвард!';
+		if(!$error && !$data)
+			$error = 'Не введены данные';
+
+
+		if(!$error )
+        {
+            $rows = explode("\r\n", $data);
+            //vd($rows);
+            foreach ($rows as $row)
+            {
+                $cols = explode("\t", $row);
+               // vd($cols);
+
+                $s = new V4Strike();
+				$s->dt = $date;
+				$s->currency = $cur;
+				$s->strike = $cols[1]/10000;
+				$s->premiumBuy = $cols[0];
+				$s->premiumSell = $cols[2];
+				$s->forward = $forward;
+				$s->status = Status2::code(Status2::ACTIVE);
+				$s->comment = $comment;
+				$s->isZone = $_REQUEST['isZone'] ? 1 : 0;
+
+				$s->calculate();
+
+				$s->insert();
+				vd($s);
+			}
+            echo '<hr>';
+        }
+
+
+//		$strikes = $_REQUEST['strike'][$cur->code];
+//		$prems = $_REQUEST['premium'][$cur->code];
+//
+//		if(!$date && !$error)
+//			$error = 'Не указана дата!';
+//		if(!$forward && !$error && $forward!=='0')
+//			$error = 'Не указан форвард!';
+//
+//		$objs = [];
+//
+//		if(!$error)
+//		{
+//			$bunch = new StrikeBunch();
+//			$bunch->title = $bunchTitle;
+//			$bunch->status = Status2::code(Status2::NEUTRAL);
+//			$bunch->dt = $date;
+//			$bunch->data = $data;
+//			$bunch->currency = $cur;
+//			$bunch->insert();
+//			//vd($bunch);
+//
+//			foreach(StrikeTypeV3::$items as $st)
+//			{
+//
+//				foreach(Type::$items as $t)
+//				{
+//					$strike = $strikes[$st->code][$t->code];
+//					$prem = $prems[$st->code][$t->code];
+//
+//					if($strike && $prem)
+//					{
+//						$item = new OAItem();
+//						$item->bunchId = $bunch->id;
+//						$item->strike = $strike;
+//						$item->currency = $cur;
+//						$item->dt = $date;
+//						$item->forward = $forward;
+//						$item->premium = $prem;
+//						$item->strikeType = $st;
+//						$item->type = $t;
+//						$item->isHistory = 0;
+//
+//						$item->calculate();
+//
+//						$objs[] = $item;
+//					}
+//				}
+//			}
+//		}
+//
+//		//vd($objs);
+//		if(!$error && !count($objs))
+//			$error = 'Не введены никакие данные.';
+
+
+		if(!$error)
+		{
+//			foreach($objs as $item)
+//			{
+//				//$item->deletePreviousData();
+//				$item->insert();
+//			}
+//			echo '<script>window.top.Opt.drawStats(); </script>';
+		}
+		else
+			echo '<script>window.top.alert("'.$error.'")</script>';
+	}
+
+
 
 
 

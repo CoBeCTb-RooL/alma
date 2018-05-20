@@ -27,5 +27,6 @@
 
     <p>-->
     <a style="font-weight: bold; " href="/ru/optionalAnalysis/v3">Опционный анализ 3.0</a>
-	
+    &nbsp;|&nbsp;
+    <a style="font-weight: bold; " href="/ru/optionalAnalysis/v4">Опционный анализ 4.0</a>
 </div>
