@@ -663,7 +663,6 @@ class optionalAnalysisController extends MainController{
             foreach ($rows as $row)
             {
                 $cols = explode("\t", $row);
-               // vd($cols);
 
                 $s = new V4Strike();
 				$s->dt = $date;
@@ -678,8 +677,8 @@ class optionalAnalysisController extends MainController{
 
 				$s->calculate();
 
-				$s->insert();
 				vd($s);
+				$s->insert();
 			}
             echo '<hr>';
         }

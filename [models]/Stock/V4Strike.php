@@ -208,7 +208,7 @@ class V4Strike{
 				, `resultSell` = '".floatval($this->resultSell)."'
 				, `forward` = '".floatval($this->forward)."'
 				, `status` = '".strPrepare($this->status->code)."'
-				, `status` = '".strPrepare($this->comment)."'
+				, `comment` = '".strPrepare($this->comment)."'
 				, `isZone` = '".($this->isZone ? 1 : 0)."'
 				";
 
