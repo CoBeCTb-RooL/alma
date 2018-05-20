@@ -203,11 +203,13 @@ foreach ($zones as $z)
                 <td>Buy</td>
                 <td><?=$z->premiumBuy?></td>
                 <td style="border-right: 3px solid #000; background: <?=$buyColor?>;  "><?=$z->resultBuy?></td>
+                <td></td>
             </tr>
             <tr style="border-bottom: 3px solid #000; ">
                 <td>Sell</td>
                 <td><?=$z->premiumSell?></td>
                 <td style="border-right: 3px solid #000; background: <?=$sellColor?>;"><?=$z->resultSell?></td>
+                <td></td>
             </tr>
 <!--            <tr><td colspan="5"></td></tr>-->
     <?
@@ -223,11 +225,13 @@ foreach ($zones as $z)
                 <td>Buy</td>
                 <td ><?=$s->premiumBuy?></td>
                 <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
+                <td style="font-size: .8em; text-align: left;  ">дельта: <?=$z->resultBuy-$s->resultBuy?></td>
             </tr>
         <tr style="font-size: .9em; border-bottom: 2px solid #000; ">
                 <td>Sell</td>
                 <td><?=$s->premiumSell?></td>
                 <td style="<?=($isClosestSell ? ' border: 3px solid #b100ff; background: '.$sellColor.'' : '')?>"><?=$s->resultSell?></td>
+            <td style="font-size: .8em; text-align: left;  ">дельта: <?=$s->resultSell-$z->resultSell?></td>
             </tr>
     <?
     }?>
