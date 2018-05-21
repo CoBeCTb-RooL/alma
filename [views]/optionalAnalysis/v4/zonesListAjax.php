@@ -28,7 +28,8 @@ foreach ($zones as $z)
     }?>
         <p>
         forward: <b><?=$z->forward?></b>
-        <button onclick='Zones.setZoneDataToForm(<?=$z->data?>)' style="font-size: .9em; padding: 3px; ">Внести данные зоны в форму</button>
+        <!--<button onclick='Zones.setZoneDataToForm(<?=$z->data?>)' style="font-size: .9em; padding: 3px; ">Внести данные зоны в форму</button>-->
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""  onclick='Zones.setZoneDataToForm(<?=$z->data?>); return false; ' style="font-size: .9em;  ">Внести данные зоны в форму</a>
         <table border="1" style="">
             <tr>
                 <th>id</th>
