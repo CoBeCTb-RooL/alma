@@ -164,7 +164,7 @@ foreach($MODEL['currencies'] as $c)
 
 
 <p>
-<button onclick="Zones.list(); "></button>
+<!--<button onclick="Zones.list(); "></button>-->
 <div class="zones">Загрузка...</div>
 
 
