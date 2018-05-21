@@ -166,7 +166,7 @@ foreach ($zones as $z)
                 <td rowspan="2" style="font-size: .8em;  "><?=$s->id?>. </td>
                 <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->currency->code?> </td>
                 <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$s->strike?> </td>
-                <td>Sell</td>
+                <td>to Sell</td>
                 <td><?=$s->premiumSell?></td>
                 <td style="<?=($isClosestSell ? ' border: 3px solid #b100ff; background: '.$sellColor.'' : '')?>"><?=$s->resultSell?></td>
                 <td style="font-size: .8em; text-align: left;  ">
@@ -175,7 +175,7 @@ foreach ($zones as $z)
                 <td rowspan="2"><a href="#" onclick="deleteStrike(<?=$s->id?>);; return false; ">удалить</a></td>
             </tr>
             <tr style="font-size: .9em; border-bottom: 3px solid #000; ">
-                <td>Buy</td>
+                <td>to Buy</td>
                 <td ><?=$s->premiumSell?></td>
                 <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
                 <td style="font-size: .8em; text-align: left;  ">
