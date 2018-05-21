@@ -12,70 +12,8 @@ $today = $MODEL['today'];
 $cur = $MODEL['currency'];
 
 
-$list = $MODEL['list'];
-$strikes = [];
 $zones = $MODEL['list'];
-//foreach ($list as $item)
-//{
-//    if($item->isZone)
-//    {
-//        foreach ($list as $item2)
-//            if($item2->pid == $item->id)
-//                $item->strikes[] = $item2;
-//        $zones[] = $item;
-//	}
-//    else
-//		$strikes[] = $item;
-//}
 
-
-#   разбираемся со страйками зон
-/*foreach ($zones as $z)
-{
-	$deltaBuy = 0;
-	$deltaSell = 0;
-    $i=0;
-    foreach ($z->strikes as $s)
-    {
-        #   разбираем БАЙи
-        if($s->premiumBuy <= $z->premiumBuy)
-        {
-			if(!$z->closestBuy)
-			{
-			    echo "!";
-				$deltaBuy = $z->premiumBuy - $s->premiumBuy;
-				$z->closestBuy = $s;
-			}
-			elseif($z->premiumBuy - $s->premiumBuy < $deltaBuy )
-            {
-                $z->closestBuy = $s;
-                $deltaBuy = $z->premiumBuy - $s->premiumBuy;
-            }
-        }
-		vd($deltaBuy);
-
-		#   разбираем СЕЛЛы
-		if($s->premiumSell >= $z->premiumSell)
-		{
-			if(!$z->closestSell)
-			{
-				$deltaSell = $s->premiumSell - $z->premiumSell;
-				$z->closestSell = $s;
-			}
-            elseif($s->premiumSell - $z->premiumSell < $deltaSell)
-			{
-				$z->closestSell = $s;
-				$deltaSell = $s->premiumSell - $z->premiumSell;
-			}
-		}
-
-//        $i++;
-//        if($i >=3)
-//            break;
-    }
-    echo '<hr>';
-
-}*/
 
 
 ?>
@@ -120,11 +58,11 @@ foreach($MODEL['currencies'] as $c)
 		<?=Funx::mkDate($date);?>
 		<?=($date == $today ? '<span class="today-lbl">(сегодня)</span>' : '' )?>
     </h2>
-    <a href="?date=<?=$datePrev?>">&larr; Предыдущий</a>
+    <a href="?date=<?=$datePrev?>&currency=<?=$cur->code?>">&larr; Предыдущий</a>
 	<?php
 	if($dateNext)
 	{?>
-        <a href="?date=<?=$dateNext?>">Следующий &rarr;</a>
+        <a href="?date=<?=$dateNext?>&currency=<?=$cur->code?>">Следующий &rarr;</a>
 		<?php
 	}?>
 </div>
