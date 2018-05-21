@@ -176,7 +176,7 @@ foreach ($zones as $z)
             </tr>
             <tr style="font-size: .9em; border-bottom: 3px solid #000; ">
                 <td>Buy</td>
-                <td ><?=$s->premiumBuy?></td>
+                <td ><?=$s->premiumSell?></td>
                 <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
                 <td style="font-size: .8em; text-align: left;  ">
                     дельта: <?=strikeVal($s->deltaBuy)?>
