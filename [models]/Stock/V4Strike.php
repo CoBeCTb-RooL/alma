@@ -208,8 +208,8 @@ class V4Strike{
 
 	public function calculate()
 	{
-		$this->resultBuy = $this->strike - $this->premiumBuy;
-		$this->resultSell = $this->strike + $this->premiumSell;
+		$this->resultBuy = $this->strike - $this->premiumSell;
+		$this->resultSell = $this->strike + $this->premiumBuy;
 
 		if($this->currency->code == Currency::CODE_AUD)
 		{
