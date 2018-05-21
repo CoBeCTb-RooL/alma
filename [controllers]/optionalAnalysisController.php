@@ -43,29 +43,12 @@ switch($_PARAMS[0])
 
 	case "v4":
 		$ACTION = 'v4index';
+		if($_PARAMS[1] == 'zonesListAjax')
+			$ACTION = 'v4zonesListAjax';
 		if($_PARAMS[1] == 'submit')
 			$ACTION = 'v4formSubmit';
-		if($_PARAMS[1] == 'deleteStrikeAjax')
+		if($_PARAMS[1] == 'Zones.deleteStrikeAjax')
 			$ACTION = 'v4deleteStrikeAjax';
-
-		/*if($_PARAMS[1] == 'submit')
-			$ACTION = 'v3formSubmit';
-		if($_PARAMS[1] == 'statsAjax')
-			$ACTION = 'v3statsAjax';
-		if($_PARAMS[1] == 'graphicAjax')
-			$ACTION = 'v3graphicAjax';
-		if($_PARAMS[1] == 'switchDoneAjax')
-			$ACTION = 'v3switchDoneAjax';
-		if($_PARAMS[1] == 'graphic2Ajax')
-			$ACTION = 'v3graphic2Ajax';
-		if($_PARAMS[1] == 'deleteBunch')
-			$ACTION = 'v3deleteBunch';
-		if($_PARAMS[1] == 'setBunchStatus')
-			$ACTION = 'v3setBunchStatus';
-		if($_PARAMS[1] == 'saveBunchTitle')
-			$ACTION = 'v3saveBunchTitle';
-		if($_PARAMS[1] == 'switchShowOnGraphicAjax')
-			$ACTION = 'v3switchShowOnGraphicAjax';*/
 
 		break;
 
@@ -617,7 +600,7 @@ class optionalAnalysisController extends MainController{
 		$_GLOBALS['NO_LAYOUT'] = true;
 
 		vd($_REQUEST);
-		//return;
+
 		$error = '';
 
 		$cur = Currency::code($_REQUEST['currency']);
@@ -654,6 +637,7 @@ class optionalAnalysisController extends MainController{
 			$s->status = Status2::code(Status2::ACTIVE);
 			$s->comment = $comment;
 			$s->isZone = 1;
+			$s->data = json_encode($_REQUEST);
 
 			$s->calculate();
 			$s->insert();
@@ -685,69 +669,10 @@ class optionalAnalysisController extends MainController{
         }
 
 
-//		$strikes = $_REQUEST['strike'][$cur->code];
-//		$prems = $_REQUEST['premium'][$cur->code];
-//
-//		if(!$date && !$error)
-//			$error = 'Не указана дата!';
-//		if(!$forward && !$error && $forward!=='0')
-//			$error = 'Не указан форвард!';
-//
-//		$objs = [];
-//
-//		if(!$error)
-//		{
-//			$bunch = new StrikeBunch();
-//			$bunch->title = $bunchTitle;
-//			$bunch->status = Status2::code(Status2::NEUTRAL);
-//			$bunch->dt = $date;
-//			$bunch->data = $data;
-//			$bunch->currency = $cur;
-//			$bunch->insert();
-//			//vd($bunch);
-//
-//			foreach(StrikeTypeV3::$items as $st)
-//			{
-//
-//				foreach(Type::$items as $t)
-//				{
-//					$strike = $strikes[$st->code][$t->code];
-//					$prem = $prems[$st->code][$t->code];
-//
-//					if($strike && $prem)
-//					{
-//						$item = new OAItem();
-//						$item->bunchId = $bunch->id;
-//						$item->strike = $strike;
-//						$item->currency = $cur;
-//						$item->dt = $date;
-//						$item->forward = $forward;
-//						$item->premium = $prem;
-//						$item->strikeType = $st;
-//						$item->type = $t;
-//						$item->isHistory = 0;
-//
-//						$item->calculate();
-//
-//						$objs[] = $item;
-//					}
-//				}
-//			}
-//		}
-//
-//		//vd($objs);
-//		if(!$error && !count($objs))
-//			$error = 'Не введены никакие данные.';
-
 
 		if(!$error)
 		{
-//			foreach($objs as $item)
-//			{
-//				//$item->deletePreviousData();
-//				$item->insert();
-//			}
-//			echo '<script>window.top.Opt.drawStats(); </script>';
+			echo '<script>window.top.Zones.list()</script>';
 		}
 		else
 			echo '<script>window.top.alert("'.$error.'")</script>';
@@ -779,6 +704,31 @@ class optionalAnalysisController extends MainController{
 		echo json_encode($res);
 	}
 
+
+
+
+	public function v4zonesListAjax()
+	{
+		global $_GLOBALS, $_CONFIG;
+		$_GLOBALS['NO_LAYOUT'] = true;
+
+		$today = date('Y-m-d');
+		$date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+		$MODEL['date'] = $date;
+		$MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
+		$MODEL['list'] = V4Strike::getList([
+			'date' => $date,
+			'currency'=>$MODEL['currency'],
+			'isZone' => 1,
+            'orderBy' => 'id desc',
+		]);
+
+		foreach ($MODEL['list'] as $item)
+			$item->initStrikes();
+
+		Slonne::view('optionalAnalysis/v4/zonesListAjax.php', $MODEL);
+	}
 
 
 

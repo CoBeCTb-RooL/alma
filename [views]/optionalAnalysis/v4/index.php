@@ -25,13 +25,68 @@ $zones = $MODEL['list'];
 
 	table{border-collapse: collapse; }
 	table td, table th{padding: 4px 8px; text-align: center; }
-
-
-	.cell-<?=Type::BUY?>{background: #dedfff; }
-	.cell-<?=Type::SELL?>{background: #e8ffe5; }
-	fieldset{margin: 0 0 20px 0;}
-    fieldset legend{font-size: 1.2em; font-weight: bold; }
 </style>
+
+
+<script>
+    var Zones = {
+        opts: {
+            date: '<?=$date?>',
+            currency: '<?=$cur->code?>'
+        },
+
+        list: function(){
+            $.ajax({
+                url: '/ru/optionalAnalysis/v4/zonesListAjax',
+                data: this.opts,
+                beforeSend: function(){ $('.zones').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
+                complete: function(){ $('.zones').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
+                success: function(data){
+                    $('.zones').html(data)
+                },
+                error: function(){}
+            })
+        },
+
+
+        deleteStrike: function(id){
+            if(!confirm('удалить?'))
+                return
+            $.ajax({
+                url: '/ru/optionalAnalysis/v4/Zones.deleteStrikeAjax',
+                data: {id: id},
+                beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
+                complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
+                success: function(data){
+                    // $('.stats').html(data)
+                    //location.href=location.href
+                    Zones.list()
+                },
+                error: function(){}
+            })
+        },
+
+
+        setZoneDataToForm: function(obj){
+            if(typeof(obj) == 'undefined' || typeof(obj.currency) == 'undefined'){
+                alert('Битые данные... С этой зоной не получится')
+                return
+            }
+
+            var form = $('#addZoneForm')
+
+            form.find('input[name=forward]').val(obj.forward)
+            form.find('input[name=zoneData]').val(obj.zoneData)
+            form.find('textarea[name=data]').val(obj.data)
+        }
+
+
+    }
+</script>
+
+
+
+
 
 
 <?php Slonne::view('stock/menu.php');?>
@@ -42,14 +97,16 @@ $zones = $MODEL['list'];
 
 
 <h1>Опционный анализ v4.0</h1>
+Валюта: |&nbsp;
 
-Валюта:
 <?
 foreach($MODEL['currencies'] as $c)
 {?>
-    <a href="?currency=<?=$c->code?>" style="; <?=$c->code == $currency->code ? 'font-weight: bold; ' : ''?>"><?=$c->code?></a>
+    <a href="?currency=<?=$c->code?>" style="; <?=$c->code == $cur->code ? 'font-weight: bold; font-size: 1.2em;  ' : ''?>"><?=$c->code?></a>
+    &nbsp;|&nbsp;
 <?
 }?>
+<hr>
 <p></p>
 
 
@@ -69,7 +126,7 @@ foreach($MODEL['currencies'] as $c)
 
 
 
-<form class="form" action="/ru/optionalAnalysis/v4/submit" id="form" target="frame7" onsubmit="if(confirm('Сохранить данные?')){return true; } return false; ">
+<form class="form" action="/ru/optionalAnalysis/v4/submit" id="addZoneForm" target="frame7" onsubmit="if(confirm('Сохранить данные?')){return true; } return false; " style="position: fixed; top: 200px; right: 100px; background: #efefef; ">
     <input type="hidden" name="currency" value="<?=$cur->code?>">
     <h3><?=$cur->code?></h3>
 
@@ -103,143 +160,12 @@ foreach($MODEL['currencies'] as $c)
 </form>
 
 
-<p></p>
 
 
 
 <p>
-
-<?
-foreach ($zones as $z)
-{?>
-    <div class="zone" >
-        <b><?=$z->comment?></b>
-	<?
-	if(!$z->closestBuy)
-	{?>
-        <div style="color: red; ">- Нет <b>BUY</b>, у которого <b>resultBuy <= <?=$z->resultBuy?></b></div>
-		<?
-	}?>
-	<?
-	if(!$z->closestSell)
-	{?>
-        <div style="color: red; ">- Нет <b>SELL</b>, у которого <b>resultSell >= <?=$z->resultSell?></b>!!!</div>
-		<?
-	}?>
-    <?
-    //vd($z->closestBuy)?>
-        <table border="1" style="">
-            <tr>
-                <th>id</th>
-                <th>cur</th>
-                <th>strike</th>
-                <th>type</th>
-                <th>prem</th>
-                <th>result</th>
-                <th>delta</th>
-                <th>action</th>
-            </tr>
-            <tr style="border-top: 3px solid #000; background: #eeeaed;  ">
-                <td rowspan="2" style="font-size: .8em; border-left: 3px solid #000;  "><?=$z->id?>. </td>
-                <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->currency->code?> </td>
-                <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->strike?> </td>
-                <td>to Sell</td>
-                <td><?=$z->premiumBuy?></td>
-                <td style="background: <?=$sellColor?>;"><?=$z->resultSell?></td>
-                <td></td>
-                <td rowspan="2" style="border-right: 3px solid #000;"><a href="#" onclick="deleteStrike(<?=$z->id?>); return false; ">удалить</a></td>
-            </tr>
-            <tr style="border-bottom: 3px solid #000; background: #eeeaed">
-                <td>to Buy</td>
-                <td><?=$z->premiumSell?></td>
-                <td style=" background: <?=$buyColor?>;  "><?=$z->resultBuy?></td>
-
-                <td></td>
-            </tr>
-    <?
-    foreach ($z->strikes as $s)
-    {
-        $isClosestBuy = $z->closestBuy->id == $s->id;
-        $isClosestSell = $z->closestSell->id == $s->id;
-        ?>
-            <tr style="font-size: .9em; ">
-                <td rowspan="2" style="font-size: .8em;  "><?=$s->id?>. </td>
-                <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->currency->code?> </td>
-                <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$s->strike?> </td>
-                <td>to Sell</td>
-                <td><?=$s->premiumBuy?></td>
-                <td style="<?=($isClosestSell ? ' border: 3px solid #b100ff; background: '.$sellColor.'' : '')?>"><?=$s->resultSell?></td>
-                <td style="font-size: .8em; text-align: left;  ">
-                    дельта: <?=strikeVal($s->deltaSell)?>
-                </td>
-                <td rowspan="2"><a href="#" onclick="deleteStrike(<?=$s->id?>);; return false; ">удалить</a></td>
-            </tr>
-            <tr style="font-size: .9em; border-bottom: 3px solid #000; ">
-                <td>to Buy</td>
-                <td ><?=$s->premiumSell?></td>
-                <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
-                <td style="font-size: .8em; text-align: left;  ">
-                    дельта: <?=strikeVal($s->deltaBuy)?>
-                </td>
-
-            </tr>
-    <?
-    }?>
-        </table>
-
-<!--    ---------------------->
-<!--    ---------------------->
-   <!-- <table border="1" style="">
-        <tr style="border-top: 3px solid #000;  border-bottom: 3px solid #000; ">
-            <td style="font-size: .8em; border-left: 3px solid #000;  "><?=$z->id?>. </td>
-            <td  style="font-weight: bold; font-size: 1.1em; "><?=$z->currency->code?> </td>
-            <td style="font-weight: bold; font-size: 1.1em; "><?=$z->strike?> </td>
-            <td>Buy</td>
-            <td><?=$z->premiumBuy?></td>
-            <td style="background: <?=$buyColor?>;  "><?=$z->resultBuy?></td>
-            <td></td>
-
-
-            <td>Sell</td>
-            <td><?=$z->premiumSell?></td>
-            <td style="background: <?=$sellColor?>;"><?=$z->resultSell?></td>
-            <td></td>
-            <td style="border-right: 3px solid #000; "><a href="#"  onclick="deleteStrike(<?=$z->id?>); return false; ">удалить</a></td>
-        </tr>
-		<?
-		foreach ($z->strikes as $s)
-		{
-			$isClosestBuy = $z->closestBuy->id == $s->id;
-			$isClosestSell = $z->closestSell->id == $s->id;
-			?>
-            <tr style="font-size: .9em; ">
-                <td style="font-size: .8em;  "><?=$s->id?>. </td>
-                <td  style="font-weight: bold; font-size: 1.1em; "><?=$z->currency->code?> </td>
-                <td style="font-weight: bold; font-size: 1.1em; "><?=$s->strike?> </td>
-                <td>Buy</td>
-                <td ><?=$s->premiumBuy?></td>
-                <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
-                <td style="font-size: .8em; text-align: left;  ">дельта: <?=strikeVal($z->resultBuy-$s->resultBuy)?></td>
-
-
-                <td>Sell</td>
-                <td><?=$s->premiumSell?></td>
-                <td style="<?=($isClosestSell ? ' border: 3px solid #b100ff; background: '.$sellColor.'' : '')?>"><?=$s->resultSell?></td>
-                <td style="font-size: .8em; text-align: left;  ">дельта: <?=strikeVal($s->resultSell-$z->resultSell)?></td>
-                <td ><a href="#"  onclick="deleteStrike(<?=$s->id?>); return false; ">удалить</a></td>
-            </tr>
-			<?
-		}?>
-    </table>-->
-<!--    ---------------------->
-<!--    ---------------------->
-
-
-    </div>
-    <hr>
-<?
-}?>
-
+<button onclick="Zones.list(); "></button>
+<div class="zones">Загрузка...</div>
 
 
 
@@ -253,21 +179,9 @@ foreach ($zones as $z)
 
 
 <script>
-    var deleteStrike = function(id){
-        if(!confirm('удалить?'))
-            return
 
-        $.ajax({
-            url: '/ru/optionalAnalysis/v4/deleteStrikeAjax',
-            data: {id: id},
-            beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
-            complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
-            success: function(data){
-                // $('.stats').html(data)
-                location.href=location.href
-            },
-            error: function(){}
-        })
-    }
+    $(document).ready(function(){
+        Zones.list()
+    })
 
 </script>

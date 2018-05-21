@@ -16,6 +16,9 @@ class V4Strike{
 	public $status;
 	public $comment;
 	public $isZone;
+	public $data;
+	public $createdAt;
+	public $updatedAt;
 
 
 	const TBL = 'v4_strikes';
@@ -38,6 +41,9 @@ class V4Strike{
 			$this->status = Status2::code($arr['status']);
 			$this->comment = $arr['comment'];
 			$this->isZone = $arr['isZone'];
+			$this->data = $arr['data'];
+			$this->createdAt = $arr['createdAt'];
+			$this->updatedAt = $arr['updatedAt'];
 
 			$this->calculate();
 		}
@@ -141,47 +147,14 @@ class V4Strike{
 
 
 
-	public static function arrangeList2($list)
+	public function toArray()
 	{
-		$res = [];
+		$tmp = clone $this;
+		unset($tmp->strikes);
+		unset($tmp->closestBuy);
+		unset($tmp->closestSell);
 
-		foreach($list as $val)
-			$res[substr($val->dt, 0, 10)][$val->currency->code][$val->strikeType->code][$val->type->code] = $val;
-
-		return $res;
-	}
-
-	public static function arrangeListByDate($list)
-	{
-		$res = [];
-
-		foreach($list as $val)
-			$res[substr($val->dt, 0, 10)][] = $val;
-
-		return $res;
-	}
-
-
-
-
-	public function deletePreviousData()
-	{
-		self::deleteByDateAndCurrencyAndStrikeTypeAndType($this->dt, $this->currency->code, $this->strikeType->code,  $this->type->code);
-	}
-
-
-
-	public static function deleteByDateAndCurrencyAndStrikeTypeAndType($date, $cur, $strikeType, $type)
-	{
-		$sql = "DELETE FROM `".self::TBL."` where 
-		DATE(dt) = DATE('".strPrepare($date)."')
-		 AND currency='".$cur."'
-		 AND `strikeType`='".$strikeType."'
-		 AND `type`='".$type."'
-		";
-		vd($sql);
-		DB::query($sql);
-		echo mysql_error();
+		return (array) $tmp;
 	}
 
 
@@ -236,8 +209,8 @@ class V4Strike{
 		{
 			$sql = "
 			INSERT INTO `".self::TBL."` 
-			SET   ".$this->innerAlterSql()."
-				";
+			SET `createdAt` = NOW(),  
+			 ".$this->innerAlterSql()."";
 			//vd($sql);
 			DB::query($sql);
 			echo mysql_error();
@@ -251,10 +224,10 @@ class V4Strike{
     function update()
     {
         $sql = "
-			UPDATE `".self::TBL."` 
-			SET   
-            ".$this->innerAlterSql()."
-            WHERE id=".intval($this->id)." ";
+		UPDATE `".self::TBL."` 
+		SET   
+		".$this->innerAlterSql()."
+		WHERE id=".intval($this->id)." ";
         //vd($sql);
         DB::query($sql);
         echo mysql_error();
@@ -278,6 +251,8 @@ class V4Strike{
 				, `status` = '".strPrepare($this->status->code)."'
 				, `comment` = '".strPrepare($this->comment)."'
 				, `isZone` = '".($this->isZone ? 1 : 0)."'
+				, `data` = '".strPrepare($this->data)."'
+				, `updatedAt` = '".strPrepare($this->updatedAt)."'
 				";
 
         return $str;
