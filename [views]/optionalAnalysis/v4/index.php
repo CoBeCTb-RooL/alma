@@ -174,7 +174,7 @@ foreach ($zones as $z)
                 </td>
                 <td rowspan="2"><a href="#" onclick="deleteStrike(<?=$s->id?>);; return false; ">удалить</a></td>
             </tr>
-            <tr style="font-size: .9em; border-bottom: 2px solid #000; ">
+            <tr style="font-size: .9em; border-bottom: 3px solid #000; ">
                 <td>Buy</td>
                 <td ><?=$s->premiumBuy?></td>
                 <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
