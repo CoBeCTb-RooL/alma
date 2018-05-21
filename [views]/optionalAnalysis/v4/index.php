@@ -14,27 +14,24 @@ $cur = $MODEL['currency'];
 
 $list = $MODEL['list'];
 $strikes = [];
-$zones = [];
-foreach ($list as $item)
-{
-    if($item->isZone)
-    {
-        foreach ($list as $item2)
-            if($item2->pid == $item->id)
-                $item->strikes[] = $item2;
-        $zones[] = $item;
-	}
-    else
-		$strikes[] = $item;
-}
+$zones = $MODEL['list'];
+//foreach ($list as $item)
+//{
+//    if($item->isZone)
+//    {
+//        foreach ($list as $item2)
+//            if($item2->pid == $item->id)
+//                $item->strikes[] = $item2;
+//        $zones[] = $item;
+//	}
+//    else
+//		$strikes[] = $item;
+//}
 
 
 #   разбираемся со страйками зон
-foreach ($zones as $z)
+/*foreach ($zones as $z)
 {
-	$z->closestBuyId='';
-	$z->closestSellId='';
-
 	$deltaBuy = 0;
 	$deltaSell = 0;
     $i=0;
@@ -45,15 +42,17 @@ foreach ($zones as $z)
         {
 			if(!$z->closestBuy)
 			{
+			    echo "!";
 				$deltaBuy = $z->premiumBuy - $s->premiumBuy;
 				$z->closestBuy = $s;
 			}
-			elseif($z->premiumBuy - $s->premiumBuy < $deltaBuy)
+			elseif($z->premiumBuy - $s->premiumBuy < $deltaBuy )
             {
                 $z->closestBuy = $s;
                 $deltaBuy = $z->premiumBuy - $s->premiumBuy;
             }
         }
+		vd($deltaBuy);
 
 		#   разбираем СЕЛЛы
 		if($s->premiumSell >= $z->premiumSell)
@@ -74,7 +73,9 @@ foreach ($zones as $z)
 //        if($i >=3)
 //            break;
     }
-}
+    echo '<hr>';
+
+}*/
 
 
 ?>
@@ -175,6 +176,20 @@ foreach ($zones as $z)
 {?>
     <div class="zone" >
         <b><?=$z->comment?></b>
+	<?
+	if(!$z->closestBuy)
+	{?>
+        <div style="color: red; ">- Нет <b>BUY</b>, у которого <b>resultBuy <= <?=$z->resultBuy?></b></div>
+		<?
+	}?>
+	<?
+	if(!$z->closestSell)
+	{?>
+        <div style="color: red; ">- Нет <b>SELL</b>, у которого <b>resultSell >= <?=$z->resultSell?></b>!!!</div>
+		<?
+	}?>
+    <?
+    //vd($z->closestBuy)?>
         <table border="1" style="">
             <tr>
                 <th>id</th>
@@ -190,16 +205,17 @@ foreach ($zones as $z)
                 <td rowspan="2" style="font-size: .8em; border-left: 3px solid #000;  "><?=$z->id?>. </td>
                 <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->currency->code?> </td>
                 <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->strike?> </td>
-                <td>Buy</td>
-                <td><?=$z->premiumBuy?></td>
-                <td style=" background: <?=$buyColor?>;  "><?=$z->resultBuy?></td>
+                <td>Sell</td>
+                <td><?=$z->premiumSell?></td>
+                <td style="background: <?=$sellColor?>;"><?=$z->resultSell?></td>
                 <td></td>
                 <td rowspan="2" style="border-right: 3px solid #000;"><a href="#" onclick="deleteStrike(<?=$z->id?>); return false; ">удалить</a></td>
             </tr>
             <tr style="border-bottom: 3px solid #000; background: #eeeaed">
-                <td>Sell</td>
-                <td><?=$z->premiumSell?></td>
-                <td style="background: <?=$sellColor?>;"><?=$z->resultSell?></td>
+                <td>Buy</td>
+                <td><?=$z->premiumBuy?></td>
+                <td style=" background: <?=$buyColor?>;  "><?=$z->resultBuy?></td>
+
                 <td></td>
             </tr>
     <?
@@ -212,17 +228,22 @@ foreach ($zones as $z)
                 <td rowspan="2" style="font-size: .8em;  "><?=$s->id?>. </td>
                 <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$z->currency->code?> </td>
                 <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$s->strike?> </td>
-                <td>Buy</td>
-                <td ><?=$s->premiumBuy?></td>
-                <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
-                <td style="font-size: .8em; text-align: left;  ">дельта: <?=strikeVal($z->resultBuy-$s->resultBuy)?></td>
-                <td rowspan="2"><a href="#" onclick="deleteStrike(<?=$s->id?>);; return false; ">удалить</a></td>
-            </tr>
-        <tr style="font-size: .9em; border-bottom: 2px solid #000; ">
                 <td>Sell</td>
                 <td><?=$s->premiumSell?></td>
                 <td style="<?=($isClosestSell ? ' border: 3px solid #b100ff; background: '.$sellColor.'' : '')?>"><?=$s->resultSell?></td>
-            <td style="font-size: .8em; text-align: left;  ">дельта: <?=strikeVal($s->resultSell-$z->resultSell)?></td>
+                <td style="font-size: .8em; text-align: left;  ">
+                    дельта: <?=strikeVal($s->deltaSell)?>
+                </td>
+                <td rowspan="2"><a href="#" onclick="deleteStrike(<?=$s->id?>);; return false; ">удалить</a></td>
+            </tr>
+            <tr style="font-size: .9em; border-bottom: 2px solid #000; ">
+                <td>Buy</td>
+                <td ><?=$s->premiumBuy?></td>
+                <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
+                <td style="font-size: .8em; text-align: left;  ">
+                    дельта: <?=strikeVal($s->deltaBuy)?>
+                </td>
+
             </tr>
     <?
     }?>

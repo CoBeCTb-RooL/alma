@@ -574,7 +574,7 @@ class optionalAnalysisController extends MainController{
 	function v4index()
 	{
 		global $_GLOBALS, $_CONFIG;
-		$_GLOBALS['TITLE'] = Slonne::getTitle('Опционный анализ v3');
+		$_GLOBALS['TITLE'] = Slonne::getTitle('Опционный анализ v4.0');
 
 		$MODEL['currencies'] = [
 			Currency::code(Currency::CODE_EUR),
@@ -599,36 +599,11 @@ class optionalAnalysisController extends MainController{
         $MODEL['list'] = V4Strike::getList([
                 'date' => $date,
                 'currency'=>$MODEL['currency'],
+                'isZone' => 1,
         ]);
 
-//		$today = date('Y-m-d');
-//		$date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
-//
-//		$prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
-//		$nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
-//
-//		$MODEL['date'] = $date;
-//		$MODEL['today'] = $today;
-//		$MODEL['datePrev'] = $prevDate;
-//		$MODEL['dateNext'] = $nextDate;
-//
-//		$list = OAItem::getList(['dt'=>$date, 'orderBy'=>'dt DESC', ]);
-//		//vd($list);
-//		$MODEL['list2'] = OAItem::arrangeList2($list);
-//		//vd($MODEL['list2']);
-//
-//		$MODEL['currencies'] = [
-//			Currency::code(Currency::CODE_EUR),
-//			Currency::code(Currency::CODE_GBP),
-//			Currency::code(Currency::CODE_AUD),
-//		];
-//
-//		$MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
-//
-//		#   даты ОТ и ДО для графика
-//		$MODEL['graphicDateFrom'] = date('Y-m-d', strtotime($today . ' - 7 day'));
-//		$MODEL['graphicDateTo'] = $today;
-//		$MODEL['graphicChosenCurrency'] = /*Currency::code(Currency::CODE_EUR)*/ $MODEL['currency'];
+        foreach ($MODEL['list'] as $item)
+			$item->initStrikes();
 
 		Slonne::view('optionalAnalysis/v4/index.php', $MODEL);
 	}

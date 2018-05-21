@@ -90,6 +90,57 @@ class V4Strike{
 
 
 
+	public function initStrikes()
+	{
+		$this->strikes = self::getList(['pid'=>$this->id]);
+
+		$this->initClosestStrikes();
+	}
+
+
+	public function initClosestStrikes()
+	{
+		foreach ($this->strikes as $s)
+			$s->countDeltas($this);
+
+		# 	теперь ищем клоусесты
+		$closestBuy = null;
+		$closestSell = null;
+
+		$i=0;
+		foreach ($this->strikes as $s)
+		{
+			if(!$i) 	# 	первый
+			{
+				if($s->deltaBuy >=0)
+					$closestBuy = $s;
+
+				if($s->deltaSell >=0)
+					$closestSell = $s;
+			}
+			else
+			{
+				if( $s->deltaBuy >= 0 && (!$closestBuy || $s->deltaBuy < $closestBuy->deltaBuy)  )
+					$closestBuy = $s;
+				if( $s->deltaSell >= 0 && (!$closestSell || $s->deltaSell < $closestSell->deltaSell)  )
+					$closestSell = $s;
+			}
+
+			$i++;
+		}
+		$this->closestBuy = $closestBuy;
+		$this->closestSell = $closestSell;
+	}
+
+
+	public function countDeltas($zone)
+	{
+		$this->deltaBuy = strikeVal($zone->resultBuy - $this->resultBuy);
+		$this->deltaSell = strikeVal($this->resultSell - $zone->resultSell);
+	}
+
+
+
 	public static function arrangeList2($list)
 	{
 		$res = [];
