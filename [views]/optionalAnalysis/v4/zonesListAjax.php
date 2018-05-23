@@ -73,6 +73,13 @@ foreach ($zones as $z)
                     <td style="<?=($isClosestSell ? ' border: 3px solid #b100ff; background: '.$sellColor.'' : '')?>"><?=$s->resultSell?></td>
                     <td style="font-size: .8em; text-align: left;  ">
                         дельта: <?=strikeVal($s->deltaSell)?>
+                        <br>
+                        <?
+                        if($z->closestAbsSell->id == $s->id)
+                        {?>
+                            <div style="display:inline-block; margin: 2px 0 0 0;  font-weight: bold; color: #fff; background: #b100ff; border-radius: 2px; padding: 1px 2px;  ">по модулю</span>
+                        <?
+                        }?>
                     </td>
                     <td rowspan="2"><a href="#" onclick="Zones.deleteStrike(<?=$s->id?>);; return false; ">удалить</a></td>
                 </tr>
@@ -82,6 +89,13 @@ foreach ($zones as $z)
                     <td style="<?=($isClosestBuy ? ' border: 3px solid #2751FF; background: '.$buyColor.'' : '')?>"><?=$s->resultBuy?></td>
                     <td style="font-size: .8em; text-align: left;  ">
                         дельта: <?=strikeVal($s->deltaBuy)?>
+                        <br>
+						<?
+						if($z->closestAbsBuy->id == $s->id)
+						{?>
+                        <div style="display:inline-block; margin: 2px 0 0 0;  font-weight: bold; color: #fff; background: #2751FF; border-radius: 2px; padding: 1px 2px;  ">по модулю</span>
+                        <?
+                        }?>
                     </td>
 
                 </tr>

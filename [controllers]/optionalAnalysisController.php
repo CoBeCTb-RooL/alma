@@ -593,6 +593,31 @@ class optionalAnalysisController extends MainController{
 
 
 
+	public function v4zonesListAjax()
+	{
+		global $_GLOBALS, $_CONFIG;
+		$_GLOBALS['NO_LAYOUT'] = true;
+
+		$today = date('Y-m-d');
+		$date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+		$MODEL['date'] = $date;
+		$MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
+		$MODEL['list'] = V4Strike::getList([
+			'date' => $date,
+			'currency'=>$MODEL['currency'],
+			'isZone' => 1,
+			'orderBy' => 'id desc',
+		]);
+
+		foreach ($MODEL['list'] as $item)
+			$item->initStrikes();
+
+		Slonne::view('optionalAnalysis/v4/zonesListAjax.php', $MODEL);
+	}
+
+
+
 
 	public function v4formSubmit()
 	{
@@ -707,28 +732,7 @@ class optionalAnalysisController extends MainController{
 
 
 
-	public function v4zonesListAjax()
-	{
-		global $_GLOBALS, $_CONFIG;
-		$_GLOBALS['NO_LAYOUT'] = true;
 
-		$today = date('Y-m-d');
-		$date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
-		$MODEL['date'] = $date;
-		$MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
-
-		$MODEL['list'] = V4Strike::getList([
-			'date' => $date,
-			'currency'=>$MODEL['currency'],
-			'isZone' => 1,
-            'orderBy' => 'id desc',
-		]);
-
-		foreach ($MODEL['list'] as $item)
-			$item->initStrikes();
-
-		Slonne::view('optionalAnalysis/v4/zonesListAjax.php', $MODEL);
-	}
 
 
 

@@ -31,7 +31,6 @@ class V4Strike{
 			$this->pid = $arr['pid'];
 			$this->dt = $arr['dt'];
 			$this->currency = Currency::code($arr['currency']);
-			$this->type = Type::code($arr['type']);
 			$this->strike = strikeVal($arr['strike']);
 			$this->premiumBuy = strikeVal($arr['premiumBuy']);
 			$this->premiumSell = strikeVal($arr['premiumSell']);
@@ -136,6 +135,24 @@ class V4Strike{
 		}
 		$this->closestBuy = $closestBuy;
 		$this->closestSell = $closestSell;
+
+
+		# 	ищем клоусесты по модулю
+		foreach ($this->strikes as $s)
+		{
+			# 	buy
+			if(!$this->closestAbsBuy)
+				$this->closestAbsBuy = $s;
+			elseif($s->deltaAbsBuy < $this->closestAbsBuy->deltaAbsBuy)
+				$this->closestAbsBuy = $s;
+
+			# 	buy
+			if(!$this->closestAbsSell)
+				$this->closestAbsSell = $s;
+			elseif($s->deltaAbsSell < $this->closestAbsSell->deltaAbsSell)
+				$this->closestAbsSell = $s;
+		}
+
 	}
 
 
@@ -143,6 +160,11 @@ class V4Strike{
 	{
 		$this->deltaBuy = strikeVal($zone->resultBuy - $this->resultBuy);
 		$this->deltaSell = strikeVal($this->resultSell - $zone->resultSell);
+
+//		$this->deltaAbsBuy = strikeVal(abs($zone->resultBuy - $this->resultBuy));
+//		$this->deltaAbsSell = strikeVal(abs($zone->resultSell - $this->resultSell));
+		$this->deltaAbsBuy = abs($this->deltaBuy);
+		$this->deltaAbsSell = abs($this->deltaSell);
 	}
 
 
