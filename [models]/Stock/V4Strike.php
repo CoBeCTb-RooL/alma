@@ -32,8 +32,8 @@ class V4Strike{
 			$this->dt = $arr['dt'];
 			$this->currency = Currency::code($arr['currency']);
 			$this->strike = strikeVal($arr['strike']);
-			$this->premiumBuy = strikeVal($arr['premiumBuy']);
-			$this->premiumSell = strikeVal($arr['premiumSell']);
+			$this->premiumBuy = strikeVal($arr['premiumBuy'], 7);
+			$this->premiumSell = strikeVal($arr['premiumSell'], 7);
 			$this->resultBuy = strikeVal($arr['resultBuy']);
 			$this->resultSell = strikeVal($arr['resultSell']);
 			$this->forward = $arr['forward'];

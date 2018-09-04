@@ -168,10 +168,10 @@ function getOnclick($page, $onclick)
 
 
 
-function strikeVal($val)
+function strikeVal($val, $signsAfterComma = 4)
 {
     $str = $val;
-    $str = number_format($str,"4");
+    $str = number_format($str, $signsAfterComma);
     return $str;
 }
 
