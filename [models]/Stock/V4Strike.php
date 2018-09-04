@@ -222,9 +222,9 @@ class V4Strike{
 			$this->resultSell = 1 / $this->resultSell;
 
 			# 	меняем местами
-//			$a = $this->resultBuy;
-//			$this->resultBuy = $this->resultSell;
-//			$this->resultSell = $a;
+			$a = $this->resultBuy;
+			$this->resultBuy = $this->resultSell;
+			$this->resultSell = $a;
 
 		}
 
