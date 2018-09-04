@@ -176,7 +176,7 @@ foreach($MODEL['currencies'] as $c)
 
 
 
-<iframe src="" frameborder="0" name="frame7" style="display:  ; border: 1px solid #000; background: #ececec; height: 400px; width: 100%; ">wqe</iframe>
+<iframe src="" frameborder="0" name="frame7" style="display: none; border: 1px solid #000; background: #ececec; height: 400px; width: 100%; ">wqe</iframe>
 
 
 <script>
