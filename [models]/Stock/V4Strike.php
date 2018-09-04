@@ -225,7 +225,6 @@ class V4Strike{
 			$a = $this->resultBuy;
 			$this->resultBuy = $this->resultSell;
 			$this->resultSell = $a;
-
 		}
 
 

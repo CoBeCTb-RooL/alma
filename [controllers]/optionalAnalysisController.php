@@ -654,11 +654,15 @@ class optionalAnalysisController extends MainController{
             #   зона
 			$cols = explode("\t", $zoneData);
 
+			$valToDivideTo = 10000;     //  на какое значение делим страйк
+            if($cur->code == Currency::CODE_JPY)
+				$valToDivideTo = 1000000;
+
 			$s = new V4Strike();
 			$s->dt = $date;
 			$s->pid = 0;
 			$s->currency = $cur;
-			$s->strike = $cols[1]/10000;
+			$s->strike = $cols[1]/$valToDivideTo;
 			$s->premiumBuy = $cols[0];
 			$s->premiumSell = $cols[2];
 			$s->forward = $forward;
@@ -682,7 +686,7 @@ class optionalAnalysisController extends MainController{
 				$s->pid = $zone->id;
 				$s->dt = $date;
 				$s->currency = $cur;
-				$s->strike = $cols[1]/10000;
+				$s->strike = $cols[1]/$valToDivideTo;
 				$s->premiumBuy = $cols[0];
 				$s->premiumSell = $cols[2];
 				$s->forward = $forward;
