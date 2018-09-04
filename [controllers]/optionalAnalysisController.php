@@ -563,6 +563,9 @@ class optionalAnalysisController extends MainController{
 			Currency::code(Currency::CODE_EUR),
 			Currency::code(Currency::CODE_GBP),
 			Currency::code(Currency::CODE_AUD),
+			Currency::code(Currency::CODE_JPY),
+			Currency::code(Currency::CODE_CAD),
+			Currency::code(Currency::CODE_CHF),
 		];
 
 

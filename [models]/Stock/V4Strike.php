@@ -206,15 +206,26 @@ class V4Strike{
 		$this->resultBuy = $this->strike - $this->premiumSell;
 		$this->resultSell = $this->strike + $this->premiumBuy;
 
-		if($this->currency->code == Currency::CODE_AUD)
-		{
-			$this->resultBuy += $this->forward;
-			$this->resultSell += $this->forward;
-		}
-		else
+//		if($this->currency->code == Currency::CODE_AUD)
+		if(in_array($this->currency->code, [Currency::CODE_AUD, Currency::CODE_EUR, Currency::CODE_GBP]))
 		{
 			$this->resultBuy -= $this->forward;
 			$this->resultSell -= $this->forward;
+		}
+		elseif(in_array($this->currency->code, [Currency::CODE_CAD, Currency::CODE_JPY, Currency::CODE_CHF]))
+		{
+			$this->resultBuy += $this->forward;
+			$this->resultSell += $this->forward;
+
+			# 	оборачиваем
+			$this->resultBuy = 1 / $this->resultBuy;
+			$this->resultSell = 1 / $this->resultSell;
+
+			# 	меняем местами
+//			$a = $this->resultBuy;
+//			$this->resultBuy = $this->resultSell;
+//			$this->resultSell = $a;
+
 		}
 
 

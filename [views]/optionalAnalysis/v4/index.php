@@ -102,7 +102,7 @@ $zones = $MODEL['list'];
 <?
 foreach($MODEL['currencies'] as $c)
 {?>
-    <a href="?currency=<?=$c->code?>" style="; <?=$c->code == $cur->code ? 'font-weight: bold; font-size: 1.2em;  ' : ''?>"><?=$c->code?></a>
+    <a href="?currency=<?=$c->code?>&date=<?=$date?>" style="; <?=$c->code == $cur->code ? 'font-weight: bold; font-size: 1.2em;  ' : ''?>"><?=$c->code?></a>
     &nbsp;|&nbsp;
 <?
 }?>
@@ -116,6 +116,7 @@ foreach($MODEL['currencies'] as $c)
 		<?=($date == $today ? '<span class="today-lbl">(сегодня)</span>' : '' )?>
     </h2>
     <a href="?date=<?=$datePrev?>&currency=<?=$cur->code?>">&larr; Предыдущий</a>
+    <a href="?date=<?=date('Y-m-d')?>&currency=<?=$cur->code?>" style="font-weight: bold; ">Сегодня</a>
 	<?php
 	if($dateNext)
 	{?>
@@ -175,7 +176,7 @@ foreach($MODEL['currencies'] as $c)
 
 
 
-<iframe src="" frameborder="0" name="frame7" style="display: none ; border: 1px solid #000; background: #ececec; height: 400px; width: 100%; ">wqe</iframe>
+<iframe src="" frameborder="0" name="frame7" style="display:  ; border: 1px solid #000; background: #ececec; height: 400px; width: 100%; ">wqe</iframe>
 
 
 <script>
