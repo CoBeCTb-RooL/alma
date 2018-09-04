@@ -36,7 +36,7 @@ class V4Strike{
 			$this->premiumSell = strikeVal($arr['premiumSell']);
 			if($this->currency->code == Currency::CODE_JPY)
 			{
-				$this->strike = strikeVal($arr['strike'], 7);
+				$this->strike = strikeVal($arr['strike'], 6);
 				$this->premiumBuy = strikeVal($arr['premiumBuy'], 7);
 				$this->premiumSell = strikeVal($arr['premiumSell'], 7);
 			}
