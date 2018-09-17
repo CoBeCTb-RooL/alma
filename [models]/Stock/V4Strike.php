@@ -204,44 +204,50 @@ class V4Strike{
         DB::query($sql);
         echo mysql_error();
     }
-	
-	
-
-	public function calculate()
-	{
-		$this->resultBuy = $this->strike - $this->premiumSell;
-		$this->resultSell = $this->strike + $this->premiumBuy;
-
-//		if($this->currency->code == Currency::CODE_AUD)
-		if(in_array($this->currency->code, [Currency::CODE_AUD, Currency::CODE_EUR, Currency::CODE_GBP]))
-		{
-			$this->resultBuy -= $this->forward;
-			$this->resultSell -= $this->forward;
-		}
-		elseif(in_array($this->currency->code, [Currency::CODE_CAD, Currency::CODE_JPY, Currency::CODE_CHF]))
-		{
-			$this->resultBuy += $this->forward;
-			$this->resultSell += $this->forward;
-
-			# 	оборачиваем
-			$this->resultBuy = 1 / $this->resultBuy;
-			$this->resultSell = 1 / $this->resultSell;
-
-			# 	меняем местами
-			$a = $this->resultBuy;
-			$this->resultBuy = $this->resultSell;
-			$this->resultSell = $a;
-		}
-
-
-		$this->resultBuy = strikeVal($this->resultBuy);
-		$this->resultSell = strikeVal($this->resultSell);
-	}
 
 
 
+    public function calculate()
+    {
+//		$this->resultBuy = $this->strike - $this->premiumSell;
+//		$this->resultSell = $this->strike + $this->premiumBuy;
 
-	function insert()
+        if(in_array($this->currency->code, [Currency::CODE_AUD, Currency::CODE_EUR, Currency::CODE_GBP]))
+        {
+            $this->resultBuy = $this->strike - $this->premiumSell;
+            $this->resultSell = $this->strike + $this->premiumBuy;
+
+            $this->resultBuy -= $this->forward;
+            $this->resultSell -= $this->forward;
+        }
+        elseif(in_array($this->currency->code, [Currency::CODE_CAD, Currency::CODE_JPY, Currency::CODE_CHF]))
+        {
+//			$this->resultBuy += $this->forward;
+//			$this->resultSell += $this->forward;
+//
+//			# 	оборачиваем
+//			$this->resultBuy = 1 / $this->resultBuy;
+//			$this->resultSell = 1 / $this->resultSell;
+//
+//			# 	меняем местами
+//			$a = $this->resultBuy;
+//			$this->resultBuy = $this->resultSell;
+//			$this->resultSell = $a;
+
+            $this->resultSell = 1 / ($this->strike - $this->premiumSell)  + $this->forward;
+            $this->resultBuy = 1 / ($this->strike + $this->premiumBuy)  + $this->forward;
+        }
+
+
+        $this->resultBuy = strikeVal($this->resultBuy);
+        $this->resultSell = strikeVal($this->resultSell);
+    }
+
+
+
+
+
+    function insert()
 	{
 		if($this->strike)
 		{
