@@ -41,16 +41,28 @@ switch($_PARAMS[0])
 
 
 
-	case "v4":
-		$ACTION = 'v4index';
-		if($_PARAMS[1] == 'zonesListAjax')
-			$ACTION = 'v4zonesListAjax';
-		if($_PARAMS[1] == 'submit')
-			$ACTION = 'v4formSubmit';
-		if($_PARAMS[1] == 'Zones.deleteStrikeAjax')
-			$ACTION = 'v4deleteStrikeAjax';
+    case "v4":
+        $ACTION = 'v4index';
+        if($_PARAMS[1] == 'zonesListAjax')
+            $ACTION = 'v4zonesListAjax';
+        if($_PARAMS[1] == 'submit')
+            $ACTION = 'v4formSubmit';
+        if($_PARAMS[1] == 'Zones.deleteStrikeAjax')
+            $ACTION = 'v4deleteStrikeAjax';
 
-		break;
+        break;
+
+
+    case "v5":
+        $ACTION = 'v5index';
+        if($_PARAMS[1] == 'zonesListAjax')
+            $ACTION = 'v5zonesListAjax';
+        if($_PARAMS[1] == 'submit')
+            $ACTION = 'v5formSubmit';
+        if($_PARAMS[1] == 'Zones.deleteStrikeAjax')
+            $ACTION = 'v5deleteStrikeAjax';
+
+        break;
 
 
 }
@@ -550,129 +562,129 @@ class optionalAnalysisController extends MainController{
 
 
 
-	#######################################
+    #######################################
     ####    v4.0    #######################
     #######################################
 
-	function v4index()
-	{
-		global $_GLOBALS, $_CONFIG;
-		$_GLOBALS['TITLE'] = Slonne::getTitle('Опционный анализ v4.0');
+    function v4index()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['TITLE'] = Slonne::getTitle('Опционный анализ v4.0');
 
-		$MODEL['currencies'] = [
-			Currency::code(Currency::CODE_EUR),
-			Currency::code(Currency::CODE_GBP),
-			Currency::code(Currency::CODE_AUD),
-			Currency::code(Currency::CODE_JPY),
-			Currency::code(Currency::CODE_CAD),
-			Currency::code(Currency::CODE_CHF),
-		];
+        $MODEL['currencies'] = [
+            Currency::code(Currency::CODE_EUR),
+            Currency::code(Currency::CODE_GBP),
+            Currency::code(Currency::CODE_AUD),
+            Currency::code(Currency::CODE_JPY),
+            Currency::code(Currency::CODE_CAD),
+            Currency::code(Currency::CODE_CHF),
+        ];
 
 
-		$today = date('Y-m-d');
-		$date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+        $today = date('Y-m-d');
+        $date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
 
-		$prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
-		$nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
+        $prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
+        $nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
 
-		$MODEL['date'] = $date;
-		$MODEL['today'] = $today;
-		$MODEL['datePrev'] = $prevDate;
-		$MODEL['dateNext'] = $nextDate;
+        $MODEL['date'] = $date;
+        $MODEL['today'] = $today;
+        $MODEL['datePrev'] = $prevDate;
+        $MODEL['dateNext'] = $nextDate;
 
-		$MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+        $MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
 
         $MODEL['list'] = V4Strike::getList([
-                'date' => $date,
-                'currency'=>$MODEL['currency'],
-                'isZone' => 1,
+            'date' => $date,
+            'currency'=>$MODEL['currency'],
+            'isZone' => 1,
         ]);
 
         foreach ($MODEL['list'] as $item)
-			$item->initStrikes();
+            $item->initStrikes();
 
-		Slonne::view('optionalAnalysis/v4/index.php', $MODEL);
-	}
-
-
-
-	public function v4zonesListAjax()
-	{
-		global $_GLOBALS, $_CONFIG;
-		$_GLOBALS['NO_LAYOUT'] = true;
-
-		$today = date('Y-m-d');
-		$date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
-		$MODEL['date'] = $date;
-		$MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
-
-		$MODEL['list'] = V4Strike::getList([
-			'date' => $date,
-			'currency'=>$MODEL['currency'],
-			'isZone' => 1,
-			'orderBy' => 'id desc',
-		]);
-
-		foreach ($MODEL['list'] as $item)
-			$item->initStrikes();
-
-		Slonne::view('optionalAnalysis/v4/zonesListAjax.php', $MODEL);
-	}
+        Slonne::view('optionalAnalysis/v4/index.php', $MODEL);
+    }
 
 
 
+    public function v4zonesListAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
 
-	public function v4formSubmit()
-	{
-		global $_GLOBALS, $_CONFIG;
-		$_GLOBALS['NO_LAYOUT'] = true;
+        $today = date('Y-m-d');
+        $date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+        $MODEL['date'] = $date;
+        $MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
 
-		vd($_REQUEST);
+        $MODEL['list'] = V4Strike::getList([
+            'date' => $date,
+            'currency'=>$MODEL['currency'],
+            'isZone' => 1,
+            'orderBy' => 'id desc',
+        ]);
 
-		$error = '';
+        foreach ($MODEL['list'] as $item)
+            $item->initStrikes();
 
-		$cur = Currency::code($_REQUEST['currency']);
-		$date = $_REQUEST['date'];
-		$zoneData = trim($_REQUEST['zoneData']);
-		$data = trim($_REQUEST['data']);
-		$forward = $_REQUEST['forward'];
-		$comment = trim($_REQUEST['comment']);
-
-		if(!$date && !$error)
-			$error = 'Не указана дата!';
-		if(!$forward && !$error && $forward!=='0')
-			$error = 'Не указан форвард!';
-		if(!$error && !$zoneData)
-			$error = 'Не введены данные зоны';
-		if(!$error && !$data)
-			$error = 'Не введены данные';
+        Slonne::view('optionalAnalysis/v4/zonesListAjax.php', $MODEL);
+    }
 
 
 
-		if(!$error )
+
+    public function v4formSubmit()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        vd($_REQUEST);
+
+        $error = '';
+
+        $cur = Currency::code($_REQUEST['currency']);
+        $date = $_REQUEST['date'];
+        $zoneData = trim($_REQUEST['zoneData']);
+        $data = trim($_REQUEST['data']);
+        $forward = $_REQUEST['forward'];
+        $comment = trim($_REQUEST['comment']);
+
+        if(!$date && !$error)
+            $error = 'Не указана дата!';
+        if(!$forward && !$error && $forward!=='0')
+            $error = 'Не указан форвард!';
+        if(!$error && !$zoneData)
+            $error = 'Не введены данные зоны';
+        if(!$error && !$data)
+            $error = 'Не введены данные';
+
+
+
+        if(!$error )
         {
             #   зона
-			$cols = explode("\t", $zoneData);
+            $cols = explode("\t", $zoneData);
 
-			$valToDivideTo = 10000;     //  на какое значение делим страйк
+            $valToDivideTo = 10000;     //  на какое значение делим страйк
             if($cur->code == Currency::CODE_JPY)
-				$valToDivideTo = 1000000;
+                $valToDivideTo = 1000000;
 
-			$s = new V4Strike();
-			$s->dt = $date;
-			$s->pid = 0;
-			$s->currency = $cur;
-			$s->strike = $cols[1]/$valToDivideTo;
-			$s->premiumBuy = $cols[0];
-			$s->premiumSell = $cols[2];
-			$s->forward = $forward;
-			$s->status = Status2::code(Status2::ACTIVE);
-			$s->comment = $comment;
-			$s->isZone = 1;
-			$s->data = json_encode($_REQUEST);
+            $s = new V4Strike();
+            $s->dt = $date;
+            $s->pid = 0;
+            $s->currency = $cur;
+            $s->strike = $cols[1]/$valToDivideTo;
+            $s->premiumBuy = $cols[0];
+            $s->premiumSell = $cols[2];
+            $s->forward = $forward;
+            $s->status = Status2::code(Status2::ACTIVE);
+            $s->comment = $comment;
+            $s->isZone = 1;
+            $s->data = json_encode($_REQUEST);
 
-			$s->calculate();
-			$s->insert();
+            $s->calculate();
+            $s->insert();
             $zone = $s;
 
             #   страйки
@@ -683,58 +695,221 @@ class optionalAnalysisController extends MainController{
                 $cols = explode("\t", $row);
 
                 $s = new V4Strike();
-				$s->pid = $zone->id;
-				$s->dt = $date;
-				$s->currency = $cur;
-				$s->strike = $cols[1]/$valToDivideTo;
-				$s->premiumBuy = $cols[0];
-				$s->premiumSell = $cols[2];
-				$s->forward = $forward;
-				$s->status = Status2::code(Status2::ACTIVE);
-				$s->comment = $comment;
-				$s->isZone = 0;
+                $s->pid = $zone->id;
+                $s->dt = $date;
+                $s->currency = $cur;
+                $s->strike = $cols[1]/$valToDivideTo;
+                $s->premiumBuy = $cols[0];
+                $s->premiumSell = $cols[2];
+                $s->forward = $forward;
+                $s->status = Status2::code(Status2::ACTIVE);
+                $s->comment = $comment;
+                $s->isZone = 0;
 
-				$s->calculate();
-				$s->insert();
-			}
+                $s->calculate();
+                $s->insert();
+            }
             echo '<hr>';
         }
 
 
 
-		if(!$error)
-		{
-			echo '<script>window.top.Zones.list()</script>';
-		}
-		else
-			echo '<script>window.top.alert("'.$error.'")</script>';
-	}
+        if(!$error)
+        {
+            echo '<script>window.top.Zones.list()</script>';
+        }
+        else
+            echo '<script>window.top.alert("'.$error.'")</script>';
+    }
 
 
 
 
 
 
-	public function v4deleteStrikeAjax()
-	{
-		global $_GLOBALS, $_CONFIG;
-		$_GLOBALS['NO_LAYOUT'] = true;
+    public function v4deleteStrikeAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
 
-		$error = null;
+        $error = null;
 
-		//vd($_REQUEST);
-		if ($item = V4Strike::get($_REQUEST['id']) )
-		{
-			$item->delete();
-		}
-		else
-			$error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
+        //vd($_REQUEST);
+        if ($item = V4Strike::get($_REQUEST['id']) )
+        {
+            $item->delete();
+        }
+        else
+            $error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
 
 
-		$res['error'] = $error;
+        $res['error'] = $error;
 
-		echo json_encode($res);
-	}
+        echo json_encode($res);
+    }
+
+
+
+
+
+
+
+
+    #######################################
+    ####    v5.0    #######################
+    #######################################
+
+    function v5index()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['TITLE'] = Slonne::getTitle('Опционный анализ v5.0');
+
+        $MODEL['currencies'] = [
+            Currency::code(Currency::CODE_EUR),
+            Currency::code(Currency::CODE_GBP),
+            Currency::code(Currency::CODE_AUD),
+            Currency::code(Currency::CODE_JPY),
+            Currency::code(Currency::CODE_CAD),
+            Currency::code(Currency::CODE_CHF),
+        ];
+
+
+        $today = date('Y-m-d');
+        $date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+
+        $prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
+        $nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
+
+        $MODEL['date'] = $date;
+        $MODEL['today'] = $today;
+        $MODEL['datePrev'] = $prevDate;
+        $MODEL['dateNext'] = $nextDate;
+
+        $MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
+
+
+        Slonne::view('optionalAnalysis/v5/index.php', $MODEL);
+    }
+
+
+
+    public function v5zonesListAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $today = date('Y-m-d');
+        $date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+        $MODEL['date'] = $date;
+        $MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
+        $MODEL['list'] = V5Bunch::getList([
+            'date' => $date,
+            'currency'=>$MODEL['currency'],
+            'orderBy' => 'id desc',
+        ]);
+
+        foreach ($MODEL['list'] as $item)
+            $item->initItems();
+
+
+
+        Slonne::view('optionalAnalysis/v5/zonesListAjax.php', $MODEL);
+    }
+
+
+
+
+    public function v5formSubmit()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $errors = null;
+
+        $cur =Currency::code($_REQUEST['code']);
+//        vd($_REQUEST);
+//        return;
+
+        $bunch = new V5Bunch();
+        $bunch->getData($_REQUEST);
+        $bunch->status = Status2::code(Status2::ACTIVE);
+
+        $errors = $bunch->validate();
+//        vd($bunch);
+//        return;
+        if(!$errors)
+        {
+            $bunch->insert();
+
+            #   сохраняем страйки
+            $valToDivideTo = 10000;     //  на какое значение делим страйк
+            if($cur->code == Currency::CODE_JPY)
+                $valToDivideTo = 1000000;
+
+            $rows = explode("\r\n", $_REQUEST['data']);
+            $num = 0;
+            foreach ($rows as $row)
+            {
+                $cols = explode("\t", $row);
+
+                $s = new v5Strike();
+                $s->pid = $bunch->id;
+                $s->dt = $bunch->dt;
+                $s->currency = $bunch->currency;
+                $s->strike = $cols[1]/$valToDivideTo;
+                $s->premiumBuy = $cols[0];
+                $s->premiumSell = $cols[2];
+                $s->forward = $bunch->forward;
+                $s->status = Status2::code(Status2::ACTIVE);
+                $s->data = $row;
+                $s->comment = $bunch->title;
+                $s->color = Color::num($num);
+
+                $s->calculate();
+                $s->insert();
+//                vd($s);
+
+                $num++;
+            }
+        }
+
+
+
+        if(!$errors)
+        {
+            echo '<script>window.top.Zones.list()</script>';
+        }
+        else
+            echo '<script>window.top.alert("'.$errors[0]->msg.'")</script>';
+    }
+
+
+
+
+
+
+    public function v5deleteStrikeAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $error = null;
+
+        //vd($_REQUEST);
+        if ($item = v5Strike::get($_REQUEST['id']) )
+        {
+            $item->delete();
+        }
+        else
+            $error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
+
+
+        $res['error'] = $error;
+
+        echo json_encode($res);
+    }
 
 
 
