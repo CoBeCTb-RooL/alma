@@ -25,6 +25,7 @@ class V5Bunch{
 			$this->dt = $arr['dt'];
             $this->currency = Currency::code($arr['currency']);
             $this->forward = $arr['forward'] ? $arr['forward'] : 0;
+            $this->openingPrice = $arr['openingPrice'];
             $this->status = Status2::code($arr['status']);
             $this->data = $arr['data'];
 		}
@@ -187,7 +188,7 @@ class V5Bunch{
     public function delete()
     {
         $this->initItems();
-        foreach($this->items as $val)
+        foreach($this->strikes as $val)
             $val->delete();
 
         $sql = "DELETE FROM `".self::TBL."` where id=".$this->id;

@@ -61,6 +61,8 @@ switch($_PARAMS[0])
             $ACTION = 'v5formSubmit';
         if($_PARAMS[1] == 'Zones.deleteStrikeAjax')
             $ACTION = 'v5deleteStrikeAjax';
+        if($_PARAMS[1] == 'Zones.deleteBunchAjax')
+            $ACTION = 'v5deleteBunchAjax';
 
         break;
 
@@ -891,27 +893,49 @@ class optionalAnalysisController extends MainController{
 
 
 
-    public function v5deleteStrikeAjax()
+//    public function v5deleteStrikeAjax()
+//    {
+//        global $_GLOBALS, $_CONFIG;
+//        $_GLOBALS['NO_LAYOUT'] = true;
+//
+//        $error = null;
+//
+//        //vd($_REQUEST);
+//        if ($item = v5Strike::get($_REQUEST['id']) )
+//        {
+//            $item->delete();
+//        }
+//        else
+//            $error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
+//
+//
+//        $res['error'] = $error;
+//
+//        echo json_encode($res);
+//    }
+
+
+
+
+    public function v5deleteBunchAjax()
     {
         global $_GLOBALS, $_CONFIG;
         $_GLOBALS['NO_LAYOUT'] = true;
 
         $error = null;
 
-        //vd($_REQUEST);
-        if ($item = v5Strike::get($_REQUEST['id']) )
+        if ($item = V5Bunch::get($_REQUEST['id']) )
         {
             $item->delete();
         }
         else
-            $error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
+            $error = 'Ошибка! Пучок не найден! ['.$_REQUEST['id'].']';
 
 
         $res['error'] = $error;
 
         echo json_encode($res);
     }
-
 
 
 

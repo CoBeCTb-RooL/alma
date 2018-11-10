@@ -60,11 +60,29 @@ $zones = $MODEL['list'];
         },
 
 
-        deleteStrike: function(id){
+        /*deleteStrike: function(id){
             if(!confirm('удалить?'))
                 return
             $.ajax({
                 url: '/ru/optionalAnalysis/v5/Zones.deleteStrikeAjax',
+                data: {id: id},
+                beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
+                complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
+                success: function(data){
+                    // $('.stats').html(data)
+                    //location.href=location.href
+                    Zones.list()
+                },
+                error: function(){}
+            })
+        },*/
+
+
+        deleteBunch: function(id){
+            if(!confirm('удалить?'))
+                return
+            $.ajax({
+                url: '/ru/optionalAnalysis/v5/Zones.deleteBunchAjax',
                 data: {id: id},
                 beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
                 complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
@@ -126,7 +144,8 @@ foreach($MODEL['currencies'] as $c)
     <h2 class="current-date" style="margin: 0 0 5px 0;  padding: 0;">
 		<?=Funx::mkDate($date);?>
 		<?=($date == $today ? '<span class="today-lbl">(сегодня)</span>' : '' )?>
-        <input  name="date1" id="date1" value="<?=$date?>" style="width:70px" type="text" onchange="location.href='?date='+$(this).val()+'&currency=<?=$cur->code?>' ; ">
+
+        &nbsp;&nbsp;&nbsp;&nbsp;<input  name="date1" id="date1" value="<?=$date?>" style="width:70px" type="text" onchange="location.href='?date='+$(this).val()+'&currency=<?=$cur->code?>' ; ">
         <img id="calendar-btn1" src="/js/calendar/calendar.jpg" style="border:0px;">
         <script>
             Calendar.setup({

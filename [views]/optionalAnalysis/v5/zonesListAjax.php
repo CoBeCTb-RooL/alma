@@ -16,9 +16,11 @@ foreach ($bunches as $bunch)
         <b><?=$bunch->title?></b> <sup style="font-size: .5em; "><?=$bunch->id?>, <?=Funx::mkDate($bunch->dt)?></sup>
    
         <p>
-        forward: <b><?=$bunch->forward?></b>
+        forward: <b><?=$bunch->forward?></b> &nbsp;&nbsp; открытие: <b><?=$bunch->openingPrice?></b>
         <!--<button onclick='Zones.setZoneDataToForm(<?=$bunch->data?>)' style="font-size: .9em; padding: 3px; ">Внести данные зоны в форму</button>-->
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""  onclick='Zones.setZoneDataToForm(<?=$bunch->data?>); return false; ' style="font-size: .9em;  ">Внести данные зоны в форму</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href=""  onclick='Zones.setZoneDataToForm(<?=$bunch->data?>); return false; ' style="font-size: .9em;  ">Внести данные зоны в форму</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""  onclick='Zones.deleteBunch(<?=$bunch->id?>); return false; ' style="font-size: .9em;  color: red;  ">&times; удалить</a>
         <table border="1" style="">
             <tr>
                 <th>id</th>

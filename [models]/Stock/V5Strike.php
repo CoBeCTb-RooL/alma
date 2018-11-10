@@ -45,6 +45,7 @@ class V5Strike{
 			}
 
 			$this->forward = $arr['forward'];
+            $this->openingPrice = $arr['openingPrice'];
 			$this->status = Status2::code($arr['status']);
 			$this->comment = $arr['comment'];
 			$this->createdAt = $arr['createdAt'];
@@ -129,20 +130,32 @@ class V5Strike{
 
 
 
+//    public function delete()
+//    {
+//    	$list = self::getList(['pid'=>$this->id]);
+//    	foreach ($list as $item)
+//		{
+//			$sql = "DELETE FROM `".self::TBL."` where id=".$item->id;
+//			//vd($sql);
+//			DB::query($sql);
+//			echo mysql_error();
+//		}
+//
+//		# 	удаляем сам объект
+//        $sql = "DELETE FROM `".self::TBL."` where id=".$this->id;
+//        //vd($sql);
+//        DB::query($sql);
+//        echo mysql_error();
+//    }
+
+
+
+
     public function delete()
     {
-    	$list = self::getList(['pid'=>$this->id]);
-    	foreach ($list as $item)
-		{
-			$sql = "DELETE FROM `".self::TBL."` where id=".$item->id;
-			//vd($sql);
-			DB::query($sql);
-			echo mysql_error();
-		}
-
-		# 	удаляем сам объект
         $sql = "DELETE FROM `".self::TBL."` where id=".$this->id;
-        //vd($sql);
+//        vd($sql);
+//        return;
         DB::query($sql);
         echo mysql_error();
     }
