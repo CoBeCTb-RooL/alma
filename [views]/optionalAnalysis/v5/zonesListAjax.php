@@ -13,7 +13,7 @@ $bunches = $MODEL['list'];
 foreach ($bunches as $bunch)
 {?>
     <div class="zone" >
-        <b><?=$bunch->title?></b>
+        <b><?=$bunch->title?></b> <sup style="font-size: .5em; "><?=$bunch->id?>, <?=Funx::mkDate($bunch->dt)?></sup>
    
         <p>
         forward: <b><?=$bunch->forward?></b>
@@ -43,7 +43,9 @@ foreach ($bunches as $bunch)
                     <td ><?=$s->resultSell?></td>
                     <td rowspan="2" style="font-weight: bold; font-size: 1.1em; color: blue;  "><?=$s->max()?> </td>
 
-                    <td rowspan="2"><a href="#" onclick="Zones.deleteStrike(<?=$s->id?>);; return false; ">удалить</a></td>
+                    <td rowspan="2">
+                        <!--<a href="#" onclick="Zones.deleteStrike(<?=$s->id?>);; return false; ">удалить</a>-->
+                    </td>
                 </tr>
                 <tr style="font-size: .9em; border-bottom: 3px solid #000; " class="strike-row strike-row-<?=$s->color->code?>">
                     <td>to Buy</td>
@@ -55,7 +57,6 @@ foreach ($bunches as $bunch)
                 <?
             }?>
         </table>
-
 
     </div>
     <hr>

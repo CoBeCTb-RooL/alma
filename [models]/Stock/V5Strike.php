@@ -12,6 +12,7 @@ class V5Strike{
 	public $premiumBuy;
 	public $premiumSell;
 	public $forward;
+	public $openingPrice;
 	public $resultBuy;
 	public $resultSell;
 	public $status;
@@ -231,6 +232,7 @@ class V5Strike{
 				, premiumBuy = '".floatval($this->premiumBuy)."'
 				, premiumSell = '".floatval($this->premiumSell)."'
 				, `forward` = '".floatval($this->forward)."'
+				, `openingPrice` = '".floatval($this->openingPrice)."'
 				, `status` = '".strPrepare($this->status->code)."'
 				, `comment` = '".strPrepare($this->comment)."'
 				, `data` = '".strPrepare($this->data)."'

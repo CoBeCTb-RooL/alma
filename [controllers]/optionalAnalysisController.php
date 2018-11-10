@@ -862,6 +862,7 @@ class optionalAnalysisController extends MainController{
                 $s->premiumBuy = $cols[0];
                 $s->premiumSell = $cols[2];
                 $s->forward = $bunch->forward;
+                $s->openingPrice = $bunch->openingPrice;
                 $s->status = Status2::code(Status2::ACTIVE);
                 $s->data = $row;
                 $s->comment = $bunch->title;

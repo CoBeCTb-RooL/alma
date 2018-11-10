@@ -7,6 +7,7 @@ class V5Bunch{
     public $title;
     public $dt;
     public $forward;
+    public $openingPrice;
     public $status;
     public $currency;
     private $_strikesData;
@@ -49,8 +50,8 @@ class V5Bunch{
 	{
 		$sql = "SELECT * FROM `".self::TBL."` WHERE 1 ";
 
-        if($params['dt'] )
-            $sql.=" AND DATE(dt)= DATE('".strPrepare($params['dt'])."') ";
+        if($params['date'] )
+            $sql.=" AND DATE(dt)= DATE('".strPrepare($params['date'])."') ";
 
         if($params['currency'] )
             $sql.=" AND currency= '".strPrepare($params['currency']->code)."' ";
@@ -132,6 +133,7 @@ class V5Bunch{
             , `status` = '".strPrepare($this->status->code)."'
             , currency = '".strPrepare($this->currency->code)."'
             , `forward` = '".floatval($this->forward)."'
+            , `openingPrice` = '".floatval($this->openingPrice)."'
             , `data` = '".strPrepare($this->data)."'
             ";
 
@@ -148,6 +150,8 @@ class V5Bunch{
             $errors[] = new Problem('Не указана дата!');
         if(!$this->forward && $this->forward!=='0')
             $errors[] = new Problem('Не указан форвард!');
+        if(!$this->openingPrice)
+            $errors[] = new Problem('Не указана цена открытия!');
         if(!$this->currency)
             $errors[] = new Problem('Не указана валюта!');
 
@@ -169,6 +173,7 @@ class V5Bunch{
     {
         $this->dt = $arr['date'];
         $this->forward =  $arr['forward'];
+        $this->openingPrice =  $arr['openingPrice'];
         $this->title = trim($arr['title']);
         $this->currency = Currency::code($arr['currency']);
         $this->data = json_encode($arr, JSON_UNESCAPED_UNICODE);

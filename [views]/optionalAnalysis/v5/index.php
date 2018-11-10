@@ -87,6 +87,7 @@ $zones = $MODEL['list'];
             var form = $('#addZoneForm')
 
             form.find('input[name=forward]').val(obj.forward)
+            form.find('input[name=openingPrice]').val(obj.openingPrice)
             form.find('input[name=title]').val(obj.title)
             form.find('textarea[name=data]').val(obj.data)
         }
@@ -125,6 +126,18 @@ foreach($MODEL['currencies'] as $c)
     <h2 class="current-date" style="margin: 0 0 5px 0;  padding: 0;">
 		<?=Funx::mkDate($date);?>
 		<?=($date == $today ? '<span class="today-lbl">(сегодня)</span>' : '' )?>
+        <input  name="date1" id="date1" value="<?=$date?>" style="width:70px" type="text" onchange="location.href='?date='+$(this).val()+'&currency=<?=$cur->code?>' ; ">
+        <img id="calendar-btn1" src="/js/calendar/calendar.jpg" style="border:0px;">
+        <script>
+            Calendar.setup({
+                inputField     :    "date1",      // id of the input field
+                ifFormat       :    "%Y-%m-%d",       // format of the input field
+                showsTime      :    false,            // will display a time selector
+                button         :    "calendar-btn1",   // trigger for the calendar (button ID)
+                singleClick    :    true,           // double-click mode
+                step           :    1                // show all years in drop-down boxes (instead of every other year as default)
+            });
+        </script>
     </h2>
     <a href="?date=<?=$datePrev?>&currency=<?=$cur->code?>">&larr; Предыдущий</a>
     <a href="?date=<?=date('Y-m-d')?>&currency=<?=$cur->code?>" style="font-weight: bold; ">Сегодня</a>
@@ -138,7 +151,8 @@ foreach($MODEL['currencies'] as $c)
 
 
 
-<form class="form" action="/ru/optionalAnalysis/v5/submit" id="addZoneForm" target="frame7" onsubmit="if(confirm('Сохранить данные?')){return true; } return false; " style="position: fixed; top: 200px; right: 100px; background: #efefef; ">
+<!--ФОРМА-->
+<form class="form" action="/ru/optionalAnalysis/v5/submit" id="addZoneForm" target="frame7" onsubmit="if(confirm('Сохранить данные?')){return true; } return false; " style="position: fixed; top: 0px; right: 0px; background: #efefef; ">
     <input type="hidden" name="currency" value="<?=$cur->code?>">
     <h3><?=$cur->code?></h3>
 
@@ -155,19 +169,20 @@ foreach($MODEL['currencies'] as $c)
         });
     </script>
 
-    Форвард: <input type="text" class="forward" name="forward" value="">
 
-    <p>Коммент: <input type="text" name="title" style="width: 170px; ">
+
+    Форвард: <input type="text" class="forward" name="forward" value="">
+    <p>Открытие: <input type="text" class="forward" name="openingPrice" value="">
+    <p>Коммент: <input type="text" name="title" style=" width: 170px; ">
     <p>
     <div class="data-input" style="display: ; ">
         Страйки:<br>
         <textarea name="data" class="global-ta" onkeyup="/*Opt.parseData2('<?=$cur->code?>')*/" style="height: 75px; width: 200px;  "></textarea>
-
-<!--        <br><label><input type="checkbox" name="isZone">Зона</label>-->
     </div>
     <p>
-        <button type="submit" >сохранить</button>
+    <button type="submit" >сохранить</button>
 </form>
+<!--ФОРМА-->
 
 
 
