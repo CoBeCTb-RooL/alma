@@ -36,6 +36,11 @@ $zones = $MODEL['list'];
     }?>
 
 
+    .zone .table{float: left; }
+    .advisor{float: left; border: 1px solid #ccc; padding: 10px; margin: 0px 0 0 30px;  font-size: 1em; }
+    .advisor .aspects{}
+    .advisor .advise{padding: 5px; font-size: 1.2em; background: #fff77f; }
+
 </style>
 
 

@@ -813,7 +813,10 @@ class optionalAnalysisController extends MainController{
         ]);
 
         foreach ($MODEL['list'] as $item)
+        {
             $item->initItems();
+            $item->initAdvisor();
+        }
 
 
 

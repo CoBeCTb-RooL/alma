@@ -12,6 +12,8 @@ class V5Bunch{
     public $currency;
     private $_strikesData;
 
+    public $advisor;
+
 
 
 	const TBL = 'v5__bunches';
@@ -196,6 +198,33 @@ class V5Bunch{
         DB::query($sql);
         echo mysql_error();
     }
-	
+
+
+    public function initAdvisor()
+    {
+        $this->advisor = new V5Advisor($this);
+    }
+
+
+    function green()
+    {
+        return $this->strike(Color::GREEN);
+    }
+    function red()
+    {
+        return $this->strike(Color::RED);
+    }
+    function black()
+    {
+        return $this->strike(Color::BLACK);
+    }
+    function strike($color=null)
+    {
+        if($color)
+            foreach ($this->strikes as $strike)
+                if($strike->color->code == $color)
+                    return $strike;
+    }
+
 		
 }

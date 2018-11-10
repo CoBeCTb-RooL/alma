@@ -2,6 +2,14 @@
 
 /*  for alma v5.0 */
 
+//МАКСЫ
+//[20:53, 10.11.2018] Ерма: Зелёный нижний
+//[20:53, 10.11.2018] Ерма: Красный вверх
+//[20:54, 10.11.2018] Ерма: И просто Макс черный
+
+
+
+
 class V5Strike{
 	public $id;
 	public $pid;
@@ -254,6 +262,19 @@ class V5Strike{
 				";
 
         return $str;
+    }
+
+
+
+
+
+    public function lower()
+    {
+        return $this->resultBuy;
+    }
+    public function upper()
+    {
+        return $this->resultSell;
     }
 
 
