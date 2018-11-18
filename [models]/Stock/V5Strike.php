@@ -114,7 +114,10 @@ class V5Strike{
 
 	public function max()
     {
-        return strikeVal($this->strike - $this->forward);
+        $ret = $this->strike - $this->forward;
+        if($this->currency->isIndirect())
+            $ret = (1 / $this->strike) - $this->forward;
+        return strikeVal($ret);
     }
 
 
