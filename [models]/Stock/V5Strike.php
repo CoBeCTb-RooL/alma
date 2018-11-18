@@ -116,7 +116,7 @@ class V5Strike{
     {
         $ret = $this->strike - $this->forward;
         if($this->currency->isIndirect())
-            $ret = (1 / $this->strike) - $this->forward;
+            $ret = (1 / $this->strike) + $this->forward;
         return strikeVal($ret);
     }
 
