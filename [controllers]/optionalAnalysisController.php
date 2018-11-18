@@ -833,8 +833,8 @@ class optionalAnalysisController extends MainController{
 
         $errors = null;
 
-        $cur =Currency::code($_REQUEST['code']);
-//        vd($_REQUEST);
+        $cur =Currency::code($_REQUEST['currency']);
+//       vd($_REQUEST);
 //        return;
 
         $bunch = new V5Bunch();
@@ -854,6 +854,11 @@ class optionalAnalysisController extends MainController{
                 $valToDivideTo = 1000000;
 
             $rows = explode("\r\n", $_REQUEST['data']);
+//            vd($rows);
+            if($cur->isIndirect())
+                $rows = array_reverse($rows);
+//            vd($rows);
+//            die;
             $num = 0;
             foreach ($rows as $row)
             {

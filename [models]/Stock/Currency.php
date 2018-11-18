@@ -48,7 +48,14 @@ class Currency{
 	{
 		return self::$items[$c];
 	}
-	
+
+
+	public function isIndirect()
+    {
+        if(in_array($this->code, [Currency::CODE_CAD, Currency::CODE_JPY, Currency::CODE_CHF]))
+            return true;
+        return false;
+    }
 	
 }
 
