@@ -294,6 +294,7 @@ class V6Strike{
         if($this->color->code == Color::LIGHT_GREEN)
             $val = $this->resultBuy;
 
+        #   считаем только для ЛАЙТ страйков. Если значение есть - тогда высчитываем
         if($val)
             $ret = strikeVal(abs($ret-$val));
 
