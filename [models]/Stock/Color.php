@@ -28,15 +28,15 @@ class Color{
 		$this->bgColor = $bgColor;
 		$this->num = $num;
 	}
-	
+
 	
 	public  function initArr()
 	{
-        $arr[self::LIGHT_RED] = new self(self::LIGHT_RED, 'Красный', 'light_red', 'purple',  0);
+        $arr[self::LIGHT_RED] = new self(self::LIGHT_RED, 'Дельта-Красный', '#FA7575', '#FCF0F0',  0);
         $arr[self::RED] = new self(self::RED, 'Красный', 'red', '#F5C1C1',  1);
         $arr[self::BLACK] = new self(self::BLACK, 'Чёрный', 'black', '#CCCCCC', 2);
         $arr[self::GREEN] = new self(self::GREEN, 'Зелёный', 'green', '#C6F0C2',  3);
-        $arr[self::LIGHT_GREEN] = new self(self::LIGHT_GREEN, 'Зелёный', 'light_green', 'yellow',  4);
+        $arr[self::LIGHT_GREEN] = new self(self::LIGHT_GREEN, 'Дельта-Зелёный', '#87F57D', '#ECFFEB',  4);
 
 		self::$items = $arr;
 	}

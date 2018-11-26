@@ -53,6 +53,7 @@ switch($_PARAMS[0])
         break;
 
 
+
     case "v5":
         $ACTION = 'v5index';
         if($_PARAMS[1] == 'zonesListAjax')
@@ -63,6 +64,21 @@ switch($_PARAMS[0])
             $ACTION = 'v5deleteStrikeAjax';
         if($_PARAMS[1] == 'Zones.deleteBunchAjax')
             $ACTION = 'v5deleteBunchAjax';
+
+        break;
+
+
+
+    case "v6":
+        $ACTION = 'v6index';
+        if($_PARAMS[1] == 'zonesListAjax')
+            $ACTION = 'v6zonesListAjax';
+        if($_PARAMS[1] == 'submit')
+            $ACTION = 'v6formSubmit';
+        if($_PARAMS[1] == 'Zones.deleteStrikeAjax')
+            $ACTION = 'v6deleteStrikeAjax';
+        if($_PARAMS[1] == 'Zones.deleteBunchAjax')
+            $ACTION = 'v6deleteBunchAjax';
 
         break;
 
@@ -872,9 +888,9 @@ class optionalAnalysisController extends MainController{
 
                 #   в старой версии участвуют только 3 цвета
                 $colorsArr = [
-                        0=>Color::code(Color::RED),
-                        1=>Color::code(Color::BLACK),
-                        2=>Color::code(Color::GREEN),
+                    0=>Color::code(Color::RED),
+                    1=>Color::code(Color::BLACK),
+                    2=>Color::code(Color::GREEN),
                 ];
                 $s->color = $colorsArr[$rowNum] ? $colorsArr[$rowNum] : Color::none();
 
@@ -885,9 +901,7 @@ class optionalAnalysisController extends MainController{
 
 
         if(!$errors)
-        {
             echo '<script>window.top.Zones.list()</script>';
-        }
         else
             echo '<script>window.top.alert("'.$errors[0]->msg.'")</script>';
     }
@@ -902,6 +916,168 @@ class optionalAnalysisController extends MainController{
         $error = null;
 
         if ($item = V5Bunch::get($_REQUEST['id']) )
+            $item->delete();
+        else
+            $error = 'Ошибка! Пучок не найден! ['.$_REQUEST['id'].']';
+
+
+        $res['error'] = $error;
+
+        echo json_encode($res);
+    }
+
+
+
+
+
+
+
+
+
+    #######################################
+    ####    v6.0    #######################
+    #######################################
+    function v6index()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['TITLE'] = Slonne::getTitle('Опционный анализ v5.0');
+
+        $MODEL['currencies'] = [
+            Currency::code(Currency::CODE_EUR),
+            Currency::code(Currency::CODE_GBP),
+            Currency::code(Currency::CODE_AUD),
+            Currency::code(Currency::CODE_JPY),
+            Currency::code(Currency::CODE_CAD),
+            Currency::code(Currency::CODE_CHF),
+        ];
+
+        $today = date('Y-m-d');
+        $date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+
+        $prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
+        $nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
+
+        $MODEL['date'] = $date;
+        $MODEL['today'] = $today;
+        $MODEL['datePrev'] = $prevDate;
+        $MODEL['dateNext'] = $nextDate;
+
+        $MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
+        Slonne::view('optionalAnalysis/v6/index.php', $MODEL);
+    }
+
+
+
+    public function v6zonesListAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $today = date('Y-m-d');
+        $date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+        $MODEL['date'] = $date;
+        $MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
+        $MODEL['list'] = V6Bunch::getList([
+            'date' => $date,
+            'currency'=>$MODEL['currency'],
+            'orderBy' => 'id desc',
+        ]);
+
+        foreach ($MODEL['list'] as $item)
+        {
+            $item->initItems();
+            $item->initAdvisor();
+        }
+
+        Slonne::view('optionalAnalysis/v6/zonesListAjax.php', $MODEL);
+    }
+
+
+
+
+    public function v6formSubmit()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $errors = null;
+
+        $cur =Currency::code($_REQUEST['currency']);
+//       vd($_REQUEST);
+//        return;
+
+        $bunch = new V6Bunch();
+        $bunch->getData($_REQUEST);
+        $bunch->status = Status2::code(Status2::ACTIVE);
+
+        $errors = $bunch->validate();
+
+        if(!$errors)
+        {
+            $bunch->insert();
+
+            $valToDivideTo = 10000;     //  на какое значение делим страйк
+            if($cur->code == Currency::CODE_JPY)
+                $valToDivideTo = 1000000;
+
+            $rows = explode("\r\n", $_REQUEST['data']);
+
+            #   для перевёртышей - ряды берём снизу вверх
+            if($cur->isIndirect())
+                $rows = array_reverse($rows);
+
+            #   формируем страйки
+            foreach ($rows as $rowNum=>$row)
+            {
+                $cols = explode("\t", $row);
+
+                $s = new V6Strike();
+                $s->pid = $bunch->id;
+                $s->dt = $bunch->dt;
+                $s->currency = $bunch->currency;
+                $s->strike = $cols[1]/$valToDivideTo;
+                $s->premiumBuy = $cols[0];
+                $s->premiumSell = $cols[2];
+                $s->forward = $bunch->forward;
+                $s->openingPrice = $bunch->openingPrice;
+                $s->status = Status2::code(Status2::ACTIVE);
+                $s->data = $row;
+                $s->comment = $bunch->title;
+
+                #   в старой версии участвуют только 3 цвета
+                $colorsArr = [
+                    0=>Color::code(Color::LIGHT_RED),
+                    1=>Color::code(Color::RED),
+                    2=>Color::code(Color::BLACK),
+                    3=>Color::code(Color::GREEN),
+                    4=>Color::code(Color::LIGHT_GREEN),
+                ];
+                $s->color = $colorsArr[$rowNum] ? $colorsArr[$rowNum] : Color::none();
+
+                $s->calculate();
+                $s->insert();
+            }
+        }
+
+
+        if(!$errors)
+            echo '<script>window.top.Zones.list()</script>';
+        else
+            echo '<script>window.top.alert("'.$errors[0]->msg.'")</script>';
+    }
+
+
+
+    public function v6deleteBunchAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $error = null;
+
+        if ($item = V6Bunch::get($_REQUEST['id']) )
             $item->delete();
         else
             $error = 'Ошибка! Пучок не найден! ['.$_REQUEST['id'].']';
