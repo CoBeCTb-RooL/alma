@@ -115,8 +115,10 @@ class V6Strike{
 	public function max()
     {
         $ret = $this->strike - $this->forward;
+
         if($this->currency->isIndirect())
             $ret = (1 / $this->strike) + $this->forward;
+
         return strikeVal($ret);
     }
 
@@ -284,19 +286,19 @@ class V6Strike{
 
 
 
-    public function potentialGoal($bunch)
+    public function potentialGoal()
     {
         $ret = null;
 
         $val = 0;
-        if($this->color->code == Color::LIGHT_RED)
+        if(in_array($this->color->code, [Color::LIGHT_RED, Color::RED]))
             $val = $this->resultSell;
-        if($this->color->code == Color::LIGHT_GREEN)
+        if(in_array($this->color->code, [Color::LIGHT_GREEN, Color::GREEN]))
             $val = $this->resultBuy;
 
         #   считаем только для ЛАЙТ страйков. Если значение есть - тогда высчитываем
         if($val)
-            $ret = strikeVal(abs($bunch->black()->max() - $val));
+            $ret = strikeVal(abs($this->max() - $val));
         return $ret;
     }
 
