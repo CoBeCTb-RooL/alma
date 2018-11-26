@@ -284,6 +284,24 @@ class V6Strike{
 
 
 
+    public function potentialGoal()
+    {
+        $ret = null;
+
+        $val = 0;
+        if($this->color->code == Color::LIGHT_RED)
+            $val = $this->resultSell;
+        if($this->color->code == Color::LIGHT_GREEN)
+            $val = $this->resultBuy;
+
+        $ret = abs($ret-$val);
+
+        return $ret;
+    }
+
+
+
+
 	
 		
 }

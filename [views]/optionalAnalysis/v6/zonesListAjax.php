@@ -14,6 +14,10 @@ $bunches = $MODEL['list'];
 
 <hr>
 <?foreach ($bunches as $bunch): ?>
+    <?
+    #   выясняем бОльшую цель
+    $strikeWithMaxPotentialGoal = $bunch->strikeWithMaxPotentialGoal();
+    ?>
     <div class="zone" >
         <b><?=$bunch->title?></b> <sup style="font-size: .5em; "><?=$bunch->id?>, <?=Funx::mkDate($bunch->dt)?></sup>
         <p>
@@ -30,10 +34,14 @@ $bunches = $MODEL['list'];
                     <th>prem</th>
                     <th>result</th>
                     <th style="color: blue; ">MAX</th>
+                    <th>goal</th>
                     <th>action</th>
                 </tr>
 
                 <?foreach ($bunch->strikes as $s): ?>
+                    <?
+                    $isStrikeWithMaxPotentialGoal = $strikeWithMaxPotentialGoal && $s->id == $strikeWithMaxPotentialGoal->id;
+                    ?>
                     <tr style="font-size: .9em; " class="strike-row strike-row-<?=$s->color->code?>">
                         <td rowspan="2" style="font-size: .8em;  " class="id"><?=$s->id?>. </td>
                         <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$bunch->currency->code?> </td>
@@ -42,6 +50,15 @@ $bunches = $MODEL['list'];
                         <td><?=$s->premiumBuy?></td>
                         <td ><?=$s->resultSell?></td>
                         <td rowspan="2" style="font-weight: bold; font-size: 1.1em; color: blue;  "><?=$s->max()?> </td>
+
+                        <td rowspan="2" class="potentialGoal <?=$isStrikeWithMaxPotentialGoal ? 'highest' : ''?>">
+                            <?if(in_array($s->color->code, [Color::LIGHT_GREEN, Color::LIGHT_RED, ])):?>
+                                <?=$s->potentialGoal()?>
+                                <?if($isStrikeWithMaxPotentialGoal):?>
+                                    <br><span style="margin: 2px 0 0 0; font-size: .7em;   font-weight: bold; color: #fff; background: #be00be; border-radius: 2px; padding: 1px 2px;  ">max</span>
+                                <?endif;?>
+                            <?endif;?>
+                        </td>
 
                         <td rowspan="2">
                             <!--<a href="#" onclick="Zones.deleteStrike(<?=$s->id?>);; return false; ">удалить</a>-->

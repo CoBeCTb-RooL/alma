@@ -32,6 +32,10 @@ $zones = $MODEL['list'];
     .advisor .aspects{}
     .advisor .advise{padding: 5px; font-size: 1.2em; background: #fff77f; }
 
+
+
+    .potentialGoal{font-size: 1.0em; }
+    .potentialGoal.highest{font-weight: bold; color: #be00be; }
 </style>
 
 

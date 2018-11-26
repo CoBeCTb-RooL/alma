@@ -200,6 +200,23 @@ class V6Bunch{
     }
 
 
+
+
+    public function strikeWithMaxPotentialGoal()
+    {
+        $ret = null;
+
+        foreach ($this->strikes as $s)
+            if(!$ret || $ret->potentialGoal() < $s->potentialGoal())
+                $ret = $s;
+
+        return $ret;
+    }
+
+
+
+
+
     public function initAdvisor()
     {
         $this->advisor = new V5Advisor($this);
