@@ -294,7 +294,8 @@ class V6Strike{
         if($this->color->code == Color::LIGHT_GREEN)
             $val = $this->resultBuy;
 
-        $ret = abs($ret-$val);
+        if($val)
+            $ret = strikeVal(abs($ret-$val));
 
         return $ret;
     }
