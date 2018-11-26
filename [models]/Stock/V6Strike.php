@@ -305,6 +305,23 @@ class V6Strike{
 
 
 
+    public function isOutOfRange($centralStrike)
+    {
+        $ret = false;
+
+        if($this->color->code == Color::LIGHT_RED)
+            if($this->resultSell > $centralStrike->max())
+                $ret = true;
+        if($this->color->code == Color::LIGHT_GREEN)
+            if($this->resultBuy < $centralStrike->max())
+                $ret = true;
+
+        return $ret;
+    }
+
+
+
+
 	
 		
 }

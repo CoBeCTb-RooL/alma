@@ -36,6 +36,8 @@ $zones = $MODEL['list'];
 
     .potentialGoal{font-size: 1.0em; }
     .potentialGoal.highest{font-weight: bold; color: #be00be; }
+
+    .outOfRange{font-weight: bold; font-size: .9em;  padding: 2px 4px 3px 4px; border-radius: 2px; background: orange; color: #fff; }
 </style>
 
 

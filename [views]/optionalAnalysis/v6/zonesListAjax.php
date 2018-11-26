@@ -35,6 +35,7 @@ $bunches = $MODEL['list'];
                     <th>result</th>
                     <th style="color: blue; ">MAX</th>
                     <th>goal</th>
+                    <th>out of range</th>
                     <th>action</th>
                 </tr>
 
@@ -57,6 +58,12 @@ $bunches = $MODEL['list'];
                                 <?if($isStrikeWithMaxPotentialGoal):?>
                                     <br><span style="margin: 2px 0 0 0; font-size: .7em;   font-weight: bold; color: #fff; background: #be00be; border-radius: 2px; padding: 1px 2px;  ">max</span>
                                 <?endif;?>
+                            <?endif;?>
+                        </td>
+
+                        <td rowspan="2">
+                            <?if($s->isOutOfRange($bunch->black())):?>
+                            <span class="outOfRange">out of range!</span>
                             <?endif;?>
                         </td>
 
