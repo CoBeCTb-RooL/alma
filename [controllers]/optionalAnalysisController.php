@@ -775,7 +775,6 @@ class optionalAnalysisController extends MainController{
             Currency::code(Currency::CODE_CHF),
         ];
 
-
         $today = date('Y-m-d');
         $date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
 
@@ -788,8 +787,6 @@ class optionalAnalysisController extends MainController{
         $MODEL['dateNext'] = $nextDate;
 
         $MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
-
-
 
         Slonne::view('optionalAnalysis/v5/index.php', $MODEL);
     }
@@ -818,8 +815,6 @@ class optionalAnalysisController extends MainController{
             $item->initAdvisor();
         }
 
-
-
         Slonne::view('optionalAnalysis/v5/zonesListAjax.php', $MODEL);
     }
 
@@ -842,25 +837,23 @@ class optionalAnalysisController extends MainController{
         $bunch->status = Status2::code(Status2::ACTIVE);
 
         $errors = $bunch->validate();
-//        vd($bunch);
-//        return;
+
         if(!$errors)
         {
             $bunch->insert();
 
-            #   сохраняем страйки
             $valToDivideTo = 10000;     //  на какое значение делим страйк
             if($cur->code == Currency::CODE_JPY)
                 $valToDivideTo = 1000000;
 
             $rows = explode("\r\n", $_REQUEST['data']);
-//            vd($rows);
+
+            #   для перевёртышей - ряды берём снизу вверх
             if($cur->isIndirect())
                 $rows = array_reverse($rows);
-//            vd($rows);
-//            die;
-            $num = 0;
-            foreach ($rows as $row)
+
+            #   формируем страйки
+            foreach ($rows as $rowNum=>$row)
             {
                 $cols = explode("\t", $row);
 
@@ -876,16 +869,19 @@ class optionalAnalysisController extends MainController{
                 $s->status = Status2::code(Status2::ACTIVE);
                 $s->data = $row;
                 $s->comment = $bunch->title;
-                $s->color = Color::num($num);
+
+                #   в старой версии участвуют только 3 цвета
+                $colorsArr = [
+                        0=>Color::code(Color::RED),
+                        1=>Color::code(Color::BLACK),
+                        2=>Color::code(Color::GREEN),
+                ];
+                $s->color = $colorsArr[$rowNum] ? $colorsArr[$rowNum] : Color::none();
 
                 $s->calculate();
                 $s->insert();
-//                vd($s);
-
-                $num++;
             }
         }
-
 
 
         if(!$errors)
@@ -898,33 +894,6 @@ class optionalAnalysisController extends MainController{
 
 
 
-
-
-
-//    public function v5deleteStrikeAjax()
-//    {
-//        global $_GLOBALS, $_CONFIG;
-//        $_GLOBALS['NO_LAYOUT'] = true;
-//
-//        $error = null;
-//
-//        //vd($_REQUEST);
-//        if ($item = v5Strike::get($_REQUEST['id']) )
-//        {
-//            $item->delete();
-//        }
-//        else
-//            $error = 'Ошибка! Запись не найдена! ['.$_REQUEST['id'].']';
-//
-//
-//        $res['error'] = $error;
-//
-//        echo json_encode($res);
-//    }
-
-
-
-
     public function v5deleteBunchAjax()
     {
         global $_GLOBALS, $_CONFIG;
@@ -933,9 +902,7 @@ class optionalAnalysisController extends MainController{
         $error = null;
 
         if ($item = V5Bunch::get($_REQUEST['id']) )
-        {
             $item->delete();
-        }
         else
             $error = 'Ошибка! Пучок не найден! ['.$_REQUEST['id'].']';
 

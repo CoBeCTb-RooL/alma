@@ -10,9 +10,11 @@ class Color{
 		;
 
 
-    const BLACK     = 'black';
-    const RED       = 'red';
-    const GREEN     = 'green';
+    const BLACK       = 'black';
+    const RED         = 'red';
+    const GREEN       = 'green';
+    const LIGHT_RED   = 'light_red';
+    const LIGHT_GREEN = 'light_green';
 
 		
 	static $items;
@@ -30,9 +32,11 @@ class Color{
 	
 	public  function initArr()
 	{
-        $arr[self::RED] = new self(self::RED, 'Красный', 'red', '#F5C1C1',  0);
-        $arr[self::BLACK] = new self(self::BLACK, 'Чёрный', 'black', '#CCCCCC', 1);
-        $arr[self::GREEN] = new self(self::GREEN, 'Зелёный', 'green', '#C6F0C2',  2);
+        $arr[self::LIGHT_RED] = new self(self::LIGHT_RED, 'Красный', 'light_red', 'purple',  0);
+        $arr[self::RED] = new self(self::RED, 'Красный', 'red', '#F5C1C1',  1);
+        $arr[self::BLACK] = new self(self::BLACK, 'Чёрный', 'black', '#CCCCCC', 2);
+        $arr[self::GREEN] = new self(self::GREEN, 'Зелёный', 'green', '#C6F0C2',  3);
+        $arr[self::LIGHT_GREEN] = new self(self::LIGHT_GREEN, 'Зелёный', 'light_green', 'yellow',  4);
 
 		self::$items = $arr;
 	}

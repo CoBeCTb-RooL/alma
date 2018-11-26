@@ -2,20 +2,14 @@
 $buyColor = '#b2dcff';
 $sellColor = '#d3aaff';
 
-
 $date = $MODEL['date'];
 $datePrev = $MODEL['datePrev'];
 $dateNext = $MODEL['dateNext'];
 $today = $MODEL['today'];
 
-
 $cur = $MODEL['currency'];
 
-
 $zones = $MODEL['list'];
-
-
-
 ?>
 
 <style>
@@ -28,12 +22,9 @@ $zones = $MODEL['list'];
 
 
     /*.strike-row .id{border-left: 3px solid #ccc; }*/
-    <?
-    foreach (Color::all() as $color)
-    {?>
+    <?foreach (Color::all() as $color):?>
     .strike-row-<?=$color->code?> {border-left: 6px solid <?=$color->color?>; bord1er-right: 5px solid <?=$color->color?>; background: <?=$color->bgColor?>; }
-    <?
-    }?>
+    <?endforeach;?>
 
 
     .zone .table{float: left; }
@@ -65,24 +56,6 @@ $zones = $MODEL['list'];
         },
 
 
-        /*deleteStrike: function(id){
-            if(!confirm('удалить?'))
-                return
-            $.ajax({
-                url: '/ru/optionalAnalysis/v5/Zones.deleteStrikeAjax',
-                data: {id: id},
-                beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
-                complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
-                success: function(data){
-                    // $('.stats').html(data)
-                    //location.href=location.href
-                    Zones.list()
-                },
-                error: function(){}
-            })
-        },*/
-
-
         deleteBunch: function(id){
             if(!confirm('удалить?'))
                 return
@@ -92,8 +65,6 @@ $zones = $MODEL['list'];
                 beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
                 complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
                 success: function(data){
-                    // $('.stats').html(data)
-                    //location.href=location.href
                     Zones.list()
                 },
                 error: function(){}
@@ -121,36 +92,23 @@ $zones = $MODEL['list'];
 
 
 
-
-
-
 <?php Slonne::view('stock/menu.php');?>
-
-
-
-
-
 
 <h1>Опционный анализ v5.0</h1>
 Валюта: |&nbsp;
 
-<?
-foreach($MODEL['currencies'] as $c)
-{?>
-    <a href="?currency=<?=$c->code?>&date=<?=$date?>" style="; <?=$c->code == $cur->code ? 'font-weight: bold; font-size: 1.2em;  ' : ''?>"><?=$c->code?></a>
-    &nbsp;|&nbsp;
-<?
-}?>
+<?foreach($MODEL['currencies'] as $c):?>
+    <a href="?currency=<?=$c->code?>&date=<?=$date?>" style="; <?=$c->code == $cur->code ? 'font-weight: bold; font-size: 1.2em;  ' : ''?>"><?=$c->code?></a>&nbsp;|&nbsp;
+<?endforeach;?>
 <hr>
-<p></p>
-
+<p>
 
 <div class="day-nav" style="margin: 0 0 14px 0; ">
     <h2 class="current-date" style="margin: 0 0 5px 0;  padding: 0;">
 		<?=Funx::mkDate($date);?>
 		<?=($date == $today ? '<span class="today-lbl">(сегодня)</span>' : '' )?>
 
-        &nbsp;&nbsp;&nbsp;&nbsp;<input  name="date1" id="date1" value="<?=$date?>" style="width:70px" type="text" onchange="location.href='?date='+$(this).val()+'&currency=<?=$cur->code?>' ; ">
+    &nbsp;&nbsp;&nbsp;&nbsp;<input  name="date1" id="date1" value="<?=$date?>" style="width:70px" type="text" onchange="location.href='?date='+$(this).val()+'&currency=<?=$cur->code?>' ; ">
         <img id="calendar-btn1" src="/js/calendar/calendar.jpg" style="border:0px;">
         <script>
             Calendar.setup({
@@ -165,12 +123,9 @@ foreach($MODEL['currencies'] as $c)
     </h2>
     <a href="?date=<?=$datePrev?>&currency=<?=$cur->code?>">&larr; Предыдущий</a>
     <a href="?date=<?=date('Y-m-d')?>&currency=<?=$cur->code?>" style="font-weight: bold; ">Сегодня</a>
-	<?php
-	if($dateNext)
-	{?>
+	<?if($dateNext):?>
         <a href="?date=<?=$dateNext?>&currency=<?=$cur->code?>">Следующий &rarr;</a>
-		<?php
-	}?>
+	<?endif;?>
 </div>
 
 
@@ -193,15 +148,13 @@ foreach($MODEL['currencies'] as $c)
         });
     </script>
 
-
-
     Форвард: <input type="text" class="forward" name="forward" value="">
     <p>Открытие: <input type="text" class="forward" name="openingPrice" value="">
     <p>Коммент: <input type="text" name="title" style=" width: 170px; ">
     <p>
     <div class="data-input" style="display: ; ">
         Страйки:<br>
-        <textarea name="data" class="global-ta" onkeyup="/*Opt.parseData2('<?=$cur->code?>')*/" style="height: 75px; width: 200px;  "></textarea>
+        <textarea name="data" class="global-ta"  style="height: 75px; width: 200px;  "></textarea>
     </div>
     <p>
     <button type="submit" >сохранить</button>
@@ -210,27 +163,14 @@ foreach($MODEL['currencies'] as $c)
 
 
 
-
-
 <p>
 <!--<button onclick="Zones.list(); "></button>-->
 <div class="zones">Загрузка...</div>
-
-
-
-
-
-
-
-
-
 <iframe src="" frameborder="0" name="frame7" style="display: ; border: 1px solid #000; background: #ececec; height: 400px; width: 100%; ">wqe</iframe>
 
 
 <script>
-
     $(document).ready(function(){
         Zones.list()
     })
-
 </script>
