@@ -284,7 +284,7 @@ class V6Strike{
 
 
 
-    public function potentialGoal()
+    public function potentialGoal($bunch)
     {
         $ret = null;
 
@@ -296,8 +296,7 @@ class V6Strike{
 
         #   считаем только для ЛАЙТ страйков. Если значение есть - тогда высчитываем
         if($val)
-            $ret = strikeVal(abs($ret-$val));
-
+            $ret = strikeVal(abs($bunch->black()->max() - $val));
         return $ret;
     }
 

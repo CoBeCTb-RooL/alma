@@ -53,7 +53,7 @@ $bunches = $MODEL['list'];
 
                         <td rowspan="2" class="potentialGoal <?=$isStrikeWithMaxPotentialGoal ? 'highest' : ''?>">
                             <?if(in_array($s->color->code, [Color::LIGHT_GREEN, Color::LIGHT_RED, ])):?>
-                                <?=$s->potentialGoal()?>
+                                <?=$s->potentialGoal($bunch)?>
                                 <?if($isStrikeWithMaxPotentialGoal):?>
                                     <br><span style="margin: 2px 0 0 0; font-size: .7em;   font-weight: bold; color: #fff; background: #be00be; border-radius: 2px; padding: 1px 2px;  ">max</span>
                                 <?endif;?>

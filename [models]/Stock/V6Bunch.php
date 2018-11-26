@@ -207,7 +207,7 @@ class V6Bunch{
         $ret = null;
 
         foreach ($this->strikes as $s)
-            if(!$ret || $ret->potentialGoal() < $s->potentialGoal())
+            if(!$ret || $ret->potentialGoal($this) < $s->potentialGoal($this))
                 $ret = $s;
 
         return $ret;
