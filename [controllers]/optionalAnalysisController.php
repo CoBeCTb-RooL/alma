@@ -989,6 +989,7 @@ class optionalAnalysisController extends MainController{
         {
             $item->initItems();
             $item->initAdvisor();
+            $item->initMinDeltasAgainstMax();
         }
 
         Slonne::view('optionalAnalysis/v6/zonesListAjax.php', $MODEL);

@@ -36,6 +36,7 @@ $bunches = $MODEL['list'];
                     <th style="color: blue; ">MAX</th>
                     <th>goal</th>
                     <th>out of range</th>
+                    <th></th>
                     <th>action</th>
                 </tr>
 
@@ -65,6 +66,27 @@ $bunches = $MODEL['list'];
                             <?if($s->isOutOfRange($bunch->black())):?>
                             <span class="outOfRange">out of range!</span>
                             <?endif;?>
+                        </td>
+
+
+                        <td rowspan="2" style="padding: 0;  ">
+                        <?if(count($s->minDeltasAgainstMax)):?>
+                            <?foreach ($s->minDeltasAgainstMax as $deltaPair):?>
+                                <div style="width: 200px ; height: 55px; padding: 5px ; background: <?=$deltaPair['strike']->color->bgColor?>; border-right: 5px solid <?=$deltaPair['strike']->color->color?>; ">
+                                    <span style="font-weight: bold; font-size: 1.2em; "><?=$deltaPair['type']?></span> (<?=$deltaPair['strike']->id?>)
+                                    <?if($deltaPair['strike']->id == $s->id):?>
+                                    <span style="color: #fff; background: #47b73b; font-size: .7em; padding: 1px 2px; border-radius: 3px; ">сам же!</span>
+                                    <?endif;?>
+                                    <br>
+                                    <div style="padding: 3px; ">
+                                        delta = <span style="font-size: 1.3em; font-weight: bold; "><?=$deltaPair['delta']?></span>
+                                    </div>
+                                    <div style="white-space: nowrap; font-size: .8em;  ">|<?=$deltaPair['resultVal']?> - <?=$deltaPair['strike']->max()?>| = <?=$deltaPair['delta']?></div>
+                                    <br>
+<!--                                    --><?//=$deltaPair['strike']->id?>
+                                </div>
+                            <?endforeach;?>
+                        <?endif?>
                         </td>
 
                         <td rowspan="2">

@@ -243,5 +243,16 @@ class V6Bunch{
                     return $strike;
     }
 
+
+
+
+    public function initMinDeltasAgainstMax()
+    {
+        foreach ($this->strikes as $strike)
+            $strike->initMinDeltasAgainstMax($this);
+    }
+
+
+
 		
 }

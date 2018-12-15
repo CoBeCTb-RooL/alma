@@ -322,6 +322,65 @@ class V6Strike{
 
 
 
+    public function initMinDeltasAgainstMax($bunch)
+    {
+        $ret = [];
+        $minDelta = 99999;
+
+        #   высчитываем минимальную дельту
+        foreach ($bunch->strikes as $strike)
+        {
+            #   бай
+            $delta = abs($this->resultBuy - $strike->max());
+            $minDelta = $delta < $minDelta ? $delta : $minDelta;
+
+            #   селл
+            $delta = abs($this->resultSell - $strike->max());
+            $minDelta = $delta < $minDelta ? $delta : $minDelta;
+        }
+
+        #   теперь, зная минДельту - заново высчитываем все дельты, и те, у кого результат равен ей - нас интересуют!
+        foreach ($bunch->strikes as $strike)
+        {
+            #   байи
+//            echo $delta.' == '.$minDelta.' ??'.($delta == $minDelta ? 'da' : 'net').'<br>';
+            $delta = abs($this->resultBuy - $strike->max());
+            if($delta == $minDelta)
+            {
+                $ret[] = [
+                    'type'=>Type::BUY,
+                    'resultVal'=>$this->resultBuy,
+                    'delta' => strikeVal($delta),
+                    'strike'=>$strike
+                ];
+            }
+
+            #   селлы
+            $delta = abs($this->resultSell - $strike->max());
+            if($delta == $minDelta)
+            {
+                $ret[] = [
+                    'type'=>Type::SELL,
+                    'resultVal'=>$this->resultSell,
+                    'delta' => strikeVal($delta),
+                    'strike'=>$strike,
+                ];
+            }
+        }
+
+//        if($this->id == 654)
+//        {
+////            vd($bunch->strikes);
+//            $ret[] = ['type'=>Type::SELL,
+//                'resultVal'=>$this->resultSell,
+//                'delta' => strikeVal($delta),
+//                'strike'=>$bunch->strikes[0],];
+//        }
+
+        $this->minDeltasAgainstMax = $ret;
+    }
+
+
 	
 		
 }
