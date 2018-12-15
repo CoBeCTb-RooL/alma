@@ -22,6 +22,7 @@ $bunches = $MODEL['list'];
         <b><?=$bunch->title?></b> <sup style="font-size: .5em; "><?=$bunch->id?>, <?=Funx::mkDate($bunch->dt)?></sup>
         <p>
         forward: <b><?=$bunch->forward?></b> &nbsp;&nbsp; открытие: <b><?=$bunch->openingPrice?></b>
+        &nbsp;&nbsp;&nbsp;&nbsp;
         <a href=""  onclick='Zones.setZoneDataToForm(<?=$bunch->data?>); return false; ' style="font-size: .9em;  ">Внести данные зоны в форму</a>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""  onclick='Zones.deleteBunch(<?=$bunch->id?>); return false; ' style="font-size: .9em;  color: red;  ">&times; удалить</a>
         <div class="table">
@@ -69,13 +70,16 @@ $bunches = $MODEL['list'];
                         </td>
 
 
-                        <td rowspan="2" style="padding: 0;  ">
+                        <td rowspan="2" style="padding: 0;  text-align: left; ">
                         <?if(count($s->minDeltasAgainstMax)):?>
                             <?foreach ($s->minDeltasAgainstMax as $deltaPair):?>
-                                <div style="width: 200px ; height: 55px; padding: 5px ; background: <?=$deltaPair['strike']->color->bgColor?>; border-right: 5px solid <?=$deltaPair['strike']->color->color?>; ">
-                                    <span style="font-weight: bold; font-size: 1.2em; "><?=$deltaPair['type']?></span> (<?=$deltaPair['strike']->id?>)
+                                <div style="width: 130px ; height: 55px; padding: 5px ; background: <?=$deltaPair['strike']->color->bgColor?>; border-right: 5px solid <?=$deltaPair['strike']->color->color?>; ">
+                                    <span style="font-weight: bold; font-size: 1.2em; "><?=$deltaPair['type']?></span>
+
                                     <?if($deltaPair['strike']->id == $s->id):?>
                                     <span style="color: #fff; background: #47b73b; font-size: .7em; padding: 1px 2px; border-radius: 3px; ">сам же!</span>
+                                    <?else:?>
+                                    <sup style="font-size: .7em; ">(<?=$deltaPair['strike']->id?>)</sup>
                                     <?endif;?>
                                     <br>
                                     <div style="padding: 3px; ">
