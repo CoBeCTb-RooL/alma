@@ -36,7 +36,7 @@ $bunches = $MODEL['list'];
                     <th style="color: blue; ">MAX</th>
                     <th>goal</th>
                     <th>out of range</th>
-                    <th></th>
+                    <th>closest max</th>
                     <th>action</th>
                 </tr>
 
