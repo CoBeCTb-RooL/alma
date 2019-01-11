@@ -322,49 +322,63 @@ class V6Strike{
 
 
 
-    public function initMinDeltasAgainstMax($bunch)
+    public function initMinDeltasAgainstMax($bunch, $type=null)
     {
         $ret = [];
         $minDelta = 99999;
+
 
         #   высчитываем минимальную дельту
         foreach ($bunch->strikes as $strike)
         {
             #   бай
-            $delta = abs($this->resultBuy - $strike->max());
-            $minDelta = $delta < $minDelta ? $delta : $minDelta;
+            if(!$type || $type == Type::BUY)
+            {
+                $delta = abs($this->resultBuy - $strike->max());
+                $minDelta = $delta < $minDelta ? $delta : $minDelta;
+            }
 
             #   селл
-            $delta = abs($this->resultSell - $strike->max());
-            $minDelta = $delta < $minDelta ? $delta : $minDelta;
+            if(!$type || $type == Type::SELL)
+            {
+                $delta = abs($this->resultSell - $strike->max());
+                $minDelta = $delta < $minDelta ? $delta : $minDelta;
+            }
         }
 
         #   теперь, зная минДельту - заново высчитываем все дельты, и те, у кого результат равен ей - нас интересуют!
         foreach ($bunch->strikes as $strike)
         {
-            #   байи
 //            echo $delta.' == '.$minDelta.' ??'.($delta == $minDelta ? 'da' : 'net').'<br>';
-            $delta = abs($this->resultBuy - $strike->max());
-            if($delta == $minDelta)
+
+            #   байи
+            if(!$type || $type == Type::BUY)
             {
-                $ret[] = [
-                    'type'=>Type::BUY,
-                    'resultVal'=>$this->resultBuy,
-                    'delta' => strikeVal($delta),
-                    'strike'=>$strike
-                ];
+                $delta = abs($this->resultBuy - $strike->max());
+                if($delta == $minDelta)
+                {
+                    $ret[] = [
+                        'type'=>Type::BUY,
+                        'resultVal'=>$this->resultBuy,
+                        'delta' => strikeVal($delta),
+                        'strike'=>$strike
+                    ];
+                }
             }
 
             #   селлы
-            $delta = abs($this->resultSell - $strike->max());
-            if($delta == $minDelta)
+            if(!$type || $type == Type::SELL)
             {
-                $ret[] = [
-                    'type'=>Type::SELL,
-                    'resultVal'=>$this->resultSell,
-                    'delta' => strikeVal($delta),
-                    'strike'=>$strike,
-                ];
+                $delta = abs($this->resultSell - $strike->max());
+                if($delta == $minDelta)
+                {
+                    $ret[] = [
+                        'type'=>Type::SELL,
+                        'resultVal'=>$this->resultSell,
+                        'delta' => strikeVal($delta),
+                        'strike'=>$strike,
+                    ];
+                }
             }
         }
 
@@ -379,6 +393,44 @@ class V6Strike{
 
         $this->minDeltasAgainstMax = $ret;
     }
+
+
+
+
+
+//    public function getMinDeltasAgainstMaxByType($bunch, $type)
+//    {
+//        $ret = [];
+//        $minDelta = 99999;
+//
+//        $valToCompare = 0;
+//        if($type == Type::SELL)
+//            $valToCompare = $this->resultSell;
+//        if($type == Type::BUY)
+//            $valToCompare = $this->resultBuy;
+//
+//        #   высчитываем минимальную дельту
+//        foreach ($bunch->strikes as $strike)
+//        {
+//            $delta = abs($valToCompare - $strike->max());
+//            $minDelta = $delta < $minDelta ? $delta : $minDelta;
+//        }
+//
+//        #   теперь, зная минДельту - заново высчитываем все дельты, и те, у кого результат равен ей - нас интересуют!
+//        foreach ($bunch->strikes as $strike)
+//        {
+//            $delta = abs($valToCompare - $strike->max());
+//            if($delta == $minDelta)
+//            {
+//                $ret[] = [
+//                    'type'=>Type::BUY,
+//                    'resultVal'=>$this->resultBuy,
+//                    'delta' => strikeVal($delta),
+//                    'strike'=>$strike
+//                ];
+//            }
+//        }
+//    }
 
 
 	

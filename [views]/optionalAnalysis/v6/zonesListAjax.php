@@ -38,6 +38,8 @@ $bunches = $MODEL['list'];
                     <th>goal</th>
                     <th>out of range</th>
                     <th>closest max</th>
+                    <th style="width: 10px; padding: 0; margin: 0; "></th>
+                    <th>closest max2</th>
                     <th>action</th>
                 </tr>
 
@@ -71,27 +73,74 @@ $bunches = $MODEL['list'];
 
 
                         <td rowspan="2" style="padding: 0;  text-align: left; ">
-                        <?if(count($s->minDeltasAgainstMax)):?>
-                            <?foreach ($s->minDeltasAgainstMax as $deltaPair):?>
-                                <div style="width: 130px ; height: 55px; padding: 5px ; background: <?=$deltaPair['strike']->color->bgColor?>; border-right: 5px solid <?=$deltaPair['strike']->color->color?>; ">
-                                    <span style="font-weight: bold; font-size: 1.2em; "><?=$deltaPair['type']?></span>
+                            <?if(count($s->minDeltasAgainstMax)):?>
+                                <?foreach ($s->minDeltasAgainstMax as $deltaPair):?>
+                                    <?//vd($deltaPair)?>
+                                    <?//vd($s->minDeltasAgainstMax2)?>
+                                    <div style="width: 130px ; height: 55px; padding: 5px ; background: <?=$deltaPair['strike']->color->bgColor?>; border-right: 5px solid <?=$deltaPair['strike']->color->color?>; ">
+                                        <span style="font-weight: bold; font-size: 1.2em; "><?=$deltaPair['type']?></span>
 
-                                    <?if($deltaPair['strike']->id == $s->id):?>
-                                    <span style="color: #fff; background: #47b73b; font-size: .7em; padding: 1px 2px; border-radius: 3px; ">сам же!</span>
-                                    <?else:?>
-                                    <sup style="font-size: .7em; ">(<?=$deltaPair['strike']->id?>)</sup>
-                                    <?endif;?>
-                                    <br>
-                                    <div style="padding: 3px; ">
-                                        delta = <span style="font-size: 1.3em; font-weight: bold; "><?=$deltaPair['delta']?></span>
+                                        <?if($deltaPair['strike']->id == $s->id):?>
+                                            <span style="color: #fff; background: #47b73b; font-size: .7em; padding: 1px 2px; border-radius: 3px; ">сам же!</span>
+                                        <?else:?>
+                                            <sup style="font-size: .7em; ">(<?=$deltaPair['strike']->id?>)</sup>
+                                        <?endif;?>
+                                        <br>
+                                        <div style="padding: 3px; ">
+                                            delta = <span style="font-size: 1.3em; font-weight: bold; "><?=$deltaPair['delta']?></span>
+                                        </div>
+                                        <div style="white-space: nowrap; font-size: .8em;  ">|<?=$deltaPair['resultVal']?> - <?=$deltaPair['strike']->max()?>| = <?=$deltaPair['delta']?></div>
+                                        <br>
+                                        <!--                                    --><?//=$deltaPair['strike']->id?>
                                     </div>
-                                    <div style="white-space: nowrap; font-size: .8em;  ">|<?=$deltaPair['resultVal']?> - <?=$deltaPair['strike']->max()?>| = <?=$deltaPair['delta']?></div>
-                                    <br>
-<!--                                    --><?//=$deltaPair['strike']->id?>
-                                </div>
-                            <?endforeach;?>
-                        <?endif?>
+                                <?endforeach;?>
+                            <?endif?>
                         </td>
+
+
+
+
+                        <td rowspan="2" style="background: #fff; padding: 0; margin: 0;  "></td>
+
+
+                        <!--второстепенный-->
+                        <td rowspan="2" style="padding: 0;  text-align: left; ">
+                            <?if(count($s->minDeltasAgainstMax)):?>
+                                <?foreach ($s->minDeltasAgainstMax as $deltaPair1):?>
+                                <?
+                                $arr = [];
+                                $arr = $s->initMinDeltasAgainstMax($bunch, $deltaPair1['type'] == Type::SELL ? Type::BUY : Type::SELL);
+                                ?>
+                                    <?foreach ($s->minDeltasAgainstMax as $deltaPair):?>
+                                        <?//vd($deltaPair['strike'])?>
+                                        <?//vd($s->minDeltasAgainstMax2)?>
+                                        <div style="width: 130px ; height: 55px; padding: 5px ; background: <?=$deltaPair['strike']->color->bgColor ? $deltaPair['strike']->color->bgColor : '#fff'?>; border-right: 5px solid <?=$deltaPair['strike']->color->color?>; ">
+                                            <span style="font-weight: bold; font-size: 1.2em; "><?=$deltaPair['type']?></span>
+
+                                            <?if($deltaPair['strike']->id == $s->id):?>
+                                                <span style="color: #fff; background: #47b73b; font-size: .7em; padding: 1px 2px; border-radius: 3px; ">сам же!</span>
+                                            <?else:?>
+                                                <sup style="font-size: .7em; ">(<?=$deltaPair['strike']->id?>)</sup>
+                                            <?endif;?>
+                                            <br>
+                                            <div style="padding: 3px; ">
+                                                delta = <span style="font-size: 1.3em; font-weight: bold; "><?=$deltaPair['delta']?></span>
+                                            </div>
+                                            <div style="white-space: nowrap; font-size: .8em;  ">|<?=$deltaPair['resultVal']?> - <?=$deltaPair['strike']->max()?>| = <?=$deltaPair['delta']?></div>
+                                            <br>
+                                            <!--                                    --><?//=$deltaPair['strike']->id?>
+                                        </div>
+                                    <?endforeach;?>
+                                <?endforeach;?>
+                            <?endif?>
+                        </td>
+                        <!--/второстепенный-->
+
+
+
+
+
+
 
                         <td rowspan="2">
                             <!--<a href="#" onclick="Zones.deleteStrike(<?=$s->id?>);; return false; ">удалить</a>-->
