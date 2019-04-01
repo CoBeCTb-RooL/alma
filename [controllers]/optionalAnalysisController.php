@@ -79,6 +79,10 @@ switch($_PARAMS[0])
             $ACTION = 'v6deleteStrikeAjax';
         if($_PARAMS[1] == 'Zones.deleteBunchAjax')
             $ACTION = 'v6deleteBunchAjax';
+        if($_PARAMS[1] == 'Zones.savePremAjax')
+            $ACTION = 'v6savePremAjax';
+
+        //else $ACTION='qweqweqwe';
 
         break;
 
@@ -1091,6 +1095,41 @@ class optionalAnalysisController extends MainController{
 
 
 
+    public function v6savePremAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $errors = null;
+
+        $strike = V6Strike::get($_REQUEST['strikeId']);
+        $premType = $_REQUEST['premType'] == 'buy' || $_REQUEST['premType'] == 'sell' ? $_REQUEST['premType']  : null;
+        $val = floatval($_REQUEST['val']);
+
+        if(!$strike)
+            $errors[] = new Problem('Страйк не найден! ['.$_REQUEST['strikeId'].']');
+        if(!$premType)
+            $errors[] = new Problem('Непонятный тип премии! ['.$_REQUEST['premType'].']');
+        if(!$val)
+            $errors[] = new Problem('Левое значение! ['.$_REQUEST['val'].']');
+
+
+        if(!$errors)
+        {
+            if($premType == 'buy')
+                $strike->premiumBuy = $val;
+            if($premType == 'sell')
+                $strike->premiumSell = $val;
+//            vd($strike);
+            $strike->update();
+
+        }
+
+        $res['errors'] = $errors;
+
+        echo json_encode($res);
+
+    }
 
 
 

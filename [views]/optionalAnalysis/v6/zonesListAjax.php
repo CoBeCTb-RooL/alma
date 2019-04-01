@@ -47,12 +47,15 @@ $bunches = $MODEL['list'];
                     <?
                     $isStrikeWithMaxPotentialGoal = $strikeWithMaxPotentialGoal && $s->id == $strikeWithMaxPotentialGoal->id;
                     ?>
-                    <tr style="font-size: .9em; " class="strike-row strike-row-<?=$s->color->code?>">
+                    <tr style="font-size: .9em; " class="strike-row strike-row-<?=$s->id?> strike-row-<?=$s->color->code?>">
                         <td rowspan="2" style="font-size: .8em;  " class="id"><?=$s->id?>. </td>
                         <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$bunch->currency->code?> </td>
                         <td rowspan="2" style="font-weight: bold; font-size: 1.1em; "><?=$s->strike?> </td>
                         <td>to Sell</td>
-                        <td><?=$s->premiumBuy?></td>
+                        <td style="cursor: pointer; ">
+                            <div class="premBuyLbl" ondblclick="$(this).slideUp('fast'); $(this).next().slideDown('fast'); $(this).next().find('input[type=text]').focus().select(); "><?=$s->premiumBuy?></div>
+                            <div class="premBuyInput" style="display: none; "><input type="text" style="width: 50px; " value="<?=$s->premiumBuy?>" onblur="Zones.savePrem(<?=$s->id?>, 'buy', $(this).val()); "></div>
+                        </td>
                         <td ><?=$s->resultSell?></td>
                         <td rowspan="2" style="font-weight: bold; font-size: 1.1em; color: blue;  "><?=$s->max()?> </td>
 
@@ -148,7 +151,10 @@ $bunches = $MODEL['list'];
                     </tr>
                     <tr style="font-size: .9em; border-bottom: 3px solid #000; " class="strike-row strike-row-<?=$s->color->code?>">
                         <td>to Buy</td>
-                        <td ><?=$s->premiumSell?></td>
+                        <td style="cursor: pointer; ">
+                            <div class="premBuyLbl" ondblclick="$(this).slideUp('fast'); $(this).next().slideDown('fast'); $(this).next().find('input[type=text]').focus().select(); "><?=$s->premiumSell?></div>
+                            <div class="premBuyInput" style="display: none; "><input type="text" style="width: 50px; " value="<?=$s->premiumSell?>" onblur="Zones.savePrem(<?=$s->id?>, 'sell', $(this).val()); "></div>
+                        </td>
                         <td ><?=$s->resultBuy?></td>
                     </tr>
                 <?endforeach;?>

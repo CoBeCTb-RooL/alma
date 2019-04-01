@@ -90,6 +90,27 @@ $zones = $MODEL['list'];
             form.find('input[name=openingPrice]').val(obj.openingPrice)
             form.find('input[name=title]').val(obj.title)
             form.find('textarea[name=data]').val(obj.data)
+        },
+
+
+        savePrem: function(strikeId, premType, val){
+            // alert(strikeId)
+            // alert(premType)
+            // alert(val)
+            $.ajax({
+                url: '/ru/optionalAnalysis/v6/Zones.savePremAjax',
+                dataType: 'json',
+                data: {strikeId: strikeId, premType: premType, val: val},
+                beforeSend: function(){ $('.stats').css('opacity', .6); $('.stat-loading').slideDown('fast');  },
+                complete: function(){ $('.stats').css('opacity', 1); $('.stat-loading').slideUp('fast');  },
+                success: function(data){
+                    if(!data.errors)
+                        Zones.list()
+                    else
+                        alert(data.errors[0].msg)
+                },
+                error: function(){}
+            })
         }
 
 
