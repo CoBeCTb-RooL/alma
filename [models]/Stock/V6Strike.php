@@ -56,6 +56,7 @@ class V6Strike{
             $this->openingPrice = $arr['openingPrice'];
 			$this->status = Status2::code($arr['status']);
 			$this->comment = $arr['comment'];
+			$this->data = $arr['data'];
 			$this->createdAt = $arr['createdAt'];
 			$this->updatedAt = $arr['updatedAt'];
 
@@ -393,6 +394,8 @@ class V6Strike{
 
         $this->minDeltasAgainstMax = $ret;
     }
+
+
 
 
 

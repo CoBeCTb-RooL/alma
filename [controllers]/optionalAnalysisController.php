@@ -1120,7 +1120,10 @@ class optionalAnalysisController extends MainController{
                 $strike->premiumBuy = $val;
             if($premType == 'sell')
                 $strike->premiumSell = $val;
-//            vd($strike);
+
+            #   подправляем исходную строку с данными
+            $strike->data = join("\t", [$strike->premiumBuy, explode("\t", $strike->data)[1], $strike->premiumSell, ]);
+
             $strike->update();
 
         }
