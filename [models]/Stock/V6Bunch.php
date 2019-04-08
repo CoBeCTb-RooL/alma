@@ -254,5 +254,24 @@ class V6Bunch{
 
 
 
+    public function assembleDataString()
+    {
+        #   если страйки банча не заинитены
+        if(!$this->strikes)
+            $this->initItems();
+
+        $strikeStringsArr = [];
+        foreach ($this->strikes as $strike)
+            $strikeStringsArr[] = $strike->assembleDataString();
+
+        $strikeString = join("\r\n", $strikeStringsArr);
+
+        $bunchData = json_decode($this->data, true);
+        $bunchData['data'] = $strikeString;
+
+        return  json_encode($bunchData);
+    }
+
+
 		
 }

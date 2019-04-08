@@ -397,6 +397,30 @@ class V6Strike{
 
 
 
+    //  коэффициент, на который делим значение страйка
+    public static function divisionCoefStatic($cur)
+    {
+        $ret = 10000;     //  на какое значение делим страйк
+        if($cur->code == Currency::CODE_JPY)
+            $ret = 1000000;
+
+        return $ret;
+    }
+
+    public function divisionCoef()
+    {
+        return $this->divisionCoefStatic($this->currency);
+    }
+
+
+
+    public function assembleDataString()
+    {
+        return join("\t", [$this->premiumBuy, $this->strike*$this->divisionCoef(), $this->premiumSell, ]);
+    }
+
+
+
 
 
 

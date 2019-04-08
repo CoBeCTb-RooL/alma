@@ -1027,6 +1027,7 @@ class optionalAnalysisController extends MainController{
             if($cur->code == Currency::CODE_JPY)
                 $valToDivideTo = 1000000;
 
+
             $rows = explode("\r\n", $_REQUEST['data']);
 
             #   для перевёртышей - ряды берём снизу вверх
@@ -1122,10 +1123,14 @@ class optionalAnalysisController extends MainController{
                 $strike->premiumSell = $val;
 
             #   подправляем исходную строку с данными
-            $strike->data = join("\t", [$strike->premiumBuy, explode("\t", $strike->data)[1], $strike->premiumSell, ]);
-
+            $strike->data = $strike->assembleDataString();
             $strike->update();
 
+            #   то же самое для БАНЧА
+            $bunch = V6Bunch::get($strike->pid);
+            $bunch->initItems();
+            $bunch->data = $bunch->assembleDataString();
+            $bunch->update();
         }
 
         $res['errors'] = $errors;
