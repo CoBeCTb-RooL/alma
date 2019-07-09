@@ -13,7 +13,7 @@ class V6MaxPainStrike{
 	public $data;
 
 
-	const TBL = 'v6__strikes_maxPain';
+	const TBL = 'v6__strikes_maxpain';
 
 	function __construct($arr)
 	{

@@ -9,7 +9,7 @@ class V6MaxPainBunch{
     private $_strikesData;
 
 
-	const TBL = 'v6__bunches_maxPain';
+	const TBL = 'v6__bunches_maxpain';
 
 	function __construct($arr)
 	{
