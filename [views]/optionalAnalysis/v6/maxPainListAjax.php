@@ -22,7 +22,8 @@ $bunches = $MODEL['list'];
         <b><?=$bunch->title?></b> <sup style="font-size: .5em; "><?=$bunch->id?>, <?=Funx::mkDate($bunch->dt)?></sup>
         <p>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""  onclick='MaxPain.deleteBunch(<?=$bunch->id?>); return false; ' style="font-size: .9em;  color: red;  ">&times; удалить</a>
+            <a href=""  onclick='MaxPain.setDataToForm(<?=$bunch->data?>); return false; ' style="font-size: .9em;  ">Внести данные зоны в форму</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""  onclick='MaxPain.deleteBunch(<?=$bunch->id?>); return false; ' style="font-size: .9em;  color: red;  ">&times; удалить</a>
         <div class="table">
             <table border="1" style="" class="t">
                 <tr>

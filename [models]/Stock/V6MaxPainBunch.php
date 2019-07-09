@@ -150,7 +150,8 @@ class V6MaxPainBunch{
         $this->dt = $arr['date'];
         $this->title = trim($arr['title']);
         $this->currency = Currency::code($arr['currency']);
-        $this->_strikesData = $this->data = $arr['data'];
+        $this->data = json_encode($arr, JSON_UNESCAPED_UNICODE);
+        $this->_strikesData = $arr['data'];
     }
 
 

@@ -39,6 +39,16 @@ $cur = $MODEL['currency'];
             })
         },
 
+        setDataToForm: function(obj){
+            if(typeof(obj) == 'undefined' || typeof(obj.currency) == 'undefined'){
+                alert('Битые данные... С этой зоной не получится')
+                return
+            }
+
+            var form = $('#addZoneForm')
+            form.find('input[name=title]').val(obj.title)
+            form.find('textarea[name=data]').val(obj.data)
+        },
 
         deleteBunch: function(id){
             if(!confirm('удалить?'))
