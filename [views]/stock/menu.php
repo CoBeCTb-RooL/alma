@@ -33,4 +33,8 @@
     <a style="font-weight: bold; " href="/ru/optionalAnalysis/v5">Опционный анализ 5.0</a>
     &nbsp;|&nbsp;
     <a style="font-weight: bold; " href="/ru/optionalAnalysis/v6">Опционный анализ 6.0</a>
+    &nbsp;|&nbsp;
+    <a style="font-weight: bold; " href="/ru/optionalAnalysis/v6/maxPainIndex">MaxPain 6.0</a>
+
+
 </div>

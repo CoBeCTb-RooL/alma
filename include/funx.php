@@ -11,6 +11,14 @@ if(!function_exists('vd'))
 }
 
 
+function echoArr($arr)
+{
+    $str = '';
+    $str = '[ '.join(', ', $arr).' ]';
+    return $str;
+}
+
+
 
 function strPrepare($a)
 {

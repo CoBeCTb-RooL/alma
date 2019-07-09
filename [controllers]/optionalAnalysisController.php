@@ -82,6 +82,15 @@ switch($_PARAMS[0])
         if($_PARAMS[1] == 'Zones.savePremAjax')
             $ACTION = 'v6savePremAjax';
 
+        if($_PARAMS[1]=='maxPainIndex')
+            $ACTION = 'v6maxPainIndex';
+        if($_PARAMS[1]=='maxPainListAjax')
+            $ACTION = 'v6maxPainListAjax';
+        if($_PARAMS[1]=='maxPainFormSubmit')
+            $ACTION = 'v6maxPainFormSubmit';
+        if($_PARAMS[1]=='maxPainDeleteBunchAjax')
+            $ACTION = 'v6maxPainDeleteBunchAjax';
+
         //else $ACTION='qweqweqwe';
 
         break;
@@ -1140,7 +1149,141 @@ class optionalAnalysisController extends MainController{
     }
 
 
+    //////////////////////////////////////////////
+    function v6maxPainIndex()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['TITLE'] = Slonne::getTitle('MaxPain 6.0');
 
+        $MODEL['currencies'] = [
+            Currency::code(Currency::CODE_EUR),
+            Currency::code(Currency::CODE_GBP),
+            Currency::code(Currency::CODE_AUD),
+            Currency::code(Currency::CODE_JPY),
+            Currency::code(Currency::CODE_CAD),
+            Currency::code(Currency::CODE_CHF),
+        ];
+
+        $today = date('Y-m-d');
+        $date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+
+        $prevDate = date('Y-m-d', strtotime($date . ' - 1 day'));
+        $nextDate = $date != $today ? date('Y-m-d', strtotime($date . ' + 1 day')) : null;
+
+        $MODEL['date'] = $date;
+        $MODEL['today'] = $today;
+        $MODEL['datePrev'] = $prevDate;
+        $MODEL['dateNext'] = $nextDate;
+
+        $MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
+        Slonne::view('optionalAnalysis/v6/maxPainIndex.php', $MODEL);
+    }
+
+
+
+
+
+    public function v6maxPainListAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $today = date('Y-m-d');
+        $date = $_REQUEST['date'] ? $_REQUEST['date'] : $today;
+        $MODEL['date'] = $date;
+        $MODEL['currency'] = Currency::code($_REQUEST['currency']) ? Currency::code($_REQUEST['currency']) : Currency::code(Currency::CODE_EUR);
+
+        $MODEL['list'] = V6MaxPainBunch::getList([
+            'date' => $date,
+            'currency'=>$MODEL['currency'],
+            'orderBy' => 'id desc',
+        ]);
+
+        foreach ($MODEL['list'] as $item)
+        {
+            $item->initItems();
+            $item->calculate();
+        }
+
+        Slonne::view('optionalAnalysis/v6/maxPainListAjax.php', $MODEL);
+    }
+
+
+
+    public function v6maxPainFormSubmit()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $errors = null;
+
+        $cur =Currency::code($_REQUEST['currency']);
+//        vd($_REQUEST);
+//        return;
+
+        $bunch = new V6MaxPainBunch();
+        $bunch->getData($_REQUEST);
+        $bunch->status = Status2::code(Status2::ACTIVE);
+
+        $errors = $bunch->validate();
+
+        if(!$errors)
+        {
+            $bunch->insert();
+
+            $_REQUEST['data'] = str_replace(',', '.', $_REQUEST['data']);
+
+            $rows = explode("\r\n", $_REQUEST['data']);
+
+            #   формируем страйки
+            foreach ($rows as $rowNum=>$row)
+            {
+                if(trim($row))
+                {
+                    $cols = explode(" ", $row);
+
+                    $s = new V6MaxPainStrike();
+                    $s->pid = $bunch->id;
+                    $s->dt = $bunch->dt;
+                    $s->currency = $bunch->currency;
+                    $s->strike = (float)$cols[0];
+                    $s->oiCall = $cols[1];
+                    $s->oiPut = $cols[2];
+                    $s->data = $row;
+
+                    $s->insert();
+                }
+            }
+        }
+
+
+        if(!$errors)
+            echo '<script>window.top.MaxPain.list()</script>';
+        else
+            echo '<script>window.top.alert("'.$errors[0]->msg.'")</script>';
+    }
+
+
+
+
+    public function v6maxPainDeleteBunchAjax()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['NO_LAYOUT'] = true;
+
+        $error = null;
+
+        if ($item = V6MaxPainBunch::get($_REQUEST['id']) )
+            $item->delete();
+        else
+            $error = 'Ошибка! Пучок не найден! ['.$_REQUEST['id'].']';
+
+
+        $res['error'] = $error;
+
+        echo json_encode($res);
+    }
 
 
 }
