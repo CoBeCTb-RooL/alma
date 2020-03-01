@@ -91,6 +91,9 @@ switch($_PARAMS[0])
         if($_PARAMS[1]=='maxPainDeleteBunchAjax')
             $ACTION = 'v6maxPainDeleteBunchAjax';
 
+        #   улыбки
+        if($_PARAMS[1]=='smiles')
+            $ACTION = 'v6Smiles';
         //else $ACTION='qweqweqwe';
 
         break;
@@ -1285,6 +1288,50 @@ class optionalAnalysisController extends MainController{
         echo json_encode($res);
     }
 
+
+    function v6Smiles()
+    {
+        global $_GLOBALS, $_CONFIG;
+        $_GLOBALS['TITLE'] = Slonne::getTitle('Опционный анализ v6.0');
+
+
+        $formData = $_REQUEST;
+
+        $tangent = null;
+
+        if($_REQUEST['goBtn'])
+        {
+            #   формируем массив точек
+            $dots = [];
+            $rows = explode("\r\n", $formData['strikes']);
+            foreach ($rows as $row)
+            {
+                $vals = explode('=', $row);
+                $dotArr = [floatval($vals[0]), floatval($vals[1])];
+                if(mb_strpos($row, '!')!==false)
+                    $dotArr[] = true;
+                $dots[] = $dotArr;
+            }
+//            $dots = [
+//                [1.1000, 8.32],
+//                [1.1025, 8.28],
+//                [1.1050, 8.41, true],
+//                [1.1075, 8.51],
+//                [1.1250, 11.42],
+//            ];
+//            vd($dots);
+            $tangent = new TangentLeastSquare($dots, $formData['sigmaAtm'], $formData['S'], $formData['T']);
+        }
+
+
+
+        $MODEL = [
+            'tangent'=>$tangent,
+            'formData' => $formData,
+        ];
+
+        Slonne::view('optionalAnalysis/v6/smiles.php', $MODEL);
+    }
 
 }
 

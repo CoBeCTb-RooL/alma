@@ -119,7 +119,7 @@ $zones = $MODEL['list'];
 
 
 
-<?php Slonne::view('stock/menu.php');?>
+<?php Slonne::view('stock/menu.php');?>|
 
 <h1>Опционный анализ v6.0</h1>
 Валюта: |&nbsp;
